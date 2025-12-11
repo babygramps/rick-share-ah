@@ -15,15 +15,19 @@ export function Settings() {
   const [partner2Name, setPartner2Name] = useState(couple?.partner2Name || '');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
-  const handleSaveCouple = () => {
+  const handleSaveCouple = async () => {
     if (coupleName.trim() && partner1Name.trim()) {
-      updateCouple({
+      await updateCouple({
         name: coupleName.trim(),
         partner1Name: partner1Name.trim(),
-        partner2Name: partner2Name.trim() || undefined,
+        partner2Name: partner2Name.trim() || null,
       });
       setIsEditingCouple(false);
     }
+  };
+
+  const handleLogout = async () => {
+    await logout();
   };
 
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
@@ -173,7 +177,7 @@ export function Settings() {
                 Sign out of your account
               </p>
             </div>
-            <Button variant="ghost" size="sm" onClick={logout}>
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
               Log Out
             </Button>
           </div>
@@ -205,10 +209,11 @@ export function Settings() {
             </Button>
             <Button
               variant="danger"
-              onClick={() => {
-                // Would call a clearAllData function here
-                localStorage.clear();
-                window.location.reload();
+              onClick={async () => {
+                // Note: In a real app, you'd delete all expenses/settlements from DynamoDB
+                // For now, just close the modal
+                setShowClearConfirm(false);
+                alert('Clear data feature requires backend implementation. For now, please delete items individually.');
               }}
               className="flex-1"
             >

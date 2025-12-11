@@ -6,13 +6,14 @@ export interface Couple {
   partner1Id: string;
   partner1Name: string;
   partner1Email: string;
-  partner2Id?: string;
-  partner2Name?: string;
-  partner2Email?: string;
-  inviteCode?: string;
+  partner2Id?: string | null;
+  partner2Name?: string | null;
+  partner2Email?: string | null;
+  inviteCode?: string | null;
   defaultSplitPercent: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+  owner?: string;
 }
 
 export interface Expense {
@@ -20,26 +21,29 @@ export interface Expense {
   coupleId: string;
   description: string;
   amount: number;
-  paidBy: 'partner1' | 'partner2';
-  splitType: 'equal' | 'percentage' | 'exact';
+  paidBy: string;
+  splitType: string;
   partner1Share: number;
   partner2Share: number;
-  category: ExpenseCategory;
+  category: string;
   date: string;
-  note?: string;
-  createdAt: string;
-  updatedAt: string;
+  note?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  owner?: string;
 }
 
 export interface Settlement {
   id: string;
   coupleId: string;
   amount: number;
-  paidBy: 'partner1' | 'partner2';
-  paidTo: 'partner1' | 'partner2';
+  paidBy: string;
+  paidTo: string;
   date: string;
-  note?: string;
-  createdAt: string;
+  note?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  owner?: string;
 }
 
 export type ExpenseCategory =

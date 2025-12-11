@@ -10,13 +10,27 @@ export function CoupleSetup() {
   const [partnerName, setPartnerName] = useState('');
   const [inviteCode, setInviteCode] = useState('');
   const [error, setError] = useState('');
-  const [isJoining, setIsJoining] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, createCouple, joinCouple, couple } = useApp();
 
-  const handleCreate = (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!coupleName.trim() || !partnerName.trim()) return;
-    createCouple(coupleName, partnerName);
+    
+    setError('');
+    setIsSubmitting(true);
+    
+    try {
+      const result = await createCouple(coupleName, partnerName);
+      if (!result.success) {
+        setError(result.error || 'Failed to create couple');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred');
+      console.error('Create couple error:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleJoin = async (e: React.FormEvent) => {
@@ -24,7 +38,7 @@ export function CoupleSetup() {
     if (!inviteCode.trim() || !partnerName.trim()) return;
     
     setError('');
-    setIsJoining(true);
+    setIsSubmitting(true);
     
     try {
       const result = await joinCouple(inviteCode.toUpperCase(), partnerName);
@@ -35,7 +49,7 @@ export function CoupleSetup() {
       setError('An unexpected error occurred');
       console.error('Join couple error:', err);
     } finally {
-      setIsJoining(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -64,7 +78,7 @@ export function CoupleSetup() {
             </p>
 
             <div className="bg-[var(--color-sage)]/20 border-2 border-[var(--color-sage)] p-4 font-mono text-sm">
-              <p className="font-bold mb-2">💡 For demo purposes:</p>
+              <p className="font-bold mb-2">💡 Tip:</p>
               <p>You can start adding expenses right away! Your partner can join later.</p>
             </div>
 
@@ -155,15 +169,21 @@ export function CoupleSetup() {
                 required
               />
 
+              {error && (
+                <div className="bg-[var(--color-coral)]/10 border-2 border-[var(--color-coral)] p-3 font-mono text-sm text-[var(--color-coral)]">
+                  ⚠️ {error}
+                </div>
+              )}
+
               <div className="flex gap-3">
                 <Button
                   type="button"
                   variant="ghost"
-                  onClick={() => setMode('choose')}
+                  onClick={() => { setMode('choose'); setError(''); }}
                 >
                   ← Back
                 </Button>
-                <Button type="submit" className="flex-1">
+                <Button type="submit" className="flex-1" isLoading={isSubmitting}>
                   Create Couple
                 </Button>
               </div>
@@ -212,7 +232,7 @@ export function CoupleSetup() {
                 >
                   ← Back
                 </Button>
-                <Button type="submit" className="flex-1" isLoading={isJoining}>
+                <Button type="submit" className="flex-1" isLoading={isSubmitting}>
                   Join Couple
                 </Button>
               </div>
@@ -223,4 +243,3 @@ export function CoupleSetup() {
     </div>
   );
 }
-

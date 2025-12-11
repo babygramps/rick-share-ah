@@ -1,46 +1,58 @@
 import type { ReactNode } from 'react';
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { 
+  signIn, 
+  signUp, 
+  signOut, 
+  getCurrentUser,
+  confirmSignUp,
+  fetchUserAttributes
+} from 'aws-amplify/auth';
+import { generateClient } from 'aws-amplify/api';
 import type { Couple, Expense, Settlement, User, Balance } from '../types';
-import { calculateBalance, generateId, generateInviteCode } from '../utils/helpers';
+import { calculateBalance, generateInviteCode } from '../utils/helpers';
+import * as queries from '../graphql/queries';
+import * as mutations from '../graphql/mutations';
+
+// Create GraphQL client
+const client = generateClient();
 
 interface AppContextType {
   // Auth state
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => void;
+  needsConfirmation: boolean;
+  pendingEmail: string | null;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (email: string, password: string, name: string) => Promise<{ success: boolean; needsConfirmation?: boolean; error?: string }>;
+  confirmAccount: (code: string) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
 
   // Couple state
   couple: Couple | null;
-  createCouple: (name: string, partnerName: string) => void;
+  createCouple: (name: string, partnerName: string) => Promise<{ success: boolean; error?: string }>;
   joinCouple: (inviteCode: string, partnerName: string) => Promise<{ success: boolean; error?: string }>;
-  updateCouple: (updates: Partial<Couple>) => void;
+  updateCouple: (updates: Partial<Couple>) => Promise<void>;
 
   // Expenses
   expenses: Expense[];
-  addExpense: (expense: Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>) => void;
-  updateExpense: (id: string, updates: Partial<Expense>) => void;
-  deleteExpense: (id: string) => void;
+  addExpense: (expense: Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  updateExpense: (id: string, updates: Partial<Expense>) => Promise<void>;
+  deleteExpense: (id: string) => Promise<void>;
 
   // Settlements
   settlements: Settlement[];
-  addSettlement: (settlement: Omit<Settlement, 'id' | 'coupleId' | 'createdAt'>) => void;
+  addSettlement: (settlement: Omit<Settlement, 'id' | 'coupleId' | 'createdAt'>) => Promise<void>;
 
   // Calculated values
   balance: Balance;
+  
+  // Refresh data
+  refreshData: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
-
-// Local storage keys
-const STORAGE_KEYS = {
-  USER: 'rickshare_user',
-  COUPLE: 'rickshare_couple',
-  EXPENSES: 'rickshare_expenses',
-  SETTLEMENTS: 'rickshare_settlements',
-};
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -48,199 +60,373 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [settlements, setSettlements] = useState<Settlement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
-  // Load data from localStorage on mount
+  // Check for existing auth session on mount
   useEffect(() => {
-    try {
-      const savedUser = localStorage.getItem(STORAGE_KEYS.USER);
-      const savedCouple = localStorage.getItem(STORAGE_KEYS.COUPLE);
-      const savedExpenses = localStorage.getItem(STORAGE_KEYS.EXPENSES);
-      const savedSettlements = localStorage.getItem(STORAGE_KEYS.SETTLEMENTS);
-
-      if (savedUser) setUser(JSON.parse(savedUser));
-      if (savedCouple) setCouple(JSON.parse(savedCouple));
-      if (savedExpenses) setExpenses(JSON.parse(savedExpenses));
-      if (savedSettlements) setSettlements(JSON.parse(savedSettlements));
-    } catch (error) {
-      console.error('Error loading data from localStorage:', error);
-    }
-    setIsLoading(false);
+    checkAuthState();
   }, []);
 
-  // Save data to localStorage on change
-  useEffect(() => {
-    if (!isLoading) {
-      if (user) {
-        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
-      } else {
-        localStorage.removeItem(STORAGE_KEYS.USER);
+  const checkAuthState = async () => {
+    try {
+      const currentUser = await getCurrentUser();
+      const attributes = await fetchUserAttributes();
+      
+      setUser({
+        id: currentUser.userId,
+        email: attributes.email || '',
+        name: attributes.name || attributes.email?.split('@')[0] || 'User',
+      });
+      
+      // Load user's couple data
+      await loadUserData(currentUser.userId);
+    } catch (error) {
+      // Not signed in
+      console.log('No authenticated user');
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadUserData = async (userId: string) => {
+    try {
+      // Find couple where user is partner1 or partner2
+      const coupleResult = await client.graphql({
+        query: queries.listCouples,
+        variables: {
+          filter: {
+            or: [
+              { partner1Id: { eq: userId } },
+              { partner2Id: { eq: userId } }
+            ]
+          }
+        }
+      });
+
+      const couples = (coupleResult as any).data?.listCouples?.items || [];
+      
+      if (couples.length > 0) {
+        const userCouple = couples[0];
+        setCouple(userCouple);
+        
+        // Load expenses and settlements for this couple
+        await loadCoupleData(userCouple.id);
       }
+    } catch (error) {
+      console.error('Error loading user data:', error);
     }
-  }, [user, isLoading]);
+  };
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (couple) {
-        localStorage.setItem(STORAGE_KEYS.COUPLE, JSON.stringify(couple));
-      } else {
-        localStorage.removeItem(STORAGE_KEYS.COUPLE);
-      }
-    }
-  }, [couple, isLoading]);
+  const loadCoupleData = async (coupleId: string) => {
+    try {
+      // Load expenses
+      const expenseResult = await client.graphql({
+        query: queries.expensesByCoupleId,
+        variables: { coupleId, sortDirection: 'DESC' }
+      });
+      setExpenses((expenseResult as any).data?.expensesByCoupleId?.items || []);
 
-  useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses));
+      // Load settlements
+      const settlementResult = await client.graphql({
+        query: queries.settlementsByCoupleId,
+        variables: { coupleId, sortDirection: 'DESC' }
+      });
+      setSettlements((settlementResult as any).data?.settlementsByCoupleId?.items || []);
+    } catch (error) {
+      console.error('Error loading couple data:', error);
     }
-  }, [expenses, isLoading]);
+  };
 
-  useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem(STORAGE_KEYS.SETTLEMENTS, JSON.stringify(settlements));
+  const refreshData = useCallback(async () => {
+    if (user) {
+      await loadUserData(user.id);
     }
-  }, [settlements, isLoading]);
+  }, [user]);
 
   // Auth functions
-  const login = async (email: string, _password: string) => {
-    // For now, simple local auth - will be replaced with Cognito
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network
-    
-    const newUser: User = {
-      id: generateId(),
-      email,
-      name: email.split('@')[0],
-    };
-    setUser(newUser);
-    setIsLoading(false);
+    try {
+      const result = await signIn({ username: email, password });
+      
+      if (result.isSignedIn) {
+        await checkAuthState();
+        return { success: true };
+      } else if (result.nextStep?.signInStep === 'CONFIRM_SIGN_UP') {
+        setPendingEmail(email);
+        setNeedsConfirmation(true);
+        setIsLoading(false);
+        return { success: false, error: 'Please verify your email first' };
+      }
+      
+      return { success: false, error: 'Login failed' };
+    } catch (error: any) {
+      console.error('Login error:', error);
+      setIsLoading(false);
+      
+      if (error.name === 'UserNotConfirmedException') {
+        setPendingEmail(email);
+        setNeedsConfirmation(true);
+        return { success: false, error: 'Please verify your email first' };
+      }
+      
+      return { success: false, error: error.message || 'Login failed' };
+    }
   };
 
-  const signup = async (email: string, _password: string, name: string) => {
+  const signup = async (email: string, password: string, name: string): Promise<{ success: boolean; needsConfirmation?: boolean; error?: string }> => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const newUser: User = {
-      id: generateId(),
-      email,
-      name,
-    };
-    setUser(newUser);
-    setIsLoading(false);
+    try {
+      const result = await signUp({
+        username: email,
+        password,
+        options: {
+          userAttributes: {
+            email,
+            name,
+          },
+        },
+      });
+
+      setIsLoading(false);
+      
+      if (result.isSignUpComplete) {
+        return { success: true };
+      } else {
+        setPendingEmail(email);
+        setNeedsConfirmation(true);
+        return { success: true, needsConfirmation: true };
+      }
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      setIsLoading(false);
+      return { success: false, error: error.message || 'Signup failed' };
+    }
   };
 
-  const logout = () => {
+  const confirmAccount = async (code: string): Promise<{ success: boolean; error?: string }> => {
+    if (!pendingEmail) {
+      return { success: false, error: 'No pending email to confirm' };
+    }
+
+    try {
+      await confirmSignUp({ username: pendingEmail, confirmationCode: code });
+      setNeedsConfirmation(false);
+      return { success: true };
+    } catch (error: any) {
+      console.error('Confirmation error:', error);
+      return { success: false, error: error.message || 'Confirmation failed' };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
     setUser(null);
     setCouple(null);
     setExpenses([]);
     setSettlements([]);
-    localStorage.clear();
+    setNeedsConfirmation(false);
+    setPendingEmail(null);
   };
 
   // Couple functions
-  const createCouple = (name: string, partnerName: string) => {
-    if (!user) return;
-    
-    const newCouple: Couple = {
-      id: generateId(),
-      name,
-      partner1Id: user.id,
-      partner1Name: partnerName,
-      partner1Email: user.email,
-      inviteCode: generateInviteCode(),
-      defaultSplitPercent: 50,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    setCouple(newCouple);
+  const createCouple = async (name: string, partnerName: string): Promise<{ success: boolean; error?: string }> => {
+    if (!user) return { success: false, error: 'Not logged in' };
+
+    try {
+      const inviteCode = generateInviteCode();
+      
+      const result = await client.graphql({
+        query: mutations.createCouple,
+        variables: {
+          input: {
+            name,
+            partner1Id: user.id,
+            partner1Name: partnerName,
+            partner1Email: user.email,
+            inviteCode,
+            defaultSplitPercent: 50,
+          }
+        }
+      });
+
+      const newCouple = (result as any).data?.createCouple;
+      if (newCouple) {
+        setCouple(newCouple);
+        return { success: true };
+      }
+      
+      return { success: false, error: 'Failed to create couple' };
+    } catch (error: any) {
+      console.error('Create couple error:', error);
+      return { success: false, error: error.message || 'Failed to create couple' };
+    }
   };
 
   const joinCouple = async (inviteCode: string, partnerName: string): Promise<{ success: boolean; error?: string }> => {
-    if (!user) {
-      return { success: false, error: 'You must be logged in to join a couple' };
-    }
-    
-    // For localStorage demo: We need to find the couple by invite code
-    // In a real app with GraphQL, this would query: listCouples(filter: { inviteCode: { eq: inviteCode } })
-    
-    // Check localStorage for any couple with this invite code
-    const savedCouple = localStorage.getItem('rickshare_couple');
-    if (savedCouple) {
-      try {
-        const existingCouple: Couple = JSON.parse(savedCouple);
-        if (existingCouple.inviteCode === inviteCode) {
-          const updatedCouple = {
-            ...existingCouple,
+    if (!user) return { success: false, error: 'Not logged in' };
+
+    try {
+      // Find couple by invite code
+      const result = await client.graphql({
+        query: queries.listCouples,
+        variables: {
+          filter: { inviteCode: { eq: inviteCode } }
+        }
+      });
+
+      const couples = (result as any).data?.listCouples?.items || [];
+      
+      if (couples.length === 0) {
+        return { success: false, error: 'Invalid invite code. Please check and try again.' };
+      }
+
+      const coupleToJoin = couples[0];
+      
+      if (coupleToJoin.partner2Id) {
+        return { success: false, error: 'This couple already has two partners.' };
+      }
+
+      // Update the couple to add partner2
+      const updateResult = await client.graphql({
+        query: mutations.updateCouple,
+        variables: {
+          input: {
+            id: coupleToJoin.id,
             partner2Id: user.id,
             partner2Name: partnerName,
             partner2Email: user.email,
-            inviteCode: undefined,
-            updatedAt: new Date().toISOString(),
-          };
-          setCouple(updatedCouple);
-          return { success: true };
+            inviteCode: null, // Clear invite code after use
+          }
         }
-      } catch (e) {
-        console.error('Error parsing couple from localStorage:', e);
+      });
+
+      const updatedCouple = (updateResult as any).data?.updateCouple;
+      if (updatedCouple) {
+        setCouple(updatedCouple);
+        await loadCoupleData(updatedCouple.id);
+        return { success: true };
       }
+
+      return { success: false, error: 'Failed to join couple' };
+    } catch (error: any) {
+      console.error('Join couple error:', error);
+      return { success: false, error: error.message || 'Failed to join couple' };
     }
-    
-    // TODO: When connected to real backend, query GraphQL here
-    // const result = await API.graphql(graphqlOperation(listCouples, { filter: { inviteCode: { eq: inviteCode } } }));
-    
-    return { 
-      success: false, 
-      error: 'Invalid invite code. Make sure you entered it correctly, or ask your partner for a new code.' 
-    };
   };
 
-  const updateCouple = (updates: Partial<Couple>) => {
+  const updateCouple = async (updates: Partial<Couple>) => {
     if (!couple) return;
-    setCouple({
-      ...couple,
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    });
+
+    try {
+      const result = await client.graphql({
+        query: mutations.updateCouple,
+        variables: {
+          input: {
+            id: couple.id,
+            ...updates,
+          }
+        }
+      });
+
+      const updatedCouple = (result as any).data?.updateCouple;
+      if (updatedCouple) {
+        setCouple(updatedCouple);
+      }
+    } catch (error) {
+      console.error('Update couple error:', error);
+    }
   };
 
   // Expense functions
-  const addExpense = (expense: Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>) => {
+  const addExpense = async (expense: Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>) => {
     if (!couple) return;
-    
-    const newExpense: Expense = {
-      ...expense,
-      id: generateId(),
-      coupleId: couple.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    setExpenses(prev => [newExpense, ...prev]);
+
+    try {
+      const result = await client.graphql({
+        query: mutations.createExpense,
+        variables: {
+          input: {
+            coupleId: couple.id,
+            ...expense,
+          }
+        }
+      });
+
+      const newExpense = (result as any).data?.createExpense;
+      if (newExpense) {
+        setExpenses(prev => [newExpense, ...prev]);
+      }
+    } catch (error) {
+      console.error('Add expense error:', error);
+    }
   };
 
-  const updateExpense = (id: string, updates: Partial<Expense>) => {
-    setExpenses(prev =>
-      prev.map(exp =>
-        exp.id === id
-          ? { ...exp, ...updates, updatedAt: new Date().toISOString() }
-          : exp
-      )
-    );
+  const updateExpense = async (id: string, updates: Partial<Expense>) => {
+    try {
+      const result = await client.graphql({
+        query: mutations.updateExpense,
+        variables: {
+          input: {
+            id,
+            ...updates,
+          }
+        }
+      });
+
+      const updatedExpense = (result as any).data?.updateExpense;
+      if (updatedExpense) {
+        setExpenses(prev =>
+          prev.map(exp => (exp.id === id ? updatedExpense : exp))
+        );
+      }
+    } catch (error) {
+      console.error('Update expense error:', error);
+    }
   };
 
-  const deleteExpense = (id: string) => {
-    setExpenses(prev => prev.filter(exp => exp.id !== id));
+  const deleteExpense = async (id: string) => {
+    try {
+      await client.graphql({
+        query: mutations.deleteExpense,
+        variables: {
+          input: { id }
+        }
+      });
+      setExpenses(prev => prev.filter(exp => exp.id !== id));
+    } catch (error) {
+      console.error('Delete expense error:', error);
+    }
   };
 
   // Settlement functions
-  const addSettlement = (settlement: Omit<Settlement, 'id' | 'coupleId' | 'createdAt'>) => {
+  const addSettlement = async (settlement: Omit<Settlement, 'id' | 'coupleId' | 'createdAt'>) => {
     if (!couple) return;
-    
-    const newSettlement: Settlement = {
-      ...settlement,
-      id: generateId(),
-      coupleId: couple.id,
-      createdAt: new Date().toISOString(),
-    };
-    setSettlements(prev => [newSettlement, ...prev]);
+
+    try {
+      const result = await client.graphql({
+        query: mutations.createSettlement,
+        variables: {
+          input: {
+            coupleId: couple.id,
+            ...settlement,
+          }
+        }
+      });
+
+      const newSettlement = (result as any).data?.createSettlement;
+      if (newSettlement) {
+        setSettlements(prev => [newSettlement, ...prev]);
+      }
+    } catch (error) {
+      console.error('Add settlement error:', error);
+    }
   };
 
   // Calculate balance
@@ -250,8 +436,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     user,
     isAuthenticated: !!user,
     isLoading,
+    needsConfirmation,
+    pendingEmail,
     login,
     signup,
+    confirmAccount,
     logout,
     couple,
     createCouple,
@@ -264,6 +453,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     settlements,
     addSettlement,
     balance,
+    refreshData,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
@@ -276,4 +466,3 @@ export function useApp() {
   }
   return context;
 }
-
