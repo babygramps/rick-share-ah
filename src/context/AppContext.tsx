@@ -14,8 +14,14 @@ import { calculateBalance, generateInviteCode } from '../utils/helpers';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 
-// Create GraphQL client
-const client = generateClient();
+// Lazy GraphQL client - only created after Amplify is configured
+let _client: ReturnType<typeof generateClient> | null = null;
+const getClient = () => {
+  if (!_client) {
+    _client = generateClient();
+  }
+  return _client;
+};
 
 interface AppContextType {
   // Auth state
@@ -93,7 +99,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const loadUserData = async (userId: string) => {
     try {
       // Find couple where user is partner1 or partner2
-      const coupleResult = await client.graphql({
+      const coupleResult = await getClient().graphql({
         query: queries.listCouples,
         variables: {
           filter: {
@@ -122,14 +128,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const loadCoupleData = async (coupleId: string) => {
     try {
       // Load expenses
-      const expenseResult = await client.graphql({
+      const expenseResult = await getClient().graphql({
         query: queries.expensesByCoupleId,
         variables: { coupleId, sortDirection: 'DESC' }
       });
       setExpenses((expenseResult as any).data?.expensesByCoupleId?.items || []);
 
       // Load settlements
-      const settlementResult = await client.graphql({
+      const settlementResult = await getClient().graphql({
         query: queries.settlementsByCoupleId,
         variables: { coupleId, sortDirection: 'DESC' }
       });
@@ -242,7 +248,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       const inviteCode = generateInviteCode();
       
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: mutations.createCouple,
         variables: {
           input: {
@@ -274,7 +280,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     try {
       // Find couple by invite code
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: queries.listCouples,
         variables: {
           filter: { inviteCode: { eq: inviteCode } }
@@ -294,7 +300,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       // Update the couple to add partner2
-      const updateResult = await client.graphql({
+      const updateResult = await getClient().graphql({
         query: mutations.updateCouple,
         variables: {
           input: {
@@ -325,7 +331,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!couple) return;
 
     try {
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: mutations.updateCouple,
         variables: {
           input: {
@@ -349,7 +355,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!couple) return;
 
     try {
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: mutations.createExpense,
         variables: {
           input: {
@@ -370,7 +376,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const updateExpense = async (id: string, updates: Partial<Expense>) => {
     try {
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: mutations.updateExpense,
         variables: {
           input: {
@@ -393,7 +399,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const deleteExpense = async (id: string) => {
     try {
-      await client.graphql({
+      await getClient().graphql({
         query: mutations.deleteExpense,
         variables: {
           input: { id }
@@ -410,7 +416,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!couple) return;
 
     try {
-      const result = await client.graphql({
+      const result = await getClient().graphql({
         query: mutations.createSettlement,
         variables: {
           input: {
