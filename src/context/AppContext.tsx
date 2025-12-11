@@ -302,6 +302,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       // Update the couple to add partner2
+      // Note: We don't clear inviteCode here because partner2 doesn't have permission
+      // to modify owner-protected fields. The code becomes invalid anyway once partner2Id is set.
       const updateResult = await getClient().graphql({
         query: mutations.updateCouple,
         variables: {
@@ -310,7 +312,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
             partner2Id: user.id,
             partner2Name: partnerName,
             partner2Email: user.email,
-            inviteCode: null, // Clear invite code after use
           }
         }
       });
