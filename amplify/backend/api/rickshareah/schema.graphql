@@ -1,4 +1,11 @@
-type Couple @model @auth(rules: [{ allow: owner }]) {
+# Couple can be:
+# - Created/updated by owner (partner1)
+# - Read by any authenticated user (to find by invite code)
+# - Updated by partner2 when joining (via owner field update)
+type Couple @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read] }
+]) {
   id: ID!
   name: String!
   partner1Id: String!
@@ -7,13 +14,18 @@ type Couple @model @auth(rules: [{ allow: owner }]) {
   partner2Id: String
   partner2Name: String
   partner2Email: String
-  inviteCode: String
+  inviteCode: String @index(name: "byInviteCode")
   defaultSplitPercent: Int!
   expenses: [Expense] @hasMany
   settlements: [Settlement] @hasMany
 }
 
-type Expense @model @auth(rules: [{ allow: owner }]) {
+# Expenses: owner can do everything, but we need both partners to access
+# Using private for now - both authenticated partners can read/write
+type Expense @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read, create, update, delete] }
+]) {
   id: ID!
   coupleId: ID! @index(name: "byCouple")
   couple: Couple @belongsTo(fields: ["coupleId"])
@@ -28,7 +40,11 @@ type Expense @model @auth(rules: [{ allow: owner }]) {
   note: String
 }
 
-type Settlement @model @auth(rules: [{ allow: owner }]) {
+# Settlements: same auth as expenses
+type Settlement @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read, create, update, delete] }
+]) {
   id: ID!
   coupleId: ID! @index(name: "byCouple")
   couple: Couple @belongsTo(fields: ["coupleId"])
