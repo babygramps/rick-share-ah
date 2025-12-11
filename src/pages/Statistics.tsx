@@ -3,7 +3,6 @@ import { useApp } from '../context/AppContext';
 import { Card, CardHeader, CardTitle } from '../components/ui/Card';
 import { formatCurrency, getCategoryInfo, groupExpensesByMonth, formatMonthKey } from '../utils/helpers';
 import { CATEGORIES } from '../types';
-import type { Expense } from '../types';
 
 type TimeRange = 'all' | '30' | '90' | '365';
 
@@ -276,7 +275,7 @@ export function Statistics() {
           </CardHeader>
           
           <div className="flex items-end gap-2 h-40">
-            {stats.monthlyData.map((month, index) => (
+            {stats.monthlyData.map((month) => (
               <div 
                 key={month.key} 
                 className="flex-1 flex flex-col items-center justify-end h-full"
@@ -362,7 +361,7 @@ export function Statistics() {
               {formatCurrency(
                 timeRange === 'all' 
                   ? stats.totalSpending / Math.max(1, Math.ceil((Date.now() - new Date(expenses[expenses.length - 1]?.date || Date.now()).getTime()) / (1000 * 60 * 60 * 24)))
-                  : stats.totalSpending / parseInt(timeRange === 'all' ? '30' : timeRange)
+                  : stats.totalSpending / parseInt(timeRange)
               )}
             </p>
           </div>
