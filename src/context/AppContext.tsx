@@ -15,7 +15,7 @@ interface AppContextType {
   // Couple state
   couple: Couple | null;
   createCouple: (name: string, partnerName: string) => void;
-  joinCouple: (inviteCode: string, partnerName: string) => void;
+  joinCouple: (inviteCode: string, partnerName: string) => Promise<{ success: boolean; error?: string }>;
   updateCouple: (updates: Partial<Couple>) => void;
 
   // Expenses
@@ -154,20 +154,43 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setCouple(newCouple);
   };
 
-  const joinCouple = (inviteCode: string, partnerName: string) => {
-    if (!user || !couple) return;
-    
-    // In a real app, this would validate the invite code server-side
-    if (couple.inviteCode === inviteCode) {
-      setCouple({
-        ...couple,
-        partner2Id: user.id,
-        partner2Name: partnerName,
-        partner2Email: user.email,
-        inviteCode: undefined,
-        updatedAt: new Date().toISOString(),
-      });
+  const joinCouple = async (inviteCode: string, partnerName: string): Promise<{ success: boolean; error?: string }> => {
+    if (!user) {
+      return { success: false, error: 'You must be logged in to join a couple' };
     }
+    
+    // For localStorage demo: We need to find the couple by invite code
+    // In a real app with GraphQL, this would query: listCouples(filter: { inviteCode: { eq: inviteCode } })
+    
+    // Check localStorage for any couple with this invite code
+    const savedCouple = localStorage.getItem('rickshare_couple');
+    if (savedCouple) {
+      try {
+        const existingCouple: Couple = JSON.parse(savedCouple);
+        if (existingCouple.inviteCode === inviteCode) {
+          const updatedCouple = {
+            ...existingCouple,
+            partner2Id: user.id,
+            partner2Name: partnerName,
+            partner2Email: user.email,
+            inviteCode: undefined,
+            updatedAt: new Date().toISOString(),
+          };
+          setCouple(updatedCouple);
+          return { success: true };
+        }
+      } catch (e) {
+        console.error('Error parsing couple from localStorage:', e);
+      }
+    }
+    
+    // TODO: When connected to real backend, query GraphQL here
+    // const result = await API.graphql(graphqlOperation(listCouples, { filter: { inviteCode: { eq: inviteCode } } }));
+    
+    return { 
+      success: false, 
+      error: 'Invalid invite code. Make sure you entered it correctly, or ask your partner for a new code.' 
+    };
   };
 
   const updateCouple = (updates: Partial<Couple>) => {
