@@ -1,4 +1,4 @@
-import type { Expense, Settlement, Balance, ExpenseCategory } from '../types';
+import type { Expense, Settlement, Balance } from '../types';
 import { CATEGORIES } from '../types';
 
 /**
