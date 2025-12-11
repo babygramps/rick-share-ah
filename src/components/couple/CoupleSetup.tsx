@@ -11,7 +11,7 @@ export function CoupleSetup() {
   const [inviteCode, setInviteCode] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user, createCouple, joinCouple, couple } = useApp();
+  const { user, createCouple, joinCouple, couple, logout } = useApp();
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +88,13 @@ export function CoupleSetup() {
             >
               Continue to Dashboard →
             </Button>
+
+            <button
+              onClick={logout}
+              className="font-mono text-xs text-[var(--color-coral)] hover:underline cursor-pointer mt-4"
+            >
+              Sign out / Switch account
+            </button>
           </div>
         </Card>
       </div>
@@ -106,6 +113,17 @@ export function CoupleSetup() {
           <p className="font-mono text-sm mt-2 text-[var(--color-plum)]/70">
             Let's set up your couple account
           </p>
+          <div className="mt-4 pt-4 border-t-2 border-dashed border-[var(--color-plum)]/20">
+            <p className="font-mono text-xs text-[var(--color-plum)]/50 mb-2">
+              Signed in as {user?.email}
+            </p>
+            <button
+              onClick={logout}
+              className="font-mono text-xs text-[var(--color-coral)] hover:underline cursor-pointer"
+            >
+              Sign out / Switch account
+            </button>
+          </div>
         </div>
 
         {mode === 'choose' && (
