@@ -6,7 +6,7 @@ import { Modal } from '../components/ui/Modal';
 import { Card } from '../components/ui/Card';
 import { Select } from '../components/ui/Select';
 import { Button } from '../components/ui/Button';
-import type { Expense, ExpenseCategory } from '../types';
+import type { Expense } from '../types';
 import { CATEGORIES } from '../types';
 import { groupExpensesByMonth, formatMonthKey } from '../utils/helpers';
 

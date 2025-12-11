@@ -1,4 +1,5 @@
-import { ReactNode, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { Card, CardHeader, CardTitle } from './Card';
 import { Button } from './Button';
 

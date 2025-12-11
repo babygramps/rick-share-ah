@@ -27,7 +27,8 @@ export function Settings() {
   };
 
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  const totalSettlements = settlements.reduce((sum, set) => sum + set.amount, 0);
+  const _totalSettlements = settlements.reduce((sum, set) => sum + set.amount, 0);
+  void _totalSettlements; // Used for future stats display
 
   return (
     <div className="space-y-6 max-w-lg mx-auto">

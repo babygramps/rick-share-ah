@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import type { Couple, Expense, Settlement, User, Balance } from '../types';
 import { calculateBalance, generateId, generateInviteCode } from '../utils/helpers';
 

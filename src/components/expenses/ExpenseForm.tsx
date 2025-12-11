@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Expense, ExpenseCategory } from '../../types';
 import { CATEGORIES } from '../../types';
 import { useApp } from '../../context/AppContext';

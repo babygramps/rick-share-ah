@@ -111,7 +111,7 @@
               {
                 "Ref": "referencetotransformerrootstackExpenseNestedStackExpenseNestedStackResource7D8E85F1OutputstransformerrootstackExpenseExpenseTable04289514Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:b9a9d693-8b49-4edc-948a-e24868f07bf2\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
             ]
           ]
         },
@@ -200,7 +200,7 @@
               {
                 "Ref": "referencetotransformerrootstackSettlementNestedStackSettlementNestedStackResourceAA98924EOutputstransformerrootstackSettlementSettlementTable3B492906Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:b9a9d693-8b49-4edc-948a-e24868f07bf2\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
             ]
           ]
         },
@@ -289,7 +289,7 @@
               {
                 "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleTable8FE46B57Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:b9a9d693-8b49-4edc-948a-e24868f07bf2\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
             ]
           ]
         },
@@ -333,7 +333,7 @@
               {
                 "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleTable8FE46B57Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:b9a9d693-8b49-4edc-948a-e24868f07bf2\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
             ]
           ]
         },
