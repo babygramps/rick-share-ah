@@ -1,10 +1,10 @@
 # Couple can be:
-# - Created/updated by owner (partner1)
-# - Read by any authenticated user (to find by invite code)
-# - Updated by partner2 when joining (via owner field update)
+# - Created by owner (partner1)
+# - Read/Updated by any authenticated user (needed for partner2 to join via invite code)
+# Note: Invite code verification in app logic provides security for join
 type Couple @model @auth(rules: [
   { allow: owner },
-  { allow: private, operations: [read] }
+  { allow: private, operations: [read, update] }
 ]) {
   id: ID!
   name: String!
