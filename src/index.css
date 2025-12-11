@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/* ==========================================
+   RICK & SHARE-AH - Brutalist-Cute Theme
+   ========================================== */
+
+/* CSS Variables for our Cozy Brutalist palette */
+:root {
+  /* Core Colors */
+  --color-cream: #FFF8F0;
+  --color-coral: #FF6B6B;
+  --color-sage: #95D5B2;
+  --color-plum: #5C374C;
+  --color-sunshine: #FFE66D;
+  --color-sky: #74C0FC;
+  --color-lavender: #E4C1F9;
+  
+  /* Semantic Colors */
+  --color-bg: var(--color-cream);
+  --color-text: var(--color-plum);
+  --color-border: var(--color-plum);
+  --color-positive: var(--color-sage);
+  --color-negative: var(--color-coral);
+  --color-highlight: var(--color-sunshine);
+  
+  /* Typography */
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  
+  /* Brutalist Borders */
+  --border-thick: 3px solid var(--color-border);
+  --border-chunky: 4px solid var(--color-border);
+  
+  /* Shadows - offset for sticker effect */
+  --shadow-brutal: 4px 4px 0px var(--color-plum);
+  --shadow-brutal-sm: 2px 2px 0px var(--color-plum);
+  --shadow-brutal-hover: 6px 6px 0px var(--color-plum);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Brutalist Button Base */
+.btn-brutal {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-brutal);
+  transition: all 0.1s ease;
+  cursor: pointer;
+}
+
+.btn-brutal:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-brutal-hover);
+}
+
+.btn-brutal:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* Card Base */
+.card-brutal {
+  background: white;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-brutal);
+}
+
+/* Input Base */
+.input-brutal {
+  font-family: var(--font-mono);
+  border: var(--border-thick);
+  background: white;
+  outline: none;
+  transition: box-shadow 0.1s ease;
+}
+
+.input-brutal:focus {
+  box-shadow: var(--shadow-brutal-sm);
+}
+
+/* Utility Classes */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Animations */
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.3s ease-in-out;
+}
+
+/* Stagger animation delays */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+  border-left: var(--border-thick);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-plum);
+  border: 2px solid var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-coral);
+}
