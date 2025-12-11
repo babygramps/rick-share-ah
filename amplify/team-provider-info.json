@@ -10,6 +10,20 @@
       "StackName": "amplify-rickshareah-dev-326e7",
       "StackId": "arn:aws:cloudformation:us-west-1:039593144912:stack/amplify-rickshareah-dev-326e7/f0227f70-d6b6-11f0-ad4a-0243bbacc3e9",
       "AmplifyAppId": "d5hdolte4cjfx"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d5hdolte4cjfx",
+          "type": "cicd"
+        }
+      },
+      "auth": {
+        "rickshareahea33e0e6": {}
+      },
+      "api": {
+        "rickshareah": {}
+      }
     }
   }
 }

@@ -1,0 +1,13 @@
+{
+    "AppSyncApiName": "rickshareah",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authrickshareahea33e0e6",
+            "Outputs.UserPoolId"
+        ]
+    },
+    "S3DeploymentBucket": "amplify-rickshareah-dev-326e7-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/6b134a132fd9f442313cdcd62e8a51048b647a3f"
+}

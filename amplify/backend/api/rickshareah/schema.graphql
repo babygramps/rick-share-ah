@@ -1,0 +1,40 @@
+type Couple @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  name: String!
+  partner1Id: String!
+  partner1Name: String!
+  partner1Email: String!
+  partner2Id: String
+  partner2Name: String
+  partner2Email: String
+  inviteCode: String
+  defaultSplitPercent: Int!
+  expenses: [Expense] @hasMany
+  settlements: [Settlement] @hasMany
+}
+
+type Expense @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  coupleId: ID! @index(name: "byCouple")
+  couple: Couple @belongsTo(fields: ["coupleId"])
+  description: String!
+  amount: Int!
+  paidBy: String!
+  splitType: String!
+  partner1Share: Int!
+  partner2Share: Int!
+  category: String!
+  date: AWSDate!
+  note: String
+}
+
+type Settlement @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  coupleId: ID! @index(name: "byCouple")
+  couple: Couple @belongsTo(fields: ["coupleId"])
+  amount: Int!
+  paidBy: String!
+  paidTo: String!
+  date: AWSDate!
+  note: String
+}

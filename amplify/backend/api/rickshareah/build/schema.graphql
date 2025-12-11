@@ -1,0 +1,506 @@
+type Couple @aws_cognito_user_pools {
+  id: ID!
+  name: String!
+  partner1Id: String!
+  partner1Name: String!
+  partner1Email: String!
+  partner2Id: String
+  partner2Name: String
+  partner2Email: String
+  inviteCode: String
+  defaultSplitPercent: Int!
+  expenses(filter: ModelExpenseFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelExpenseConnection
+  settlements(filter: ModelSettlementFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelSettlementConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  owner: String
+}
+
+type Expense @aws_cognito_user_pools {
+  id: ID!
+  coupleId: ID!
+  couple: Couple
+  description: String!
+  amount: Int!
+  paidBy: String!
+  splitType: String!
+  partner1Share: Int!
+  partner2Share: Int!
+  category: String!
+  date: AWSDate!
+  note: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  coupleExpensesId: ID
+  owner: String
+}
+
+type Settlement @aws_cognito_user_pools {
+  id: ID!
+  coupleId: ID!
+  couple: Couple
+  amount: Int!
+  paidBy: String!
+  paidTo: String!
+  date: AWSDate!
+  note: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  coupleSettlementsId: ID
+  owner: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelCoupleConnection @aws_cognito_user_pools {
+  items: [Couple]!
+  nextToken: String
+}
+
+input ModelCoupleFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  partner1Id: ModelStringInput
+  partner1Name: ModelStringInput
+  partner1Email: ModelStringInput
+  partner2Id: ModelStringInput
+  partner2Name: ModelStringInput
+  partner2Email: ModelStringInput
+  inviteCode: ModelStringInput
+  defaultSplitPercent: ModelIntInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelCoupleFilterInput]
+  or: [ModelCoupleFilterInput]
+  not: ModelCoupleFilterInput
+  owner: ModelStringInput
+}
+
+type Query {
+  getCouple(id: ID!): Couple @aws_cognito_user_pools
+  listCouples(filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection @aws_cognito_user_pools
+  getExpense(id: ID!): Expense @aws_cognito_user_pools
+  listExpenses(filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
+  expensesByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
+  getSettlement(id: ID!): Settlement @aws_cognito_user_pools
+  listSettlements(filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection @aws_cognito_user_pools
+  settlementsByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection @aws_cognito_user_pools
+}
+
+input ModelCoupleConditionInput {
+  name: ModelStringInput
+  partner1Id: ModelStringInput
+  partner1Name: ModelStringInput
+  partner1Email: ModelStringInput
+  partner2Id: ModelStringInput
+  partner2Name: ModelStringInput
+  partner2Email: ModelStringInput
+  inviteCode: ModelStringInput
+  defaultSplitPercent: ModelIntInput
+  and: [ModelCoupleConditionInput]
+  or: [ModelCoupleConditionInput]
+  not: ModelCoupleConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  owner: ModelStringInput
+}
+
+input CreateCoupleInput {
+  id: ID
+  name: String!
+  partner1Id: String!
+  partner1Name: String!
+  partner1Email: String!
+  partner2Id: String
+  partner2Name: String
+  partner2Email: String
+  inviteCode: String
+  defaultSplitPercent: Int!
+}
+
+input UpdateCoupleInput {
+  id: ID!
+  name: String
+  partner1Id: String
+  partner1Name: String
+  partner1Email: String
+  partner2Id: String
+  partner2Name: String
+  partner2Email: String
+  inviteCode: String
+  defaultSplitPercent: Int
+}
+
+input DeleteCoupleInput {
+  id: ID!
+}
+
+type Mutation {
+  createCouple(input: CreateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
+  updateCouple(input: UpdateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
+  deleteCouple(input: DeleteCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
+  createExpense(input: CreateExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
+  updateExpense(input: UpdateExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
+  deleteExpense(input: DeleteExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
+  createSettlement(input: CreateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
+  updateSettlement(input: UpdateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
+  deleteSettlement(input: DeleteSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
+}
+
+input ModelSubscriptionCoupleFilterInput {
+  id: ModelSubscriptionIDInput
+  name: ModelSubscriptionStringInput
+  partner1Id: ModelSubscriptionStringInput
+  partner1Name: ModelSubscriptionStringInput
+  partner1Email: ModelSubscriptionStringInput
+  partner2Id: ModelSubscriptionStringInput
+  partner2Name: ModelSubscriptionStringInput
+  partner2Email: ModelSubscriptionStringInput
+  inviteCode: ModelSubscriptionStringInput
+  defaultSplitPercent: ModelSubscriptionIntInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionCoupleFilterInput]
+  or: [ModelSubscriptionCoupleFilterInput]
+  coupleExpensesId: ModelSubscriptionIDInput
+  coupleSettlementsId: ModelSubscriptionIDInput
+  owner: ModelStringInput
+}
+
+type Subscription {
+  onCreateCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["createCouple"]) @aws_cognito_user_pools
+  onUpdateCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["updateCouple"]) @aws_cognito_user_pools
+  onDeleteCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["deleteCouple"]) @aws_cognito_user_pools
+  onCreateExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["createExpense"]) @aws_cognito_user_pools
+  onUpdateExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["updateExpense"]) @aws_cognito_user_pools
+  onDeleteExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["deleteExpense"]) @aws_cognito_user_pools
+  onCreateSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["createSettlement"]) @aws_cognito_user_pools
+  onUpdateSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["updateSettlement"]) @aws_cognito_user_pools
+  onDeleteSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["deleteSettlement"]) @aws_cognito_user_pools
+}
+
+type ModelExpenseConnection @aws_cognito_user_pools {
+  items: [Expense]!
+  nextToken: String
+}
+
+input ModelExpenseFilterInput {
+  id: ModelIDInput
+  coupleId: ModelIDInput
+  description: ModelStringInput
+  amount: ModelIntInput
+  paidBy: ModelStringInput
+  splitType: ModelStringInput
+  partner1Share: ModelIntInput
+  partner2Share: ModelIntInput
+  category: ModelStringInput
+  date: ModelStringInput
+  note: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelExpenseFilterInput]
+  or: [ModelExpenseFilterInput]
+  not: ModelExpenseFilterInput
+  coupleExpensesId: ModelIDInput
+  owner: ModelStringInput
+}
+
+input ModelExpenseConditionInput {
+  coupleId: ModelIDInput
+  description: ModelStringInput
+  amount: ModelIntInput
+  paidBy: ModelStringInput
+  splitType: ModelStringInput
+  partner1Share: ModelIntInput
+  partner2Share: ModelIntInput
+  category: ModelStringInput
+  date: ModelStringInput
+  note: ModelStringInput
+  and: [ModelExpenseConditionInput]
+  or: [ModelExpenseConditionInput]
+  not: ModelExpenseConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  coupleExpensesId: ModelIDInput
+  owner: ModelStringInput
+}
+
+input CreateExpenseInput {
+  id: ID
+  coupleId: ID!
+  description: String!
+  amount: Int!
+  paidBy: String!
+  splitType: String!
+  partner1Share: Int!
+  partner2Share: Int!
+  category: String!
+  date: AWSDate!
+  note: String
+  coupleExpensesId: ID
+}
+
+input UpdateExpenseInput {
+  id: ID!
+  coupleId: ID
+  description: String
+  amount: Int
+  paidBy: String
+  splitType: String
+  partner1Share: Int
+  partner2Share: Int
+  category: String
+  date: AWSDate
+  note: String
+  coupleExpensesId: ID
+}
+
+input DeleteExpenseInput {
+  id: ID!
+}
+
+input ModelSubscriptionExpenseFilterInput {
+  id: ModelSubscriptionIDInput
+  coupleId: ModelSubscriptionIDInput
+  description: ModelSubscriptionStringInput
+  amount: ModelSubscriptionIntInput
+  paidBy: ModelSubscriptionStringInput
+  splitType: ModelSubscriptionStringInput
+  partner1Share: ModelSubscriptionIntInput
+  partner2Share: ModelSubscriptionIntInput
+  category: ModelSubscriptionStringInput
+  date: ModelSubscriptionStringInput
+  note: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionExpenseFilterInput]
+  or: [ModelSubscriptionExpenseFilterInput]
+  owner: ModelStringInput
+}
+
+type ModelSettlementConnection @aws_cognito_user_pools {
+  items: [Settlement]!
+  nextToken: String
+}
+
+input ModelSettlementFilterInput {
+  id: ModelIDInput
+  coupleId: ModelIDInput
+  amount: ModelIntInput
+  paidBy: ModelStringInput
+  paidTo: ModelStringInput
+  date: ModelStringInput
+  note: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelSettlementFilterInput]
+  or: [ModelSettlementFilterInput]
+  not: ModelSettlementFilterInput
+  coupleSettlementsId: ModelIDInput
+  owner: ModelStringInput
+}
+
+input ModelSettlementConditionInput {
+  coupleId: ModelIDInput
+  amount: ModelIntInput
+  paidBy: ModelStringInput
+  paidTo: ModelStringInput
+  date: ModelStringInput
+  note: ModelStringInput
+  and: [ModelSettlementConditionInput]
+  or: [ModelSettlementConditionInput]
+  not: ModelSettlementConditionInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  coupleSettlementsId: ModelIDInput
+  owner: ModelStringInput
+}
+
+input CreateSettlementInput {
+  id: ID
+  coupleId: ID!
+  amount: Int!
+  paidBy: String!
+  paidTo: String!
+  date: AWSDate!
+  note: String
+  coupleSettlementsId: ID
+}
+
+input UpdateSettlementInput {
+  id: ID!
+  coupleId: ID
+  amount: Int
+  paidBy: String
+  paidTo: String
+  date: AWSDate
+  note: String
+  coupleSettlementsId: ID
+}
+
+input DeleteSettlementInput {
+  id: ID!
+}
+
+input ModelSubscriptionSettlementFilterInput {
+  id: ModelSubscriptionIDInput
+  coupleId: ModelSubscriptionIDInput
+  amount: ModelSubscriptionIntInput
+  paidBy: ModelSubscriptionStringInput
+  paidTo: ModelSubscriptionStringInput
+  date: ModelSubscriptionStringInput
+  note: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionSettlementFilterInput]
+  or: [ModelSubscriptionSettlementFilterInput]
+  owner: ModelStringInput
+}
