@@ -15,7 +15,8 @@ import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 
 // Lazy GraphQL client - only created after Amplify is configured
-let _client: ReturnType<typeof generateClient> | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _client: any = null;
 const getClient = () => {
   if (!_client) {
     _client = generateClient();
