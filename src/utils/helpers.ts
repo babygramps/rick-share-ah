@@ -123,7 +123,7 @@ export function calculateBalance(expenses: Expense[], settlements: Settlement[])
 /**
  * Get category info by ID
  */
-export function getCategoryInfo(categoryId: ExpenseCategory) {
+export function getCategoryInfo(categoryId: string) {
   return CATEGORIES.find(c => c.id === categoryId) || CATEGORIES[CATEGORIES.length - 1];
 }
 

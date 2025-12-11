@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Expense, ExpenseCategory } from '../../types';
+import type { Expense } from '../../types';
 import { CATEGORIES } from '../../types';
 import { useApp } from '../../context/AppContext';
 import { parseCurrencyInput, getTodayISO, formatDateForInput } from '../../utils/helpers';
@@ -20,10 +20,10 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
 
   const [description, setDescription] = useState(expense?.description || '');
   const [amount, setAmount] = useState(expense ? (expense.amount / 100).toFixed(2) : '');
-  const [paidBy, setPaidBy] = useState<'partner1' | 'partner2'>(expense?.paidBy || 'partner1');
-  const [splitType, setSplitType] = useState<'equal' | 'percentage' | 'exact'>(expense?.splitType || 'equal');
+  const [paidBy, setPaidBy] = useState(expense?.paidBy || 'partner1');
+  const [splitType, setSplitType] = useState(expense?.splitType || 'equal');
   const [partner1Share, setPartner1Share] = useState(expense?.partner1Share?.toString() || '50');
-  const [category, setCategory] = useState<ExpenseCategory>(expense?.category || 'food');
+  const [category, setCategory] = useState(expense?.category || 'food');
   const [date, setDate] = useState(expense ? formatDateForInput(expense.date) : getTodayISO());
   const [note, setNote] = useState(expense?.note || '');
 
@@ -154,7 +154,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           label="Who paid?"
           options={partnerOptions}
           value={paidBy}
-          onChange={(e) => setPaidBy(e.target.value as 'partner1' | 'partner2')}
+          onChange={(e) => setPaidBy(e.target.value)}
         />
 
         {/* Category */}
@@ -162,7 +162,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           label="Category"
           options={categoryOptions}
           value={category}
-          onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
+          onChange={(e) => setCategory(e.target.value)}
         />
 
         {/* Date */}
@@ -179,7 +179,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           label="How to split?"
           options={splitOptions}
           value={splitType}
-          onChange={(e) => setSplitType(e.target.value as 'equal' | 'percentage' | 'exact')}
+          onChange={(e) => setSplitType(e.target.value)}
         />
 
         {/* Custom split fields */}
