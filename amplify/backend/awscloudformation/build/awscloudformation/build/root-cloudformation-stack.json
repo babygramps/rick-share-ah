@@ -199,6 +199,26 @@
         }
       }
     },
+    "apirickshareah": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-rickshareah-dev-326e7-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "Parameters": {
+          "AppSyncApiName": "rickshareah",
+          "DynamoDBBillingMode": "PAY_PER_REQUEST",
+          "DynamoDBEnableServerSideEncryption": false,
+          "AuthCognitoUserPoolId": {
+            "Fn::GetAtt": [
+              "authrickshareahea33e0e6",
+              "Outputs.UserPoolId"
+            ]
+          },
+          "S3DeploymentBucket": "amplify-rickshareah-dev-326e7-deployment",
+          "S3DeploymentRootKey": "amplify-appsync-files/75af06ad018910d45fa893e6394d3c80c35b2766",
+          "env": "dev"
+        }
+      }
+    },
     "authrickshareahea33e0e6": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
@@ -249,26 +269,6 @@
           },
           "breakCircularDependency": true,
           "dependsOn": "",
-          "env": "dev"
-        }
-      }
-    },
-    "apirickshareah": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "TemplateURL": "https://s3.amazonaws.com/amplify-rickshareah-dev-326e7-deployment/amplify-cfn-templates/api/cloudformation-template.json",
-        "Parameters": {
-          "AppSyncApiName": "rickshareah",
-          "DynamoDBBillingMode": "PAY_PER_REQUEST",
-          "DynamoDBEnableServerSideEncryption": false,
-          "AuthCognitoUserPoolId": {
-            "Fn::GetAtt": [
-              "authrickshareahea33e0e6",
-              "Outputs.UserPoolId"
-            ]
-          },
-          "S3DeploymentBucket": "amplify-rickshareah-dev-326e7-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/6b134a132fd9f442313cdcd62e8a51048b647a3f",
           "env": "dev"
         }
       }

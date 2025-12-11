@@ -12,6 +12,8 @@ $util.qr($ctx.stash.put("hasAuth", true))
 $util.unauthorized()
 #end
 #if( $util.authType() == "User Pool Authorization" )
+  $util.qr($allowedFields.addAll(["id","name","partner1Id","partner1Name","partner1Email","partner2Id","partner2Name","partner2Email","inviteCode","defaultSplitPercent","expenses","settlements"]))
+  $util.qr($nullAllowedFields.addAll([]))
   #if( !$isAuthorized )
     #set( $ownerEntity0 = $util.defaultIfNull($ctx.result.owner, null) )
     #set( $ownerClaim0 = $util.defaultIfNull($ctx.identity.claims.get("sub"), null) )

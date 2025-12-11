@@ -7,6 +7,7 @@ $util.qr($ctx.stash.put("hasAuth", true))
 $util.unauthorized()
 #end
 #if( $util.authType() == "User Pool Authorization" )
+  #set( $isAuthorized = true )
   #set( $ownerEntity0 = $util.defaultIfNull($ctx.args.input.owner, null) )
   #set( $ownerClaim0 = $util.defaultIfNull($ctx.identity.claims.get("sub"), null) )
   #set( $currentClaim1 = $util.defaultIfNull($ctx.identity.claims.get("username"), $util.defaultIfNull($ctx.identity.claims.get("cognito:username"), null)) )

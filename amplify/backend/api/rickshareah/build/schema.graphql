@@ -227,6 +227,7 @@ input ModelCoupleFilterInput {
 type Query {
   getCouple(id: ID!): Couple @aws_cognito_user_pools
   listCouples(filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection @aws_cognito_user_pools
+  couplesByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection @aws_cognito_user_pools
   getExpense(id: ID!): Expense @aws_cognito_user_pools
   listExpenses(filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
   expensesByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools

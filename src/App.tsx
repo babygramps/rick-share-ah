@@ -6,6 +6,7 @@ import { CoupleSetup } from './components/couple/CoupleSetup';
 import { Dashboard } from './pages/Dashboard';
 import { AddExpense } from './pages/AddExpense';
 import { History } from './pages/History';
+import { Statistics } from './pages/Statistics';
 import { Settings } from './pages/Settings';
 
 // Protected route wrapper
@@ -108,6 +109,18 @@ function AppRoutes() {
             <RequireCouple>
               <Layout>
                 <History />
+              </Layout>
+            </RequireCouple>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/stats"
+        element={
+          <ProtectedRoute>
+            <RequireCouple>
+              <Layout>
+                <Statistics />
               </Layout>
             </RequireCouple>
           </ProtectedRoute>
