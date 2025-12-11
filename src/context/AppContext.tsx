@@ -15,11 +15,12 @@ import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 
 // Lazy GraphQL client - only created after Amplify is configured
+// Uses userPool auth for owner-based authorization
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let _client: any = null;
 const getClient = () => {
   if (!_client) {
-    _client = generateClient();
+    _client = generateClient({ authMode: 'userPool' });
   }
   return _client;
 };
