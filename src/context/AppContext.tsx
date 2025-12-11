@@ -129,19 +129,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const loadCoupleData = async (coupleId: string) => {
     try {
-      // Load expenses
+      console.log('Loading couple data for coupleId:', coupleId);
+      
+      // Load expenses (no sortDirection - index doesn't have a sort key)
       const expenseResult = await getClient().graphql({
         query: queries.expensesByCoupleId,
-        variables: { coupleId, sortDirection: 'DESC' }
+        variables: { coupleId }
       });
-      setExpenses((expenseResult as any).data?.expensesByCoupleId?.items || []);
+      console.log('Expense query result:', expenseResult);
+      const loadedExpenses = (expenseResult as any).data?.expensesByCoupleId?.items || [];
+      // Sort client-side by date descending
+      loadedExpenses.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      console.log('Loaded expenses:', loadedExpenses.length, loadedExpenses);
+      setExpenses(loadedExpenses);
 
-      // Load settlements
+      // Load settlements (no sortDirection - index doesn't have a sort key)
       const settlementResult = await getClient().graphql({
         query: queries.settlementsByCoupleId,
-        variables: { coupleId, sortDirection: 'DESC' }
+        variables: { coupleId }
       });
-      setSettlements((settlementResult as any).data?.settlementsByCoupleId?.items || []);
+      console.log('Settlement query result:', settlementResult);
+      const loadedSettlements = (settlementResult as any).data?.settlementsByCoupleId?.items || [];
+      // Sort client-side by date descending
+      loadedSettlements.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      console.log('Loaded settlements:', loadedSettlements.length);
+      setSettlements(loadedSettlements);
     } catch (error) {
       console.error('Error loading couple data:', error);
     }
