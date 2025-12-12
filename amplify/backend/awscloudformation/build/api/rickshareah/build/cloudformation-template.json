@@ -127,7 +127,7 @@
             "ApiId"
           ]
         },
-        "Expires": 1766170292
+        "Expires": 1766171332
       }
     },
     "GraphQLAPINONEDS95A13CF0": {
@@ -139,7 +139,6 @@
             "ApiId"
           ]
         },
-        "Description": "None Data Source for Pipeline functions",
         "Name": "NONE_DS",
         "Type": "NONE"
       }
@@ -456,6 +455,12 @@
           },
           "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
             "Ref": "S3DeploymentRootKey"
+          },
+          "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
+            "Fn::GetAtt": [
+              "GraphQLAPINONEDS95A13CF0",
+              "Name"
+            ]
           }
         },
         "TemplateURL": {
