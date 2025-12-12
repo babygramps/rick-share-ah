@@ -97,3 +97,18 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
 }
+
+// Receipt line items (from Textract)
+export interface ReceiptLineItem {
+  description?: string | null;
+  price?: number | null; // cents
+  quantity?: number | null;
+}
+
+export type LineItemAssignTo = 'partner1' | 'partner2' | 'split' | 'custom';
+
+export interface ReceiptLineItemAssignment extends ReceiptLineItem {
+  id: string;
+  assignTo: LineItemAssignTo;
+  customPercent?: number; // partner1 percent (0-100) when assignTo === 'custom'
+}

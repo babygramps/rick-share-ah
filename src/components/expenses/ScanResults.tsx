@@ -1,5 +1,7 @@
 import { Button } from '../ui/Button';
 import type { ReceiptScanResult } from '../../hooks/useReceiptScan';
+import type { ReceiptLineItemAssignment } from '../../types';
+import { LineItemAssigner } from './LineItemAssigner';
 
 export interface ScanApplySelection {
   description: boolean;
@@ -13,6 +15,8 @@ interface ScanResultsProps {
   scan: ReceiptScanResult;
   selection: ScanApplySelection;
   onSelectionChange: (next: ScanApplySelection) => void;
+  lineItemAssignments?: ReceiptLineItemAssignment[];
+  onLineItemAssignmentsChange?: (next: ReceiptLineItemAssignment[]) => void;
   onApply: () => void;
   onRetry: () => void;
 }
@@ -27,6 +31,8 @@ export function ScanResults({
   scan,
   selection,
   onSelectionChange,
+  lineItemAssignments,
+  onLineItemAssignmentsChange,
   onApply,
   onRetry,
 }: ScanResultsProps) {
@@ -112,6 +118,10 @@ export function ScanResults({
               />
             </label>
           </div>
+
+          {!!lineItemAssignments?.length && !!onLineItemAssignmentsChange && (
+            <LineItemAssigner assignments={lineItemAssignments} onAssignmentsChange={onLineItemAssignmentsChange} />
+          )}
         </div>
       </div>
 

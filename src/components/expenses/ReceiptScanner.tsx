@@ -3,6 +3,8 @@ import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { ScanOverlay, type ScanOverlayMode, type ScanOverlayOutput } from './ScanOverlay';
 import { ScanResults, type ScanApplySelection } from './ScanResults';
+import type { ReceiptLineItemAssignment } from '../../types';
+import { computeLineItemSplitPercent } from './LineItemAssigner';
 import { useReceiptScan } from '../../hooks/useReceiptScan';
 
 export interface ReceiptScannerApplyPayload {
@@ -12,6 +14,8 @@ export interface ReceiptScannerApplyPayload {
   category?: string;
   confidence?: number;
   imageKey?: string;
+  splitType?: 'percentage';
+  partner1SharePercent?: number;
 }
 
 interface ReceiptScannerProps {
@@ -26,6 +30,7 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
   const [imageKey, setImageKey] = useState<string | null>(null);
   const [scanId, setScanId] = useState<string | null>(null);
   const [scan, setScan] = useState<any>(null);
+  const [lineItemAssignments, setLineItemAssignments] = useState<ReceiptLineItemAssignment[]>([]);
 
   const { isUploading, isProcessing, error, uploadAndProcess } = useReceiptScan();
 
@@ -63,9 +68,38 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
     setImageKey(null);
     setScanId(null);
     setScan(null);
+    setLineItemAssignments([]);
     setSelection({ description: true, amount: true, date: true, category: true });
     setMode('camera');
   };
+
+  useEffect(() => {
+    const items = scan?.lineItems;
+    if (!Array.isArray(items) || items.length === 0) {
+      setLineItemAssignments([]);
+      return;
+    }
+
+    const makeId =
+      (globalThis.crypto as any)?.randomUUID?.bind((globalThis.crypto as any) || null) ||
+      (() => `li_${Date.now()}_${Math.random().toString(16).slice(2)}`);
+
+    const next: ReceiptLineItemAssignment[] = items.map((li: any, idx: number) => ({
+      id: `${makeId()}_${idx}`,
+      description: li?.description ?? null,
+      price: li?.price ?? null,
+      quantity: li?.quantity ?? null,
+      assignTo: 'split',
+      customPercent: undefined,
+    }));
+
+    console.log('[receipt-scan] lineItems.init', {
+      scanId,
+      count: next.length,
+      priced: next.filter((x) => typeof x.price === 'number' && x.price > 0).length,
+    });
+    setLineItemAssignments(next);
+  }, [scan?.lineItems, scanId]);
 
   const doProcess = async () => {
     if (!capture) return;
@@ -99,6 +133,20 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
       payload.category = String(scan.category);
     }
 
+    // If we have line items, compute a clean percentage split for the total.
+    if (
+      selection.amount &&
+      typeof scan.totalAmount === 'number' &&
+      Array.isArray(lineItemAssignments) &&
+      lineItemAssignments.length > 0
+    ) {
+      const { partner1Pct, basisCents } = computeLineItemSplitPercent(lineItemAssignments);
+      if (basisCents > 0) {
+        payload.splitType = 'percentage';
+        payload.partner1SharePercent = partner1Pct;
+      }
+    }
+
     console.log('[receipt-scan] apply', { scanId, payload });
     onApply(payload);
     reset();
@@ -113,6 +161,8 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
           scan={scan}
           selection={selection}
           onSelectionChange={setSelection}
+          lineItemAssignments={lineItemAssignments}
+          onLineItemAssignmentsChange={setLineItemAssignments}
           onApply={apply}
           onRetry={() => {
             setScan(null);

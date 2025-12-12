@@ -170,6 +170,15 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
               nextAi.category = true;
             }
 
+            if (payload.splitType === 'percentage' && typeof payload.partner1SharePercent === 'number') {
+              const pct = Math.max(0, Math.min(100, Math.round(payload.partner1SharePercent)));
+              setSplitType('percentage');
+              setPartner1Share(String(pct));
+              nextAi.splitType = true;
+              nextAi.partner1Share = true;
+              console.log('[receipt-scan] apply.to.form.split', { pct });
+            }
+
             setAiFilled((prev) => ({ ...prev, ...nextAi }));
           }}
         />
@@ -230,6 +239,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           options={splitOptions}
           value={splitType}
           onChange={(e) => setSplitType(e.target.value)}
+          className={aiFilled.splitType ? 'ai-filled' : ''}
         />
 
         {/* Custom split fields */}
@@ -244,6 +254,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
                 value={partner1Share}
                 onChange={(e) => setPartner1Share(e.target.value)}
                 error={errors.partner1Share}
+                className={aiFilled.partner1Share ? 'ai-filled' : ''}
               />
               <div>
                 <label className="block font-mono text-sm font-bold uppercase tracking-wider mb-2 text-[var(--color-plum)]">

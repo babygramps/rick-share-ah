@@ -73,11 +73,50 @@ function parseAnalyzeExpenseResponse(resp) {
       ? confidenceCandidates.reduce((a, b) => a + b, 0) / confidenceCandidates.length / 100
       : 0;
 
+  // Textract line items (optional; not present for all receipts)
+  const lineItems = [];
+  const lineItemGroups = doc?.LineItemGroups || [];
+  for (const group of lineItemGroups) {
+    const items = group?.LineItems || [];
+    for (const item of items) {
+      const fields = item?.LineItemExpenseFields || [];
+
+      let description = null;
+      let priceCents = null;
+      let quantity = null;
+
+      for (const f of fields) {
+        const typeText = f?.Type?.Text || f?.Type?.TextDetection?.Text;
+        const valueText = f?.ValueDetection?.Text;
+        if (!typeText || !valueText) continue;
+
+        const t = String(typeText).toUpperCase();
+        if (t === 'ITEM' || t === 'ITEM_DESCRIPTION' || t === 'DESCRIPTION') {
+          description = String(valueText).trim();
+        } else if (t === 'PRICE' || t === 'AMOUNT') {
+          priceCents = parseMoneyToCents(valueText);
+        } else if (t === 'QUANTITY') {
+          const q = Number(String(valueText).replace(/[^\d.-]/g, ''));
+          quantity = Number.isFinite(q) ? Math.max(0, Math.round(q)) : quantity;
+        }
+      }
+
+      if (description || typeof priceCents === 'number') {
+        lineItems.push({
+          description: description || null,
+          price: typeof priceCents === 'number' ? priceCents : null,
+          quantity: typeof quantity === 'number' ? quantity : null,
+        });
+      }
+    }
+  }
+
   return {
     merchantName,
     totalAmount,
     date: dateText,
     confidence,
+    lineItems,
   };
 }
 
@@ -166,6 +205,7 @@ export const handler = async (event, context) => {
       date: parsed.date,
       category: null,
       confidence: parsed.confidence,
+      lineItems: parsed.lineItems || [],
       rawText: null,
       imageUrl: null,
     };
@@ -187,6 +227,7 @@ export const handler = async (event, context) => {
       date: null,
       category: null,
       confidence: 0,
+      lineItems: [],
       rawText: null,
       imageUrl: null,
     };

@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { uploadData } from 'aws-amplify/storage';
 import { generateClient } from 'aws-amplify/api';
 import * as mutations from '../graphql/mutations';
+import type { ReceiptLineItem } from '../types';
 
 export interface ReceiptScanResult {
   id: string;
@@ -11,6 +12,7 @@ export interface ReceiptScanResult {
   date?: string | null; // may be AWSDate or raw
   category?: string | null;
   confidence?: number | null; // 0-1
+  lineItems?: ReceiptLineItem[] | null;
   rawText?: string | null;
   imageUrl?: string | null;
 }

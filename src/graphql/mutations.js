@@ -338,6 +338,12 @@ export const processReceipt = /* GraphQL */ `
       date
       category
       confidence
+      lineItems {
+        description
+        price
+        quantity
+        __typename
+      }
       rawText
       imageUrl
       __typename

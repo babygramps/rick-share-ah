@@ -214,7 +214,7 @@
             ]
           },
           "S3DeploymentBucket": "amplify-rickshareah-dev-326e7-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/fb4b0033219cd94f75ddb19e2f7f1eda7fc58d0c",
+          "S3DeploymentRootKey": "amplify-appsync-files/da167dbf88e2123360b37790e755b0e20a6fca33",
           "env": "dev"
         }
       }
@@ -285,7 +285,7 @@
             ]
           },
           "deploymentBucketName": "amplify-rickshareah-dev-326e7-deployment",
-          "s3Key": "amplify-builds/processReceipt-324f66727653562b3467-build.zip",
+          "s3Key": "amplify-builds/processReceipt-3063364857672f754975-build.zip",
           "env": "dev"
         }
       }

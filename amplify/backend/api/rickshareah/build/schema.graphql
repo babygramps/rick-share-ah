@@ -50,6 +50,12 @@ type Settlement @aws_cognito_user_pools {
   owner: String
 }
 
+type LineItem @aws_cognito_user_pools {
+  description: String
+  price: Int
+  quantity: Int
+}
+
 type ReceiptScan @aws_cognito_user_pools {
   id: ID!
   status: String!
@@ -58,6 +64,7 @@ type ReceiptScan @aws_cognito_user_pools {
   date: AWSDate
   category: String
   confidence: Float
+  lineItems: [LineItem]
   rawText: String
   imageUrl: String
 }
