@@ -78,6 +78,9 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
   const [importResult, setImportResult] = useState<{ created: number; failed: number; skipped: number } | null>(null);
   const [fatalError, setFatalError] = useState<string | null>(null);
 
+  // Row-level overrides for editable fields (paidBy, category) keyed by row index
+  const [rowOverrides, setRowOverrides] = useState<Record<number, { paidBy?: 'partner1' | 'partner2'; category?: string }>>({});
+
   const resetAll = () => {
     setStep('upload');
     setIsDragging(false);
@@ -92,6 +95,7 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
     setIsImporting(false);
     setImportResult(null);
     setFatalError(null);
+    setRowOverrides({});
   };
 
   useEffect(() => {
@@ -202,7 +206,10 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
     return rec[h] ?? '';
   };
 
-  const validateRecord = (rec: Record<string, string>) => {
+  const validateRecord = (
+    rec: Record<string, string>,
+    overrides?: { paidBy?: 'partner1' | 'partner2'; category?: string }
+  ) => {
     const errors: string[] = [];
 
     const description = String(getCell(rec, 'description')).trim();
@@ -217,10 +224,10 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
     if (!iso) errors.push('Invalid date');
 
     const catRaw = String(getCell(rec, 'category')).trim();
-    const category = categoryFromText(catRaw) || 'other';
+    const category = overrides?.category ?? categoryFromText(catRaw) ?? 'other';
 
     const paidByRaw = String(getCell(rec, 'paidBy')).trim();
-    const paidBy = paidByFromText(paidByRaw);
+    const paidBy = overrides?.paidBy ?? paidByFromText(paidByRaw);
 
     const note = String(getCell(rec, 'note')).trim();
 
@@ -247,13 +254,13 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
 
     for (let idx = 0; idx < maxPreviewRows; idx += 1) {
       const rec = records[idx];
-      const { errors, draft } = validateRecord(rec);
+      const { errors, draft } = validateRecord(rec, rowOverrides[idx]);
       out.push({ rowNumber: idx + 1, raw: rec, draft, errors });
     }
 
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [records, mapping, couple?.partner1Name, couple?.partner2Name]);
+  }, [records, mapping, couple?.partner1Name, couple?.partner2Name, rowOverrides]);
 
   const counts = useMemo(() => {
     if (records.length === 0) return { total: 0, valid: 0, invalid: 0 };
@@ -261,13 +268,13 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
     // Count across ALL rows (not just preview), so button + summary are truthful.
     let invalid = 0;
     for (let idx = 0; idx < records.length; idx += 1) {
-      const { errors } = validateRecord(records[idx]);
+      const { errors } = validateRecord(records[idx], rowOverrides[idx]);
       if (errors.length > 0) invalid += 1;
     }
     const valid = records.length - invalid;
     return { total: records.length, valid, invalid };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [records, mapping, couple?.partner1Name, couple?.partner2Name]);
+  }, [records, mapping, couple?.partner1Name, couple?.partner2Name, rowOverrides]);
 
   const importNow = async () => {
     if (!validateMapping(mapping)) return;
@@ -276,7 +283,7 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
     let invalidCount = 0;
 
     for (let idx = 0; idx < records.length; idx += 1) {
-      const { draft, errors } = validateRecord(records[idx]);
+      const { draft, errors } = validateRecord(records[idx], rowOverrides[idx]);
       if (errors.length > 0 || !draft) invalidCount += 1;
       else validDrafts.push(draft);
     }
@@ -495,20 +502,56 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
       {fatalError && <p className="font-mono text-sm text-[var(--color-coral)]">{fatalError}</p>}
 
       <Card padding="sm" className="bg-[var(--color-cream)]">
-        <div className="flex items-center justify-between gap-3">
-          <label className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)]">
-            Skip invalid rows
-          </label>
-          <button
-            type="button"
-            className={`
-              border-[3px] border-[var(--color-plum)] px-3 py-1 font-mono text-xs uppercase
-              ${skipInvalid ? 'bg-[var(--color-sage)]' : 'bg-white'}
-            `}
-            onClick={() => setSkipInvalid((v) => !v)}
-          >
-            {skipInvalid ? 'ON' : 'OFF'}
-          </button>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <label className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)]">
+              Skip invalid rows
+            </label>
+            <button
+              type="button"
+              className={`
+                border-[3px] border-[var(--color-plum)] px-3 py-1 font-mono text-xs uppercase
+                ${skipInvalid ? 'bg-[var(--color-sage)]' : 'bg-white'}
+              `}
+              onClick={() => setSkipInvalid((v) => !v)}
+            >
+              {skipInvalid ? 'ON' : 'OFF'}
+            </button>
+          </div>
+
+          <div className="pt-2 border-t border-[var(--color-plum)]/20">
+            <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)] mb-2">
+              Bulk assign all rows
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="px-3 py-1.5 text-xs font-mono font-bold uppercase border-2 border-[var(--color-plum)] bg-[var(--color-coral)] text-white hover:bg-[#ff5252] transition-colors"
+                onClick={() => {
+                  const all: Record<number, { paidBy?: 'partner1' | 'partner2'; category?: string }> = {};
+                  for (let i = 0; i < records.length; i++) {
+                    all[i] = { ...rowOverrides[i], paidBy: 'partner1' };
+                  }
+                  setRowOverrides(all);
+                }}
+              >
+                All → {couple?.partner1Name || 'Partner 1'}
+              </button>
+              <button
+                type="button"
+                className="px-3 py-1.5 text-xs font-mono font-bold uppercase border-2 border-[var(--color-plum)] bg-[var(--color-sage)] text-[var(--color-plum)] hover:bg-[#7bc9a0] transition-colors"
+                onClick={() => {
+                  const all: Record<number, { paidBy?: 'partner1' | 'partner2'; category?: string }> = {};
+                  for (let i = 0; i < records.length; i++) {
+                    all[i] = { ...rowOverrides[i], paidBy: 'partner2' };
+                  }
+                  setRowOverrides(all);
+                }}
+              >
+                All → {couple?.partner2Name || 'Partner 2'}
+              </button>
+            </div>
+          </div>
         </div>
       </Card>
 
@@ -528,6 +571,10 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
           <tbody>
             {previewRows.map((r) => {
               const bad = r.errors.length > 0;
+              const rowIdx = r.rowNumber - 1; // 0-based index
+              const currentPaidBy = r.draft?.paidBy || rowOverrides[rowIdx]?.paidBy || 'partner1';
+              const currentCategory = r.draft?.category || rowOverrides[rowIdx]?.category || 'other';
+
               return (
                 <tr
                   key={r.rowNumber}
@@ -537,11 +584,45 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
                   `}
                 >
                   <td className="p-3 font-mono text-xs">{r.rowNumber}</td>
-                  <td className="p-3">{r.draft?.description || ''}</td>
+                  <td className="p-3 max-w-[180px] truncate" title={r.draft?.description || ''}>
+                    {r.draft?.description || ''}
+                  </td>
                   <td className="p-3 font-mono text-sm">{r.draft ? `$${(r.draft.amount / 100).toFixed(2)}` : ''}</td>
                   <td className="p-3 font-mono text-sm">{r.draft?.date || ''}</td>
-                  <td className="p-3 font-mono text-sm">{r.draft?.paidBy || ''}</td>
-                  <td className="p-3 font-mono text-sm">{r.draft?.category || ''}</td>
+                  <td className="p-2">
+                    <select
+                      className="w-full px-2 py-1 text-xs font-mono border-2 border-[var(--color-plum)]/30 bg-white cursor-pointer focus:border-[var(--color-plum)] outline-none"
+                      value={currentPaidBy}
+                      onChange={(e) => {
+                        const val = e.target.value as 'partner1' | 'partner2';
+                        setRowOverrides((prev) => ({
+                          ...prev,
+                          [rowIdx]: { ...prev[rowIdx], paidBy: val },
+                        }));
+                      }}
+                    >
+                      <option value="partner1">{couple?.partner1Name || 'Partner 1'}</option>
+                      <option value="partner2">{couple?.partner2Name || 'Partner 2'}</option>
+                    </select>
+                  </td>
+                  <td className="p-2">
+                    <select
+                      className="w-full px-2 py-1 text-xs font-mono border-2 border-[var(--color-plum)]/30 bg-white cursor-pointer focus:border-[var(--color-plum)] outline-none"
+                      value={currentCategory}
+                      onChange={(e) => {
+                        setRowOverrides((prev) => ({
+                          ...prev,
+                          [rowIdx]: { ...prev[rowIdx], category: e.target.value },
+                        }));
+                      }}
+                    >
+                      {CATEGORIES.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.emoji} {c.label}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                   <td className="p-3">
                     {bad ? (
                       <div className="space-y-1">
