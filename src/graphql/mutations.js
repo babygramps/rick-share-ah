@@ -1,22 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const processReceipt = /* GraphQL */ `
-  mutation ProcessReceipt($imageKey: String!) {
-    processReceipt(imageKey: $imageKey) {
-      id
-      status
-      merchantName
-      totalAmount
-      date
-      category
-      confidence
-      rawText
-      imageUrl
-      __typename
-    }
-  }
-`;
 export const createCouple = /* GraphQL */ `
   mutation CreateCouple(
     $input: CreateCoupleInput!
@@ -340,6 +324,22 @@ export const deleteSettlement = /* GraphQL */ `
       updatedAt
       coupleSettlementsId
       owner
+      __typename
+    }
+  }
+`;
+export const processReceipt = /* GraphQL */ `
+  mutation ProcessReceipt($imageKey: String!) {
+    processReceipt(imageKey: $imageKey) {
+      id
+      status
+      merchantName
+      totalAmount
+      date
+      category
+      confidence
+      rawText
+      imageUrl
       __typename
     }
   }

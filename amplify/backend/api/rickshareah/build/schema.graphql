@@ -50,7 +50,7 @@ type Settlement @aws_cognito_user_pools {
   owner: String
 }
 
-type ReceiptScan {
+type ReceiptScan @aws_cognito_user_pools {
   id: ID!
   status: String!
   merchantName: String
