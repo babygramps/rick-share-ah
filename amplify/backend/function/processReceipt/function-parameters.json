@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "storage": {
+      "receipts": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "receiptsBucketName",
+      "environmentVariableName": "RECEIPTS_BUCKET"
+    }
+  ]
+}
+
+

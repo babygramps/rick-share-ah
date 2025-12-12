@@ -32,6 +32,28 @@
       "service": "AppSync"
     }
   },
+  "storage": {
+    "receipts": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  },
+  "function": {
+    "processReceipt": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "storage",
+          "resourceName": "receipts",
+          "attributes": [
+            "BucketName"
+          ]
+        }
+      ]
+    }
+  },
   "auth": {
     "rickshareahea33e0e6": {
       "customAuth": false,

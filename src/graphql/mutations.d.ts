@@ -7,4 +7,5 @@ export const deleteExpense: string;
 export const createSettlement: string;
 export const updateSettlement: string;
 export const deleteSettlement: string;
+export const processReceipt: string;
 

@@ -54,3 +54,20 @@ type Settlement @model @auth(rules: [
   date: AWSDate!
   note: String
 }
+
+# Receipt scanning result returned by Textract processing
+type ReceiptScan {
+  id: ID!
+  status: String! # PENDING, PROCESSING, COMPLETED, FAILED
+  merchantName: String
+  totalAmount: Int
+  date: AWSDate
+  category: String
+  confidence: Float
+  rawText: String
+  imageUrl: String
+}
+
+type Mutation {
+  processReceipt(imageKey: String!): ReceiptScan @function(name: "processReceipt-${env}")
+}

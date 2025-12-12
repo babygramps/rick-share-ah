@@ -3,10 +3,13 @@ import type { Expense } from '../../types';
 import { CATEGORIES } from '../../types';
 import { useApp } from '../../context/AppContext';
 import { parseCurrencyInput, getTodayISO, formatDateForInput } from '../../utils/helpers';
+import { normalizeDateToISO } from '../../utils/receiptParser';
+import { suggestCategoryFromMerchant } from '../../utils/categoryMatcher';
 import { Card, CardHeader, CardTitle } from '../ui/Card';
 import { Input, TextArea } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { Button } from '../ui/Button';
+import { ReceiptScanner } from './ReceiptScanner';
 
 interface ExpenseFormProps {
   expense?: Expense;
@@ -28,6 +31,8 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
   const [note, setNote] = useState(expense?.note || '');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [aiFilled, setAiFilled] = useState<Record<string, boolean>>({});
 
   // Calculate partner2Share based on splitType
   const partner2Share = splitType === 'percentage' 
@@ -127,6 +132,48 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
       </CardHeader>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {!isEditing && (
+          <div className="flex gap-3">
+            <Button type="button" variant="secondary" className="flex-1" onClick={() => setIsScannerOpen(true)}>
+              🧾 Scan Receipt
+            </Button>
+          </div>
+        )}
+
+        <ReceiptScanner
+          isOpen={isScannerOpen}
+          onClose={() => setIsScannerOpen(false)}
+          onApply={(payload) => {
+            console.log('[receipt-scan] apply.to.form', payload);
+            const nextAi: Record<string, boolean> = {};
+
+            if (payload.description) {
+              setDescription(payload.description);
+              nextAi.description = true;
+            }
+            if (typeof payload.amountCents === 'number' && payload.amountCents > 0) {
+              setAmount((payload.amountCents / 100).toFixed(2));
+              nextAi.amount = true;
+            }
+
+            const iso = normalizeDateToISO(payload.date || null);
+            if (iso) {
+              setDate(iso);
+              nextAi.date = true;
+            }
+
+            const suggested =
+              (payload.category as any) ||
+              suggestCategoryFromMerchant(payload.description || null);
+            if (suggested) {
+              setCategory(String(suggested));
+              nextAi.category = true;
+            }
+
+            setAiFilled((prev) => ({ ...prev, ...nextAi }));
+          }}
+        />
+
         {/* Description */}
         <Input
           label="What was it for?"
@@ -135,6 +182,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           onChange={(e) => setDescription(e.target.value)}
           error={errors.description}
           icon="📝"
+          className={aiFilled.description ? 'ai-filled' : ''}
         />
 
         {/* Amount */}
@@ -147,6 +195,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           onChange={(e) => setAmount(e.target.value)}
           error={errors.amount}
           icon="💵"
+          className={aiFilled.amount ? 'ai-filled' : ''}
         />
 
         {/* Who Paid */}
@@ -172,6 +221,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           value={date}
           onChange={(e) => setDate(e.target.value)}
           icon="📅"
+          className={aiFilled.date ? 'ai-filled' : ''}
         />
 
         {/* Split Type */}

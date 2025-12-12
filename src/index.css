@@ -158,6 +158,26 @@ h1, h2, h3, h4, h5, h6 {
   animation: wiggle 0.3s ease-in-out;
 }
 
+/* Receipt scan effects */
+@keyframes receipt-scanline {
+  0% { transform: translateY(-140px); opacity: 0.2; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(140px); opacity: 0.2; }
+}
+
+.receipt-scanline {
+  animation: receipt-scanline 1.6s ease-in-out infinite;
+}
+
+@keyframes ai-filled-pulse {
+  0% { background-color: rgba(255, 230, 109, 0.25); }
+  100% { background-color: white; }
+}
+
+.ai-filled {
+  animation: ai-filled-pulse 900ms ease-out;
+}
+
 /* Stagger animation delays */
 .stagger-1 { animation-delay: 0.05s; }
 .stagger-2 { animation-delay: 0.1s; }
