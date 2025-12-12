@@ -83,40 +83,6 @@
       "type": "cicd"
     }
   },
-  "parameters": {
-    "AMPLIFY_function_processReceipt_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processReceipt"
-        }
-      ]
-    },
-    "AMPLIFY_function_processReceipt_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processReceipt"
-        }
-      ]
-    },
-    "AMPLIFY_hosting_amplifyhosting_appId": {
-      "usedBy": [
-        {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
-        }
-      ]
-    },
-    "AMPLIFY_hosting_amplifyhosting_type": {
-      "usedBy": [
-        {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
-        }
-      ]
-    }
-  },
   "storage": {
     "receipts": {
       "dependsOn": [],

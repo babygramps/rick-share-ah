@@ -198,6 +198,12 @@
           "Functions": [
             {
               "Fn::GetAtt": [
+                "MutationProcessReceiptAuthFNMutationProcessReceiptAuthFNAppSyncFunction1CF91321",
+                "FunctionId"
+              ]
+            },
+            {
+              "Fn::GetAtt": [
                 "InvokeProcessReceiptLambdaDataSourceInvokeProcessReceiptLambdaDataSourceAppSyncFunctionF3A8B38B",
                 "FunctionId"
               ]
@@ -223,6 +229,36 @@
         },
         "TypeName": "Mutation"
       }
+    },
+    "MutationProcessReceiptAuthFNMutationProcessReceiptAuthFNAppSyncFunction1CF91321": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Ref": "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name"
+        },
+        "FunctionVersion": "2018-05-29",
+        "Name": "MutationProcessReceiptAuthFN",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Mutation.processReceipt.auth.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson({})"
+      }
     }
   },
   "Parameters": {
@@ -236,6 +272,9 @@
       "Type": "String"
     },
     "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
+      "Type": "String"
+    },
+    "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
       "Type": "String"
     }
   }

@@ -63,7 +63,6 @@ type ReceiptScan {
 }
 
 type Mutation {
-  processReceipt(imageKey: String!): ReceiptScan
   createCouple(input: CreateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
   updateCouple(input: UpdateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
   deleteCouple(input: DeleteCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
@@ -73,6 +72,7 @@ type Mutation {
   createSettlement(input: CreateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
   updateSettlement(input: UpdateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
   deleteSettlement(input: DeleteSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
+  processReceipt(imageKey: String!): ReceiptScan @aws_cognito_user_pools
 }
 
 input ModelStringInput {
