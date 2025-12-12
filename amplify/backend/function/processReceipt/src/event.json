@@ -1,7 +1,8 @@
 {
   "arguments": {
-    "imageKey": "protected/demo-user/receipts/demo.jpg"
+    "imageKey": "public/test-receipt.jpg"
+  },
+  "identity": {
+    "sub": "test-user-id"
   }
 }
-
-

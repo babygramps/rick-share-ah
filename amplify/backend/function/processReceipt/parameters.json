@@ -1,10 +1,6 @@
 {
-  "receiptsBucketName": {
-    "Fn::GetAtt": [
-      "storagereceipts",
-      "Outputs.BucketName"
-    ]
+  "storagereceiptsBucketName": {
+    "Fn::GetAtt": ["storagereceipts", "Outputs.BucketName"]
   }
 }
-
 

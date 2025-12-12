@@ -57,6 +57,42 @@ export const listCouples = /* GraphQL */ `
     }
   }
 `;
+export const couplesByInviteCode = /* GraphQL */ `
+  query CouplesByInviteCode(
+    $inviteCode: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCoupleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    couplesByInviteCode(
+      inviteCode: $inviteCode
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getExpense = /* GraphQL */ `
   query GetExpense($id: ID!) {
     getExpense(id: $id) {

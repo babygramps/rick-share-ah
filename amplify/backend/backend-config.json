@@ -32,28 +32,6 @@
       "service": "AppSync"
     }
   },
-  "storage": {
-    "receipts": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation"
-    }
-  },
-  "function": {
-    "processReceipt": {
-      "service": "Lambda",
-      "providerPlugin": "awscloudformation",
-      "build": true,
-      "dependsOn": [
-        {
-          "category": "storage",
-          "resourceName": "receipts",
-          "attributes": [
-            "BucketName"
-          ]
-        }
-      ]
-    }
-  },
   "auth": {
     "rickshareahea33e0e6": {
       "customAuth": false,
@@ -82,6 +60,22 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "processReceipt": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "BucketName"
+          ],
+          "category": "storage",
+          "resourceName": "receipts"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "hosting": {
     "amplifyhosting": {
       "lastPushTimeStamp": "2025-12-11T17:42:09.900Z",
@@ -90,6 +84,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_processReceipt_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "processReceipt"
+        }
+      ]
+    },
+    "AMPLIFY_function_processReceipt_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "processReceipt"
+        }
+      ]
+    },
     "AMPLIFY_hosting_amplifyhosting_appId": {
       "usedBy": [
         {
@@ -105,6 +115,13 @@
           "resourceName": "amplifyhosting"
         }
       ]
+    }
+  },
+  "storage": {
+    "receipts": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

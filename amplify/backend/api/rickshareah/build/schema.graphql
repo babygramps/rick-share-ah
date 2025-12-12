@@ -50,6 +50,31 @@ type Settlement @aws_cognito_user_pools {
   owner: String
 }
 
+type ReceiptScan {
+  id: ID!
+  status: String!
+  merchantName: String
+  totalAmount: Int
+  date: AWSDate
+  category: String
+  confidence: Float
+  rawText: String
+  imageUrl: String
+}
+
+type Mutation {
+  processReceipt(imageKey: String!): ReceiptScan
+  createCouple(input: CreateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
+  updateCouple(input: UpdateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
+  deleteCouple(input: DeleteCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
+  createExpense(input: CreateExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
+  updateExpense(input: UpdateExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
+  deleteExpense(input: DeleteExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
+  createSettlement(input: CreateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
+  updateSettlement(input: UpdateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
+  deleteSettlement(input: DeleteSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
+}
+
 input ModelStringInput {
   ne: String
   eq: String
@@ -282,18 +307,6 @@ input UpdateCoupleInput {
 
 input DeleteCoupleInput {
   id: ID!
-}
-
-type Mutation {
-  createCouple(input: CreateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
-  updateCouple(input: UpdateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
-  deleteCouple(input: DeleteCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
-  createExpense(input: CreateExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
-  updateExpense(input: UpdateExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
-  deleteExpense(input: DeleteExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
-  createSettlement(input: CreateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
-  updateSettlement(input: UpdateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
-  deleteSettlement(input: DeleteSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
 }
 
 input ModelSubscriptionCoupleFilterInput {

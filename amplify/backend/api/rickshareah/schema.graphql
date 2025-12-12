@@ -58,7 +58,7 @@ type Settlement @model @auth(rules: [
 # Receipt scanning result returned by Textract processing
 type ReceiptScan {
   id: ID!
-  status: String! # PENDING, PROCESSING, COMPLETED, FAILED
+  status: String!
   merchantName: String
   totalAmount: Int
   date: AWSDate

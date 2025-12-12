@@ -8,7 +8,6 @@ function log(level, message, meta) {
     ...(meta ? { meta } : {}),
     ts: new Date().toISOString(),
   };
-  // eslint-disable-next-line no-console
   console.log(JSON.stringify(payload));
 }
 
@@ -64,8 +63,6 @@ function parseAnalyzeExpenseResponse(resp) {
 
   const totalAmount = parseMoneyToCents(total?.valueText);
   const merchantName = vendor?.valueText ? String(vendor.valueText).trim() : null;
-
-  // Textract date strings vary; we pass through and let frontend normalize if needed.
   const dateText = date?.valueText ? String(date.valueText).trim() : null;
 
   const confidenceCandidates = [total?.confidence, vendor?.confidence, date?.confidence].filter(
@@ -111,9 +108,8 @@ export const handler = async (event, context) => {
   }
 
   const bucket =
-    process.env.RECEIPTS_BUCKET ||
     process.env.STORAGE_RECEIPTS_BUCKETNAME ||
-    process.env.STORAGE_RECEIPTS_BUCKET_NAME ||
+    process.env.RECEIPTS_BUCKET ||
     process.env.BUCKET_NAME;
 
   if (!bucket) {
@@ -196,5 +192,3 @@ export const handler = async (event, context) => {
     };
   }
 };
-
-

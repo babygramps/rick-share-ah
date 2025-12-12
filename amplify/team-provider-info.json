@@ -23,6 +23,15 @@
       },
       "api": {
         "rickshareah": {}
+      },
+      "storage": {
+        "receipts": {}
+      },
+      "function": {
+        "processReceipt": {
+          "deploymentBucketName": "amplify-rickshareah-dev-326e7-deployment",
+          "s3Key": "amplify-builds/processReceipt-324f66727653562b3467-build.zip"
+        }
       }
     }
   }

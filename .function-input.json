@@ -1,0 +1,1 @@
+{"version":1,"resourceName":"processReceipt","functionConfiguration":{"runtime":"nodejs18.x","memorySize":256,"timeout":30}}

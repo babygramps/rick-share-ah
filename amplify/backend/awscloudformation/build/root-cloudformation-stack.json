@@ -214,7 +214,7 @@
             ]
           },
           "S3DeploymentBucket": "amplify-rickshareah-dev-326e7-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/75af06ad018910d45fa893e6394d3c80c35b2766",
+          "S3DeploymentRootKey": "amplify-appsync-files/8d9df691531993014ac46a17d36d56dfc162f640",
           "env": "dev"
         }
       }
@@ -269,6 +269,56 @@
           },
           "breakCircularDependency": true,
           "dependsOn": "",
+          "env": "dev"
+        }
+      }
+    },
+    "functionprocessReceipt": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-rickshareah-dev-326e7-deployment/amplify-cfn-templates/function/processReceipt-cloudformation-template.json",
+        "Parameters": {
+          "storagereceiptsBucketName": {
+            "Fn::GetAtt": [
+              "storagereceipts",
+              "Outputs.BucketName"
+            ]
+          },
+          "deploymentBucketName": "amplify-rickshareah-dev-326e7-deployment",
+          "s3Key": "amplify-builds/processReceipt-324f66727653562b3467-build.zip",
+          "env": "dev"
+        }
+      }
+    },
+    "storagereceipts": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-rickshareah-dev-326e7-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "Parameters": {
+          "bucketName": "receipts",
+          "selectedGuestPermissions": "",
+          "selectedAuthenticatedPermissions": "s3:PutObject,s3:GetObject,s3:ListBucket,s3:DeleteObject",
+          "unauthRoleName": {
+            "Ref": "UnauthRoleName"
+          },
+          "authRoleName": {
+            "Ref": "AuthRoleName"
+          },
+          "s3PrivatePolicy": "Private_policy_31acc566-8372-4e90-a5d6-0b9732c95123",
+          "s3ProtectedPolicy": "Protected_policy_31acc566-8372-4e90-a5d6-0b9732c95123",
+          "s3PublicPolicy": "Public_policy_31acc566-8372-4e90-a5d6-0b9732c95123",
+          "s3ReadPolicy": "read_policy_31acc566-8372-4e90-a5d6-0b9732c95123",
+          "s3UploadsPolicy": "Uploads_policy_31acc566-8372-4e90-a5d6-0b9732c95123",
+          "authPolicyName": "s3_amplify_31acc566-8372-4e90-a5d6-0b9732c95123",
+          "unauthPolicyName": "s3_amplify_31acc566-8372-4e90-a5d6-0b9732c95123",
+          "AuthenticatedAllowList": "ALLOW",
+          "GuestAllowList": "DISALLOW",
+          "s3PermissionsAuthenticatedPrivate": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3PermissionsAuthenticatedProtected": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3PermissionsAuthenticatedPublic": "s3:PutObject,s3:GetObject,s3:DeleteObject",
+          "s3PermissionsAuthenticatedUploads": "s3:PutObject",
+          "s3PermissionsGuestPublic": "DISALLOW",
+          "s3PermissionsGuestUploads": "DISALLOW",
           "env": "dev"
         }
       }

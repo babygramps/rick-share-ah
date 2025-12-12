@@ -127,7 +127,7 @@
                         "ApiId"
                     ]
                 },
-                "Expires": 1766167541
+                "Expires": 1766170292
             }
         },
         "GraphQLAPINONEDS95A13CF0": {
@@ -438,6 +438,55 @@
                 "GraphQLAPITransformerSchema3CB2AE18"
             ]
         },
+        "FunctionDirectiveStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "Parameters": {
+                    "referencetotransformerrootstackenv10C5A902Ref": {
+                        "Ref": "env"
+                    },
+                    "referencetotransformerrootstackGraphQLAPI20497F53ApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    },
+                    "referencetotransformerrootstackS3DeploymentBucket7592718ARef": {
+                        "Ref": "S3DeploymentBucket"
+                    },
+                    "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
+                        "Ref": "S3DeploymentRootKey"
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "https://s3.",
+                            {
+                                "Ref": "AWS::Region"
+                            },
+                            ".",
+                            {
+                                "Ref": "AWS::URLSuffix"
+                            },
+                            "/",
+                            {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            "/",
+                            {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "/stacks/FunctionDirectiveStack.json"
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": [
+                "GraphQLAPITransformerSchema3CB2AE18"
+            ]
+        },
         "ConnectionStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
@@ -575,6 +624,7 @@
                 "Couple",
                 "Expense",
                 "Settlement",
+                "FunctionDirectiveStack",
                 "ConnectionStack"
             ]
         }
