@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
+import { CSVUploader } from '../components/expenses/CSVUploader';
 import { formatCurrency } from '../utils/helpers';
 
 export function Settings() {
@@ -14,6 +15,7 @@ export function Settings() {
   const [partner1Name, setPartner1Name] = useState(couple?.partner1Name || '');
   const [partner2Name, setPartner2Name] = useState(couple?.partner2Name || '');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [showCsvImport, setShowCsvImport] = useState(false);
 
   const handleSaveCouple = async () => {
     if (coupleName.trim() && partner1Name.trim()) {
@@ -149,6 +151,24 @@ export function Settings() {
         </div>
       </Card>
 
+      {/* Import Data */}
+      <Card>
+        <CardHeader className="flex items-center justify-between">
+          <CardTitle>📦 Import Data</CardTitle>
+        </CardHeader>
+        <div className="space-y-4">
+          <div>
+            <p className="font-bold">Import expenses from CSV</p>
+            <p className="font-mono text-xs text-[var(--color-plum)]/60">
+              Upload a CSV, map columns, preview rows, then import in one batch.
+            </p>
+          </div>
+          <Button variant="secondary" className="w-full" onClick={() => setShowCsvImport(true)}>
+            Import CSV
+          </Button>
+        </div>
+      </Card>
+
       {/* Danger Zone */}
       <Card className="border-[var(--color-coral)]">
         <CardHeader>
@@ -222,6 +242,11 @@ export function Settings() {
           </div>
         </div>
       </Modal>
+
+      <CSVUploader
+        isOpen={showCsvImport}
+        onClose={() => setShowCsvImport(false)}
+      />
 
       {/* Footer */}
       <p className="text-center font-mono text-xs text-[var(--color-plum)]/40 pb-4">

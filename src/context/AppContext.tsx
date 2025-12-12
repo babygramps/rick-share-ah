@@ -46,6 +46,9 @@ interface AppContextType {
   // Expenses
   expenses: Expense[];
   addExpense: (expense: Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  addExpenseBatch: (
+    expenses: Array<Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>>
+  ) => Promise<{ created: number; failed: number }>;
   updateExpense: (id: string, updates: Partial<Expense>) => Promise<void>;
   deleteExpense: (id: string) => Promise<void>;
 
@@ -389,6 +392,56 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const addExpenseBatch: AppContextType['addExpenseBatch'] = async (batch) => {
+    if (!couple) return { created: 0, failed: batch.length };
+
+    console.log('[csv-import] addExpenseBatch.start', { count: batch.length, coupleId: couple.id });
+
+    const created: Expense[] = [];
+    let failed = 0;
+
+    for (let i = 0; i < batch.length; i += 1) {
+      const expense = batch[i];
+      try {
+        const result = await getClient().graphql({
+          query: mutations.createExpense,
+          variables: {
+            input: {
+              coupleId: couple.id,
+              ...expense,
+            }
+          }
+        });
+
+        const newExpense = (result as any).data?.createExpense;
+        if (newExpense) {
+          created.push(newExpense);
+        } else {
+          failed += 1;
+          console.warn('[csv-import] addExpenseBatch.missingResponse', { index: i });
+        }
+      } catch (error) {
+        failed += 1;
+        console.error('[csv-import] addExpenseBatch.itemError', { index: i, error });
+      }
+
+      if ((i + 1) % 25 === 0) {
+        console.log('[csv-import] addExpenseBatch.progress', { done: i + 1, total: batch.length, created: created.length, failed });
+      }
+    }
+
+    if (created.length > 0) {
+      setExpenses((prev) => {
+        const next = [...created, ...prev];
+        next.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        return next;
+      });
+    }
+
+    console.log('[csv-import] addExpenseBatch.done', { created: created.length, failed });
+    return { created: created.length, failed };
+  };
+
   const updateExpense = async (id: string, updates: Partial<Expense>) => {
     try {
       const result = await getClient().graphql({
@@ -469,6 +522,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateCouple,
     expenses,
     addExpense,
+    addExpenseBatch,
     updateExpense,
     deleteExpense,
     settlements,
