@@ -41,18 +41,16 @@ export function ExpenseCard({ expense, onEdit, onDelete, showActions = true }: E
           style={{ backgroundColor: categoryInfo.color }}
         />
         
-        <div className="flex-1 p-4">
-          <div className="flex items-start justify-between gap-4">
-            {/* Left side - expense info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xl">{categoryInfo.emoji}</span>
-                <h3 className="font-bold text-lg truncate">
-                  {expense.description}
-                </h3>
-              </div>
-              
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-[var(--color-plum)]/70">
+        <div className="flex-1 min-w-0 p-4">
+          {/* Header: emoji, description, amount */}
+          <div className="flex items-start gap-3">
+            <span className="text-2xl flex-shrink-0">{categoryInfo.emoji}</span>
+            
+            <div className="flex-1 min-w-0 overflow-hidden">
+              <h3 className="font-bold text-lg truncate" title={expense.description}>
+                {expense.description}
+              </h3>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 font-mono text-xs text-[var(--color-plum)]/70">
                 <span>{formatDate(expense.date)}</span>
                 <span className="bg-[var(--color-cream)] px-2 py-0.5 border border-[var(--color-plum)]/20">
                   {categoryInfo.label}
@@ -60,20 +58,17 @@ export function ExpenseCard({ expense, onEdit, onDelete, showActions = true }: E
               </div>
             </div>
 
-            {/* Right side - amount */}
-            <div className="text-right flex-shrink-0">
-              <p className="font-mono text-2xl font-bold">
-                {formatCurrency(expense.amount)}
-              </p>
-            </div>
+            <p className="font-mono text-2xl font-bold flex-shrink-0 text-right">
+              {formatCurrency(expense.amount)}
+            </p>
           </div>
 
           {/* Payment info */}
           <div className="mt-3 pt-3 border-t-2 border-dashed border-[var(--color-plum)]/20">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span 
-                  className="px-2 py-1 text-xs font-mono font-bold uppercase border-2 border-[var(--color-plum)]"
+                  className="px-2 py-1 text-xs font-mono font-bold uppercase border-2 border-[var(--color-plum)] whitespace-nowrap"
                   style={{ 
                     backgroundColor: expense.paidBy === 'partner1' 
                       ? 'var(--color-coral)' 
@@ -84,14 +79,14 @@ export function ExpenseCard({ expense, onEdit, onDelete, showActions = true }: E
                   {paidByName} paid
                 </span>
                 
-                <span className="font-mono text-xs text-[var(--color-plum)]/70">
+                <span className="font-mono text-xs text-[var(--color-plum)]/70 whitespace-nowrap">
                   {expense.splitType === 'equal' 
                     ? 'Split 50/50' 
                     : `${expense.partner1Share}/${expense.partner2Share}`}
                 </span>
               </div>
 
-              <p className="font-mono text-sm font-bold">
+              <p className="font-mono text-sm font-bold whitespace-nowrap">
                 {otherPartnerName} owes {formatCurrency(amountOwed)}
               </p>
             </div>
@@ -99,7 +94,10 @@ export function ExpenseCard({ expense, onEdit, onDelete, showActions = true }: E
 
           {/* Note if present */}
           {expense.note && (
-            <p className="mt-2 text-sm italic text-[var(--color-plum)]/60">
+            <p 
+              className="mt-3 text-sm italic text-[var(--color-plum)]/60 line-clamp-2"
+              title={expense.note}
+            >
               "{expense.note}"
             </p>
           )}
