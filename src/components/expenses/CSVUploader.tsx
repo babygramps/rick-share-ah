@@ -410,6 +410,9 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
         <div>
           <p className="font-bold text-lg">🧩 Map your CSV columns</p>
           <p className="font-mono text-xs text-[var(--color-plum)]/70">
+            {fileName && <span className="font-bold">{fileName}</span>}
+            {fileName && fileSize && <span> ({(fileSize / 1024).toFixed(1)} KB)</span>}
+            {fileName && ' — '}
             Detected <span className="font-bold">{records.length}</span> rows and{' '}
             <span className="font-bold">{headers.length}</span> columns.
           </p>
