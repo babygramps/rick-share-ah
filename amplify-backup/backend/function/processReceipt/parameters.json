@@ -1,0 +1,7 @@
+{
+  "storagereceiptsBucketName": {
+    "Fn::GetAtt": ["storagereceipts", "Outputs.BucketName"]
+  }
+}
+
+

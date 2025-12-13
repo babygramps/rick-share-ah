@@ -11,6 +11,15 @@ export interface Couple {
   partner2Email?: string | null;
   inviteCode?: string | null;
   defaultSplitPercent: number;
+  // Pre-computed aggregates (updated by Lambda trigger)
+  expenseCount?: number | null;
+  settlementCount?: number | null;
+  partner1TotalPaid?: number | null;
+  partner2TotalPaid?: number | null;
+  partner1TotalOwes?: number | null;
+  partner2TotalOwes?: number | null;
+  netBalance?: number | null;
+  lastCalculatedAt?: string | null;
   createdAt?: string;
   updatedAt?: string;
   owner?: string;
@@ -111,4 +120,38 @@ export interface ReceiptLineItemAssignment extends ReceiptLineItem {
   id: string;
   assignTo: LineItemAssignTo;
   customPercent?: number; // partner1 percent (0-100) when assignTo === 'custom'
+}
+
+// History item returned from getCoupleHistory query
+export interface HistoryItem {
+  id: string;
+  type: 'expense' | 'settlement';
+  date: string;
+  createdAt: string;
+  amount: number;
+  paidBy: string;
+  // Expense-specific fields
+  description?: string | null;
+  category?: string | null;
+  splitType?: string | null;
+  partner1Share?: number | null;
+  partner2Share?: number | null;
+  // Settlement-specific fields
+  paidTo?: string | null;
+  note?: string | null;
+}
+
+export interface HistoryConnection {
+  items: HistoryItem[];
+  nextToken: string | null;
+  totalCount: number;
+}
+
+export interface HistoryQueryOptions {
+  coupleId: string;
+  limit?: number;
+  nextToken?: string | null;
+  typeFilter?: string | null;
+  categoryFilter?: string | null;
+  paidByFilter?: string | null;
 }

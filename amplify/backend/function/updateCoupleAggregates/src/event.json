@@ -1,0 +1,45 @@
+{
+  "Records": [
+    {
+      "eventID": "1",
+      "eventVersion": "1.0",
+      "dynamodb": {
+        "Keys": {
+          "id": {
+            "S": "test-expense-id"
+          }
+        },
+        "NewImage": {
+          "id": {
+            "S": "test-expense-id"
+          },
+          "coupleId": {
+            "S": "test-couple-id"
+          },
+          "amount": {
+            "N": "1000"
+          },
+          "paidBy": {
+            "S": "partner1"
+          },
+          "splitType": {
+            "S": "equal"
+          },
+          "partner1Share": {
+            "N": "500"
+          },
+          "partner2Share": {
+            "N": "500"
+          }
+        },
+        "StreamViewType": "NEW_AND_OLD_IMAGES",
+        "SequenceNumber": "111",
+        "SizeBytes": 26
+      },
+      "awsRegion": "us-east-1",
+      "eventName": "INSERT",
+      "eventSourceARN": "arn:aws:dynamodb:us-east-1:123456789012:table/Expense/stream/2024-01-01T00:00:00.000",
+      "eventSource": "aws:dynamodb"
+    }
+  ]
+}

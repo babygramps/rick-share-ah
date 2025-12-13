@@ -1,0 +1,11 @@
+{
+  "bucketName": "receipts",
+  "authRoleName": {
+    "Ref": "AuthRoleName"
+  },
+  "unauthRoleName": {
+    "Ref": "UnauthRoleName"
+  }
+}
+
+

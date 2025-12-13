@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "storage": {
+      "receipts": ["read"]
+    }
+  },
+  "lambdaLayers": []
+}

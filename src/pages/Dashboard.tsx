@@ -15,7 +15,7 @@ type ActivityItem =
   | { type: 'settlement'; data: Settlement; date: string };
 
 export function Dashboard() {
-  const { expenses, settlements, balance } = useApp();
+  const { expenses, settlements, balance, couple } = useApp();
   const [showSettleModal, setShowSettleModal] = useState(false);
 
   // Combine and sort expenses and settlements for recent activity
@@ -47,7 +47,8 @@ export function Dashboard() {
     return items.slice(0, 5);
   }, [expenses, settlements]);
 
-  const totalActivityCount = expenses.length + settlements.length;
+  // Use pre-computed counts from couple if available, otherwise use client-side arrays
+  const totalActivityCount = (couple?.expenseCount ?? expenses.length) + (couple?.settlementCount ?? settlements.length);
 
   return (
     <div className="space-y-6">

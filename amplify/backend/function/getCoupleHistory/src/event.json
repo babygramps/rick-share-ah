@@ -1,0 +1,10 @@
+{
+  "arguments": {
+    "coupleId": "test-couple-id",
+    "limit": 20,
+    "nextToken": null,
+    "typeFilter": null,
+    "categoryFilter": null,
+    "paidByFilter": null
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "Effect": "Allow",
+    "Action": [
+      "textract:AnalyzeExpense"
+    ],
+    "Resource": [
+      "*"
+    ]
+  }
+]
+
+
+

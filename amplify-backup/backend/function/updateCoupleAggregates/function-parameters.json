@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "api": {
+      "rickshareah": ["Query", "Mutation"]
+    }
+  },
+  "lambdaLayers": []
+}

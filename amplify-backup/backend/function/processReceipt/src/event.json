@@ -1,0 +1,8 @@
+{
+  "arguments": {
+    "imageKey": "public/test-receipt.jpg"
+  },
+  "identity": {
+    "sub": "test-user-id"
+  }
+}

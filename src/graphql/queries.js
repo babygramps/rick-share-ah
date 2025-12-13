@@ -22,6 +22,14 @@ export const getCouple = /* GraphQL */ `
         nextToken
         __typename
       }
+      expenseCount
+      settlementCount
+      partner1TotalPaid
+      partner2TotalPaid
+      partner1TotalOwes
+      partner2TotalOwes
+      netBalance
+      lastCalculatedAt
       createdAt
       updatedAt
       owner
@@ -47,6 +55,14 @@ export const listCouples = /* GraphQL */ `
         partner2Email
         inviteCode
         defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
         createdAt
         updatedAt
         owner
@@ -83,6 +99,14 @@ export const couplesByInviteCode = /* GraphQL */ `
         partner2Email
         inviteCode
         defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
         createdAt
         updatedAt
         owner
@@ -109,6 +133,14 @@ export const getExpense = /* GraphQL */ `
         partner2Email
         inviteCode
         defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
         createdAt
         updatedAt
         owner
@@ -215,6 +247,14 @@ export const getSettlement = /* GraphQL */ `
         partner2Email
         inviteCode
         defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
         createdAt
         updatedAt
         owner
