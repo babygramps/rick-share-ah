@@ -16,7 +16,7 @@ export function BalanceDisplay() {
   return (
     <Card className="text-center animate-bounce-in" padding="lg">
       {/* Balance status */}
-      <div className="mb-6">
+      <div>
         {isSettled ? (
           <>
             <div className="text-6xl mb-3">✨</div>
@@ -41,27 +41,6 @@ export function BalanceDisplay() {
             </h2>
           </>
         )}
-      </div>
-
-      {/* Totals breakdown */}
-      <div className="border-t-4 border-dashed border-[var(--color-plum)]/20 pt-6">
-        <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)]/50 mb-4">
-          Total Paid
-        </p>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-[var(--color-coral)]/10 border-2 border-[var(--color-coral)] p-4">
-            <p className="font-mono text-xs uppercase mb-1">{partner1Name}</p>
-            <p className="font-mono text-xl font-bold text-[var(--color-coral)]">
-              {formatCurrency(balance.partner1Total)}
-            </p>
-          </div>
-          <div className="bg-[var(--color-sage)]/20 border-2 border-[var(--color-sage)] p-4">
-            <p className="font-mono text-xs uppercase mb-1">{partner2Name}</p>
-            <p className="font-mono text-xl font-bold text-[var(--color-plum)]">
-              {formatCurrency(balance.partner2Total)}
-            </p>
-          </div>
-        </div>
       </div>
     </Card>
   );
