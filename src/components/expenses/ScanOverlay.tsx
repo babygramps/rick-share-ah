@@ -141,3 +141,4 @@ export function ScanOverlay({ mode, onModeChange, onCaptured }: ScanOverlayProps
 }
 
 
+

@@ -55,6 +55,8 @@ interface AppContextType {
   // Settlements
   settlements: Settlement[];
   addSettlement: (settlement: Omit<Settlement, 'id' | 'coupleId' | 'createdAt'>) => Promise<void>;
+  updateSettlement: (id: string, updates: Partial<Settlement>) => Promise<void>;
+  deleteSettlement: (id: string) => Promise<void>;
 
   // Calculated values
   balance: Balance;
@@ -503,6 +505,43 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateSettlement = async (id: string, updates: Partial<Settlement>) => {
+    try {
+      const result = await getClient().graphql({
+        query: mutations.updateSettlement,
+        variables: {
+          input: {
+            id,
+            ...updates,
+          }
+        }
+      });
+
+      const updatedSettlement = (result as any).data?.updateSettlement;
+      if (updatedSettlement) {
+        setSettlements(prev =>
+          prev.map(s => (s.id === id ? updatedSettlement : s))
+        );
+      }
+    } catch (error) {
+      console.error('Update settlement error:', error);
+    }
+  };
+
+  const deleteSettlement = async (id: string) => {
+    try {
+      await getClient().graphql({
+        query: mutations.deleteSettlement,
+        variables: {
+          input: { id }
+        }
+      });
+      setSettlements(prev => prev.filter(s => s.id !== id));
+    } catch (error) {
+      console.error('Delete settlement error:', error);
+    }
+  };
+
   // Calculate balance
   const balance = calculateBalance(expenses, settlements);
 
@@ -527,6 +566,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     deleteExpense,
     settlements,
     addSettlement,
+    updateSettlement,
+    deleteSettlement,
     balance,
     refreshData,
   };

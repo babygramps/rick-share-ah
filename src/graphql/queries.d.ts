@@ -7,3 +7,4 @@ export const getSettlement: string;
 export const listSettlements: string;
 export const settlementsByCoupleId: string;
 
+
