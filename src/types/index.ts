@@ -2,6 +2,7 @@
 
 export interface Couple {
   id: string;
+  owners: string[];  // Contains partner user IDs for multi-owner auth
   name: string;
   partner1Id: string;
   partner1Name: string;
@@ -11,7 +12,7 @@ export interface Couple {
   partner2Email?: string | null;
   inviteCode?: string | null;
   defaultSplitPercent: number;
-  // Pre-computed aggregates (updated by Lambda trigger)
+  // Pre-computed aggregates (updated transactionally by Lambda)
   expenseCount?: number | null;
   settlementCount?: number | null;
   partner1TotalPaid?: number | null;
@@ -22,11 +23,11 @@ export interface Couple {
   lastCalculatedAt?: string | null;
   createdAt?: string;
   updatedAt?: string;
-  owner?: string;
 }
 
 export interface Expense {
   id: string;
+  owners?: string[];  // Contains partner user IDs for multi-owner auth
   coupleId: string;
   description: string;
   amount: number;
@@ -39,11 +40,11 @@ export interface Expense {
   note?: string | null;
   createdAt?: string;
   updatedAt?: string;
-  owner?: string;
 }
 
 export interface Settlement {
   id: string;
+  owners?: string[];  // Contains partner user IDs for multi-owner auth
   coupleId: string;
   amount: number;
   paidBy: string;
@@ -52,7 +53,6 @@ export interface Settlement {
   note?: string | null;
   createdAt?: string;
   updatedAt?: string;
-  owner?: string;
 }
 
 export type ExpenseCategory =

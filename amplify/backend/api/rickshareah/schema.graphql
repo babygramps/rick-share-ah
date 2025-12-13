@@ -1,12 +1,11 @@
-# Couple can be:
-# - Created by owner (partner1)
-# - Read/Updated by any authenticated user (needed for partner2 to join via invite code)
-# Note: Invite code verification in app logic provides security for join
+# Couple uses multi-owner auth: only partner1 and partner2 can access
+# The 'owners' field contains both partner user IDs
+# Lambda mutations handle join flow (partner2 not yet in owners when joining)
 type Couple @model @auth(rules: [
-  { allow: owner },
-  { allow: private, operations: [read, update] }
+  { allow: owner, ownerField: "owners" }
 ]) {
   id: ID!
+  owners: [String!]!  # Contains [partner1Id] initially, then [partner1Id, partner2Id] after join
   name: String!
   partner1Id: String!
   partner1Name: String!
@@ -18,7 +17,7 @@ type Couple @model @auth(rules: [
   defaultSplitPercent: Int!
   expenses: [Expense] @hasMany
   settlements: [Settlement] @hasMany
-  # Pre-computed aggregates (updated by Lambda trigger - to be added later)
+  # Pre-computed aggregates (updated transactionally by Lambda)
   expenseCount: Int
   settlementCount: Int
   partner1TotalPaid: Int      # cents
@@ -29,14 +28,13 @@ type Couple @model @auth(rules: [
   lastCalculatedAt: AWSDateTime
 }
 
-# Expenses: owner can do everything, but we need both partners to access
-# Using private for now - both authenticated partners can read/write
+# Expenses: multi-owner auth via 'owners' field (copied from Couple.owners)
 type Expense @model @auth(rules: [
-  { allow: owner },
-  { allow: private, operations: [read, create, update, delete] }
+  { allow: owner, ownerField: "owners" }
 ]) {
   id: ID!
-  coupleId: ID! @index(name: "byCouple")
+  owners: [String!]!  # Copied from Couple.owners at creation time
+  coupleId: ID! @index(name: "byCouple", sortKeyFields: ["date"])
   couple: Couple @belongsTo(fields: ["coupleId"])
   description: String!
   amount: Int!
@@ -49,13 +47,13 @@ type Expense @model @auth(rules: [
   note: String
 }
 
-# Settlements: same auth as expenses
+# Settlements: multi-owner auth via 'owners' field (copied from Couple.owners)
 type Settlement @model @auth(rules: [
-  { allow: owner },
-  { allow: private, operations: [read, create, update, delete] }
+  { allow: owner, ownerField: "owners" }
 ]) {
   id: ID!
-  coupleId: ID! @index(name: "byCouple")
+  owners: [String!]!  # Copied from Couple.owners at creation time
+  coupleId: ID! @index(name: "byCouple", sortKeyFields: ["date"])
   couple: Couple @belongsTo(fields: ["coupleId"])
   amount: Int!
   paidBy: String!
@@ -84,8 +82,151 @@ type ReceiptScan @aws_cognito_user_pools {
   imageUrl: String
 }
 
+# Input types for trusted mutations
+input CreateExpenseInput {
+  coupleId: ID!
+  description: String!
+  amount: Int!
+  paidBy: String!
+  splitType: String!
+  partner1Share: Int!
+  partner2Share: Int!
+  category: String!
+  date: AWSDate!
+  note: String
+  clientMutationId: String
+}
+
+input UpdateExpenseInput {
+  id: ID!
+  description: String
+  amount: Int
+  paidBy: String
+  splitType: String
+  partner1Share: Int
+  partner2Share: Int
+  category: String
+  date: AWSDate
+  note: String
+  clientMutationId: String
+}
+
+input DeleteExpenseInput {
+  id: ID!
+  clientMutationId: String
+}
+
+input CreateSettlementInput {
+  coupleId: ID!
+  amount: Int!
+  paidBy: String!
+  paidTo: String!
+  date: AWSDate!
+  note: String
+  clientMutationId: String
+}
+
+input UpdateSettlementInput {
+  id: ID!
+  amount: Int
+  paidBy: String
+  paidTo: String
+  date: AWSDate
+  note: String
+  clientMutationId: String
+}
+
+input DeleteSettlementInput {
+  id: ID!
+  clientMutationId: String
+}
+
+input CreateCoupleInput {
+  name: String!
+  partnerName: String!
+  defaultSplitPercent: Int
+  clientMutationId: String
+}
+
+input JoinCoupleInput {
+  inviteCode: String!
+  partnerName: String!
+  clientMutationId: String
+}
+
+# Response types for trusted mutations
+type ExpenseMutationResult @aws_cognito_user_pools {
+  success: Boolean!
+  expense: Expense
+  couple: Couple
+  error: String
+  clientMutationId: String
+}
+
+type SettlementMutationResult @aws_cognito_user_pools {
+  success: Boolean!
+  settlement: Settlement
+  couple: Couple
+  error: String
+  clientMutationId: String
+}
+
+type CoupleMutationResult @aws_cognito_user_pools {
+  success: Boolean!
+  couple: Couple
+  error: String
+  clientMutationId: String
+}
+
+type RecalculateResult @aws_cognito_user_pools {
+  success: Boolean!
+  couple: Couple
+  error: String
+}
+
 type Mutation {
+  # Receipt scanning (existing)
   processReceipt(imageKey: String!): ReceiptScan 
     @function(name: "processReceipt-${env}")
+    @auth(rules: [{ allow: private }])
+
+  # Trusted couple mutations (Lambda-backed)
+  createCoupleTrusted(input: CreateCoupleInput!): CoupleMutationResult
+    @function(name: "coupleWriteService-${env}")
+    @auth(rules: [{ allow: private }])
+
+  joinCoupleByInviteCode(input: JoinCoupleInput!): CoupleMutationResult
+    @function(name: "coupleWriteService-${env}")
+    @auth(rules: [{ allow: private }])
+
+  # Trusted expense mutations (Lambda-backed, transactional with aggregates)
+  createExpenseTrusted(input: CreateExpenseInput!): ExpenseMutationResult
+    @function(name: "coupleWriteService-${env}")
+    @auth(rules: [{ allow: private }])
+
+  updateExpenseTrusted(input: UpdateExpenseInput!): ExpenseMutationResult
+    @function(name: "coupleWriteService-${env}")
+    @auth(rules: [{ allow: private }])
+
+  deleteExpenseTrusted(input: DeleteExpenseInput!): ExpenseMutationResult
+    @function(name: "coupleWriteService-${env}")
+    @auth(rules: [{ allow: private }])
+
+  # Trusted settlement mutations (Lambda-backed, transactional with aggregates)
+  createSettlementTrusted(input: CreateSettlementInput!): SettlementMutationResult
+    @function(name: "coupleWriteService-${env}")
+    @auth(rules: [{ allow: private }])
+
+  updateSettlementTrusted(input: UpdateSettlementInput!): SettlementMutationResult
+    @function(name: "coupleWriteService-${env}")
+    @auth(rules: [{ allow: private }])
+
+  deleteSettlementTrusted(input: DeleteSettlementInput!): SettlementMutationResult
+    @function(name: "coupleWriteService-${env}")
+    @auth(rules: [{ allow: private }])
+
+  # Admin/repair mutation
+  recalculateCoupleAggregates(coupleId: ID!): RecalculateResult
+    @function(name: "coupleWriteService-${env}")
     @auth(rules: [{ allow: private }])
 }

@@ -1,102 +1,101 @@
 /**
- * One-time backfill script to calculate aggregates for existing couples.
+ * One-time backfill script to:
+ * 1. Populate 'owners' arrays on Couple, Expense, and Settlement records
+ * 2. Calculate aggregates for existing couples
  * 
- * This script should be run after deploying the backend changes to populate
- * the pre-computed aggregate fields (expenseCount, settlementCount, netBalance, etc.)
- * for all existing couples.
+ * This script should be run after deploying the multi-owner auth backend changes.
  * 
  * Usage:
  *   1. Set up AWS credentials (e.g., via AWS_PROFILE or environment variables)
  *   2. Update the TABLE_NAMES below with your actual table names
  *   3. Run: node scripts/backfill-aggregates.cjs
  * 
- * Note: After initial backfill, the DynamoDB stream triggers will keep aggregates
- * up-to-date automatically.
+ * Note: After initial backfill, the Lambda write service will keep aggregates
+ * and owners up-to-date automatically.
  */
 
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocumentClient, ScanCommand, QueryCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, ScanCommand, QueryCommand, UpdateCommand, BatchWriteCommand } = require('@aws-sdk/lib-dynamodb');
 
 // Configuration - UPDATE THESE WITH YOUR ACTUAL TABLE NAMES
 const CONFIG = {
-  region: process.env.AWS_REGION || 'us-east-1',
+  region: process.env.AWS_REGION || 'us-west-1',
   // Table names follow pattern: ModelName-{apiId}-{env}
   // Find these in your AWS Console > DynamoDB > Tables
   coupleTableName: process.env.COUPLE_TABLE || 'Couple-XXXXXX-dev',
   expenseTableName: process.env.EXPENSE_TABLE || 'Expense-XXXXXX-dev',
   settlementTableName: process.env.SETTLEMENT_TABLE || 'Settlement-XXXXXX-dev',
+  // Dry run mode - set to false to actually make changes
+  dryRun: process.env.DRY_RUN !== 'false',
 };
 
 const client = new DynamoDBClient({ region: CONFIG.region });
 const docClient = DynamoDBDocumentClient.from(client);
 
 /**
- * Calculate what each partner owes for an expense
+ * Build owners array from couple record
  */
-function calculateExpenseSplit(expense) {
-  if (expense.splitType === 'equal') {
-    const half = Math.floor(expense.amount / 2);
-    const remainder = expense.amount % 2;
-    return {
-      partner1Owes: half + (expense.paidBy === 'partner2' ? remainder : 0),
-      partner2Owes: half + (expense.paidBy === 'partner1' ? remainder : 0),
-    };
+function buildOwnersArray(couple) {
+  const owners = [];
+  if (couple.partner1Id) {
+    owners.push(couple.partner1Id);
   }
-  
-  if (expense.splitType === 'percentage') {
-    const partner1Amount = Math.round(expense.amount * (expense.partner1Share / 100));
-    const partner2Amount = expense.amount - partner1Amount;
-    return {
-      partner1Owes: partner1Amount,
-      partner2Owes: partner2Amount,
-    };
+  if (couple.partner2Id) {
+    owners.push(couple.partner2Id);
   }
-  
-  // exact split
-  return {
-    partner1Owes: expense.partner1Share,
-    partner2Owes: expense.partner2Share,
-  };
+  return owners;
+}
+
+/**
+ * Calculate net balance from expenses
+ * Uses the same logic as the Lambda write service
+ */
+function calculateNetBalance(partner1TotalPaid, partner2TotalPaid, partner1TotalOwes, partner2TotalOwes) {
+  const partner1Credit = partner1TotalPaid - partner1TotalOwes;
+  const partner2Credit = partner2TotalPaid - partner2TotalOwes;
+  return partner1Credit - partner2Credit;
 }
 
 /**
  * Calculate aggregates from expenses and settlements
  */
-function calculateAggregates(expenses, settlements) {
-  let partner1Paid = 0;
-  let partner2Paid = 0;
-  let partner1Owes = 0;
-  let partner2Owes = 0;
+function calculateAggregates(expenses, settlements, couple) {
+  let partner1TotalPaid = 0;
+  let partner2TotalPaid = 0;
+  let partner1TotalOwes = 0;
+  let partner2TotalOwes = 0;
 
   for (const expense of expenses) {
-    const split = calculateExpenseSplit(expense);
+    // Determine if paidBy is partner1 (by id or name)
+    const isPaidByPartner1 = 
+      expense.paidBy === couple.partner1Id || 
+      expense.paidBy === couple.partner1Name ||
+      expense.paidBy === 'partner1';
     
-    if (expense.paidBy === 'partner1') {
-      partner1Paid += expense.amount;
-      partner2Owes += split.partner2Owes;
+    if (isPaidByPartner1) {
+      partner1TotalPaid += expense.amount;
     } else {
-      partner2Paid += expense.amount;
-      partner1Owes += split.partner1Owes;
+      partner2TotalPaid += expense.amount;
     }
+    
+    partner1TotalOwes += expense.partner1Share || 0;
+    partner2TotalOwes += expense.partner2Share || 0;
   }
 
-  for (const settlement of settlements) {
-    if (settlement.paidBy === 'partner1') {
-      partner1Owes = Math.max(0, partner1Owes - settlement.amount);
-    } else {
-      partner2Owes = Math.max(0, partner2Owes - settlement.amount);
-    }
-  }
-
-  const netBalance = partner2Owes - partner1Owes;
+  const netBalance = calculateNetBalance(
+    partner1TotalPaid, 
+    partner2TotalPaid, 
+    partner1TotalOwes, 
+    partner2TotalOwes
+  );
 
   return {
     expenseCount: expenses.length,
     settlementCount: settlements.length,
-    partner1TotalPaid: partner1Paid,
-    partner2TotalPaid: partner2Paid,
-    partner1TotalOwes: partner1Owes,
-    partner2TotalOwes: partner2Owes,
+    partner1TotalPaid,
+    partner2TotalPaid,
+    partner1TotalOwes,
+    partner2TotalOwes,
     netBalance,
     lastCalculatedAt: new Date().toISOString(),
   };
@@ -179,23 +178,34 @@ async function getSettlementsForCouple(coupleId) {
 }
 
 /**
- * Update couple with aggregates
+ * Update couple with owners and aggregates
  */
-async function updateCoupleAggregates(coupleId, aggregates) {
+async function updateCouple(coupleId, owners, aggregates) {
+  if (CONFIG.dryRun) {
+    console.log(`  [DRY RUN] Would update couple with owners=${JSON.stringify(owners)}, netBalance=${aggregates.netBalance}`);
+    return;
+  }
+
   await docClient.send(new UpdateCommand({
     TableName: CONFIG.coupleTableName,
     Key: { id: coupleId },
     UpdateExpression: `
-      SET expenseCount = :expenseCount,
+      SET #owners = :owners,
+          expenseCount = :expenseCount,
           settlementCount = :settlementCount,
           partner1TotalPaid = :partner1TotalPaid,
           partner2TotalPaid = :partner2TotalPaid,
           partner1TotalOwes = :partner1TotalOwes,
           partner2TotalOwes = :partner2TotalOwes,
           netBalance = :netBalance,
-          lastCalculatedAt = :lastCalculatedAt
+          lastCalculatedAt = :lastCalculatedAt,
+          updatedAt = :updatedAt
     `,
+    ExpressionAttributeNames: {
+      '#owners': 'owners',
+    },
     ExpressionAttributeValues: {
+      ':owners': owners,
       ':expenseCount': aggregates.expenseCount,
       ':settlementCount': aggregates.settlementCount,
       ':partner1TotalPaid': aggregates.partner1TotalPaid,
@@ -204,6 +214,53 @@ async function updateCoupleAggregates(coupleId, aggregates) {
       ':partner2TotalOwes': aggregates.partner2TotalOwes,
       ':netBalance': aggregates.netBalance,
       ':lastCalculatedAt': aggregates.lastCalculatedAt,
+      ':updatedAt': new Date().toISOString(),
+    },
+  }));
+}
+
+/**
+ * Update expense with owners array
+ */
+async function updateExpenseOwners(expenseId, owners) {
+  if (CONFIG.dryRun) {
+    console.log(`    [DRY RUN] Would update expense ${expenseId} with owners=${JSON.stringify(owners)}`);
+    return;
+  }
+
+  await docClient.send(new UpdateCommand({
+    TableName: CONFIG.expenseTableName,
+    Key: { id: expenseId },
+    UpdateExpression: 'SET #owners = :owners, updatedAt = :updatedAt',
+    ExpressionAttributeNames: {
+      '#owners': 'owners',
+    },
+    ExpressionAttributeValues: {
+      ':owners': owners,
+      ':updatedAt': new Date().toISOString(),
+    },
+  }));
+}
+
+/**
+ * Update settlement with owners array
+ */
+async function updateSettlementOwners(settlementId, owners) {
+  if (CONFIG.dryRun) {
+    console.log(`    [DRY RUN] Would update settlement ${settlementId} with owners=${JSON.stringify(owners)}`);
+    return;
+  }
+
+  await docClient.send(new UpdateCommand({
+    TableName: CONFIG.settlementTableName,
+    Key: { id: settlementId },
+    UpdateExpression: 'SET #owners = :owners, updatedAt = :updatedAt',
+    ExpressionAttributeNames: {
+      '#owners': 'owners',
+    },
+    ExpressionAttributeValues: {
+      ':owners': owners,
+      ':updatedAt': new Date().toISOString(),
     },
   }));
 }
@@ -211,24 +268,38 @@ async function updateCoupleAggregates(coupleId, aggregates) {
 /**
  * Main backfill function
  */
-async function backfillAllCouples() {
-  console.log('='.repeat(60));
-  console.log('Backfill Aggregates Script');
-  console.log('='.repeat(60));
+async function backfillAll() {
+  console.log('='.repeat(70));
+  console.log('Backfill Script: Owners + Aggregates');
+  console.log('='.repeat(70));
   console.log('Configuration:');
   console.log(`  Region: ${CONFIG.region}`);
   console.log(`  Couple Table: ${CONFIG.coupleTableName}`);
   console.log(`  Expense Table: ${CONFIG.expenseTableName}`);
   console.log(`  Settlement Table: ${CONFIG.settlementTableName}`);
+  console.log(`  Dry Run: ${CONFIG.dryRun}`);
+  if (CONFIG.dryRun) {
+    console.log('\n  *** DRY RUN MODE - No changes will be made ***');
+    console.log('  Set DRY_RUN=false to apply changes\n');
+  }
   console.log('');
+
+  // Validate table names
+  if (CONFIG.coupleTableName.includes('XXXXXX')) {
+    console.error('ERROR: Please update CONFIG with your actual table names!');
+    console.error('Find them in AWS Console > DynamoDB > Tables');
+    process.exit(1);
+  }
 
   try {
     console.log('Fetching all couples...');
     const couples = await getAllCouples();
     console.log(`Found ${couples.length} couple(s) to process\n`);
 
-    let successCount = 0;
-    let errorCount = 0;
+    let coupleSuccessCount = 0;
+    let coupleErrorCount = 0;
+    let expenseUpdateCount = 0;
+    let settlementUpdateCount = 0;
 
     for (let i = 0; i < couples.length; i++) {
       const couple = couples[i];
@@ -238,6 +309,12 @@ async function backfillAllCouples() {
       console.log(`[${i + 1}/${couples.length}] Processing: ${coupleName} (${coupleId})`);
 
       try {
+        // Build owners array
+        const owners = buildOwnersArray(couple);
+        console.log(`  Partners: ${couple.partner1Id || 'none'}, ${couple.partner2Id || 'none'}`);
+        console.log(`  Owners array: ${JSON.stringify(owners)}`);
+
+        // Fetch expenses and settlements
         const [expenses, settlements] = await Promise.all([
           getExpensesForCouple(coupleId),
           getSettlementsForCouple(coupleId),
@@ -245,23 +322,57 @@ async function backfillAllCouples() {
 
         console.log(`  Found ${expenses.length} expenses, ${settlements.length} settlements`);
 
-        const aggregates = calculateAggregates(expenses, settlements);
+        // Calculate aggregates
+        const aggregates = calculateAggregates(expenses, settlements, couple);
         console.log(`  Aggregates: netBalance=${aggregates.netBalance}, p1Paid=${aggregates.partner1TotalPaid}, p2Paid=${aggregates.partner2TotalPaid}`);
 
-        await updateCoupleAggregates(coupleId, aggregates);
-        console.log('  ✓ Updated successfully\n');
-        successCount++;
+        // Update couple with owners and aggregates
+        await updateCouple(coupleId, owners, aggregates);
+
+        // Update expenses with owners
+        let expensesNeedingUpdate = 0;
+        for (const expense of expenses) {
+          if (!expense.owners || JSON.stringify(expense.owners) !== JSON.stringify(owners)) {
+            await updateExpenseOwners(expense.id, owners);
+            expensesNeedingUpdate++;
+            expenseUpdateCount++;
+          }
+        }
+        if (expensesNeedingUpdate > 0) {
+          console.log(`  Updated owners on ${expensesNeedingUpdate} expenses`);
+        }
+
+        // Update settlements with owners
+        let settlementsNeedingUpdate = 0;
+        for (const settlement of settlements) {
+          if (!settlement.owners || JSON.stringify(settlement.owners) !== JSON.stringify(owners)) {
+            await updateSettlementOwners(settlement.id, owners);
+            settlementsNeedingUpdate++;
+            settlementUpdateCount++;
+          }
+        }
+        if (settlementsNeedingUpdate > 0) {
+          console.log(`  Updated owners on ${settlementsNeedingUpdate} settlements`);
+        }
+
+        console.log('  ✓ Completed successfully\n');
+        coupleSuccessCount++;
       } catch (error) {
         console.error(`  ✗ Error: ${error.message}\n`);
-        errorCount++;
+        coupleErrorCount++;
       }
     }
 
-    console.log('='.repeat(60));
+    console.log('='.repeat(70));
     console.log('Backfill Complete!');
-    console.log(`  Success: ${successCount}`);
-    console.log(`  Errors: ${errorCount}`);
-    console.log('='.repeat(60));
+    console.log(`  Couples processed: ${coupleSuccessCount} success, ${coupleErrorCount} errors`);
+    console.log(`  Expenses updated: ${expenseUpdateCount}`);
+    console.log(`  Settlements updated: ${settlementUpdateCount}`);
+    if (CONFIG.dryRun) {
+      console.log('\n  *** This was a DRY RUN - no actual changes were made ***');
+      console.log('  Run with DRY_RUN=false to apply changes');
+    }
+    console.log('='.repeat(70));
 
   } catch (error) {
     console.error('Fatal error:', error);
@@ -270,4 +381,4 @@ async function backfillAllCouples() {
 }
 
 // Run the script
-backfillAllCouples();
+backfillAll();

@@ -1,5 +1,6 @@
 type Couple @aws_cognito_user_pools {
   id: ID!
+  owners: [String!]!
   name: String!
   partner1Id: String!
   partner1Name: String!
@@ -21,11 +22,11 @@ type Couple @aws_cognito_user_pools {
   lastCalculatedAt: AWSDateTime
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
-  owner: String
 }
 
 type Expense @aws_cognito_user_pools {
   id: ID!
+  owners: [String!]!
   coupleId: ID!
   couple: Couple
   description: String!
@@ -40,11 +41,11 @@ type Expense @aws_cognito_user_pools {
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   coupleExpensesId: ID
-  owner: String
 }
 
 type Settlement @aws_cognito_user_pools {
   id: ID!
+  owners: [String!]!
   coupleId: ID!
   couple: Couple
   amount: Int!
@@ -55,7 +56,6 @@ type Settlement @aws_cognito_user_pools {
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   coupleSettlementsId: ID
-  owner: String
 }
 
 type LineItem @aws_cognito_user_pools {
@@ -77,6 +77,110 @@ type ReceiptScan @aws_cognito_user_pools {
   imageUrl: String
 }
 
+input CreateExpenseInput {
+  coupleId: ID!
+  description: String!
+  amount: Int!
+  paidBy: String!
+  splitType: String!
+  partner1Share: Int!
+  partner2Share: Int!
+  category: String!
+  date: AWSDate!
+  note: String
+  clientMutationId: String
+  coupleExpensesId: ID
+}
+
+input UpdateExpenseInput {
+  id: ID!
+  description: String
+  amount: Int
+  paidBy: String
+  splitType: String
+  partner1Share: Int
+  partner2Share: Int
+  category: String
+  date: AWSDate
+  note: String
+  clientMutationId: String
+  coupleExpensesId: ID
+}
+
+input DeleteExpenseInput {
+  id: ID!
+  clientMutationId: String
+}
+
+input CreateSettlementInput {
+  coupleId: ID!
+  amount: Int!
+  paidBy: String!
+  paidTo: String!
+  date: AWSDate!
+  note: String
+  clientMutationId: String
+  coupleSettlementsId: ID
+}
+
+input UpdateSettlementInput {
+  id: ID!
+  amount: Int
+  paidBy: String
+  paidTo: String
+  date: AWSDate
+  note: String
+  clientMutationId: String
+  coupleSettlementsId: ID
+}
+
+input DeleteSettlementInput {
+  id: ID!
+  clientMutationId: String
+}
+
+input CreateCoupleInput {
+  name: String!
+  partnerName: String!
+  defaultSplitPercent: Int
+  clientMutationId: String
+}
+
+input JoinCoupleInput {
+  inviteCode: String!
+  partnerName: String!
+  clientMutationId: String
+}
+
+type ExpenseMutationResult @aws_cognito_user_pools {
+  success: Boolean!
+  expense: Expense
+  couple: Couple
+  error: String
+  clientMutationId: String
+}
+
+type SettlementMutationResult @aws_cognito_user_pools {
+  success: Boolean!
+  settlement: Settlement
+  couple: Couple
+  error: String
+  clientMutationId: String
+}
+
+type CoupleMutationResult @aws_cognito_user_pools {
+  success: Boolean!
+  couple: Couple
+  error: String
+  clientMutationId: String
+}
+
+type RecalculateResult @aws_cognito_user_pools {
+  success: Boolean!
+  couple: Couple
+  error: String
+}
+
 type Mutation {
   createCouple(input: CreateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
   updateCouple(input: UpdateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
@@ -88,6 +192,15 @@ type Mutation {
   updateSettlement(input: UpdateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
   deleteSettlement(input: DeleteSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
   processReceipt(imageKey: String!): ReceiptScan @aws_cognito_user_pools
+  createCoupleTrusted(input: CreateCoupleInput!): CoupleMutationResult @aws_cognito_user_pools
+  joinCoupleByInviteCode(input: JoinCoupleInput!): CoupleMutationResult @aws_cognito_user_pools
+  createExpenseTrusted(input: CreateExpenseInput!): ExpenseMutationResult @aws_cognito_user_pools
+  updateExpenseTrusted(input: UpdateExpenseInput!): ExpenseMutationResult @aws_cognito_user_pools
+  deleteExpenseTrusted(input: DeleteExpenseInput!): ExpenseMutationResult @aws_cognito_user_pools
+  createSettlementTrusted(input: CreateSettlementInput!): SettlementMutationResult @aws_cognito_user_pools
+  updateSettlementTrusted(input: UpdateSettlementInput!): SettlementMutationResult @aws_cognito_user_pools
+  deleteSettlementTrusted(input: DeleteSettlementInput!): SettlementMutationResult @aws_cognito_user_pools
+  recalculateCoupleAggregates(coupleId: ID!): RecalculateResult @aws_cognito_user_pools
 }
 
 input ModelStringInput {
@@ -247,6 +360,7 @@ type ModelCoupleConnection @aws_cognito_user_pools {
 
 input ModelCoupleFilterInput {
   id: ModelIDInput
+  owners: ModelStringInput
   name: ModelStringInput
   partner1Id: ModelStringInput
   partner1Name: ModelStringInput
@@ -269,7 +383,6 @@ input ModelCoupleFilterInput {
   and: [ModelCoupleFilterInput]
   or: [ModelCoupleFilterInput]
   not: ModelCoupleFilterInput
-  owner: ModelStringInput
 }
 
 type Query {
@@ -278,13 +391,14 @@ type Query {
   couplesByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection @aws_cognito_user_pools
   getExpense(id: ID!): Expense @aws_cognito_user_pools
   listExpenses(filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
-  expensesByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
+  expensesByCoupleIdAndDate(coupleId: ID!, date: ModelStringKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
   getSettlement(id: ID!): Settlement @aws_cognito_user_pools
   listSettlements(filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection @aws_cognito_user_pools
-  settlementsByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection @aws_cognito_user_pools
+  settlementsByCoupleIdAndDate(coupleId: ID!, date: ModelStringKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection @aws_cognito_user_pools
 }
 
 input ModelCoupleConditionInput {
+  owners: ModelStringInput
   name: ModelStringInput
   partner1Id: ModelStringInput
   partner1Name: ModelStringInput
@@ -307,32 +421,11 @@ input ModelCoupleConditionInput {
   not: ModelCoupleConditionInput
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
-  owner: ModelStringInput
-}
-
-input CreateCoupleInput {
-  id: ID
-  name: String!
-  partner1Id: String!
-  partner1Name: String!
-  partner1Email: String!
-  partner2Id: String
-  partner2Name: String
-  partner2Email: String
-  inviteCode: String
-  defaultSplitPercent: Int!
-  expenseCount: Int
-  settlementCount: Int
-  partner1TotalPaid: Int
-  partner2TotalPaid: Int
-  partner1TotalOwes: Int
-  partner2TotalOwes: Int
-  netBalance: Int
-  lastCalculatedAt: AWSDateTime
 }
 
 input UpdateCoupleInput {
   id: ID!
+  owners: [String!]
   name: String
   partner1Id: String
   partner1Name: String
@@ -381,19 +474,19 @@ input ModelSubscriptionCoupleFilterInput {
   or: [ModelSubscriptionCoupleFilterInput]
   coupleExpensesId: ModelSubscriptionIDInput
   coupleSettlementsId: ModelSubscriptionIDInput
-  owner: ModelStringInput
+  owners: ModelStringInput
 }
 
 type Subscription {
-  onCreateCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["createCouple"]) @aws_cognito_user_pools
-  onUpdateCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["updateCouple"]) @aws_cognito_user_pools
-  onDeleteCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["deleteCouple"]) @aws_cognito_user_pools
-  onCreateExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["createExpense"]) @aws_cognito_user_pools
-  onUpdateExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["updateExpense"]) @aws_cognito_user_pools
-  onDeleteExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["deleteExpense"]) @aws_cognito_user_pools
-  onCreateSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["createSettlement"]) @aws_cognito_user_pools
-  onUpdateSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["updateSettlement"]) @aws_cognito_user_pools
-  onDeleteSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["deleteSettlement"]) @aws_cognito_user_pools
+  onCreateCouple(filter: ModelSubscriptionCoupleFilterInput): Couple @aws_subscribe(mutations: ["createCouple"]) @aws_cognito_user_pools
+  onUpdateCouple(filter: ModelSubscriptionCoupleFilterInput): Couple @aws_subscribe(mutations: ["updateCouple"]) @aws_cognito_user_pools
+  onDeleteCouple(filter: ModelSubscriptionCoupleFilterInput): Couple @aws_subscribe(mutations: ["deleteCouple"]) @aws_cognito_user_pools
+  onCreateExpense(filter: ModelSubscriptionExpenseFilterInput): Expense @aws_subscribe(mutations: ["createExpense"]) @aws_cognito_user_pools
+  onUpdateExpense(filter: ModelSubscriptionExpenseFilterInput): Expense @aws_subscribe(mutations: ["updateExpense"]) @aws_cognito_user_pools
+  onDeleteExpense(filter: ModelSubscriptionExpenseFilterInput): Expense @aws_subscribe(mutations: ["deleteExpense"]) @aws_cognito_user_pools
+  onCreateSettlement(filter: ModelSubscriptionSettlementFilterInput): Settlement @aws_subscribe(mutations: ["createSettlement"]) @aws_cognito_user_pools
+  onUpdateSettlement(filter: ModelSubscriptionSettlementFilterInput): Settlement @aws_subscribe(mutations: ["updateSettlement"]) @aws_cognito_user_pools
+  onDeleteSettlement(filter: ModelSubscriptionSettlementFilterInput): Settlement @aws_subscribe(mutations: ["deleteSettlement"]) @aws_cognito_user_pools
 }
 
 type ModelExpenseConnection @aws_cognito_user_pools {
@@ -403,6 +496,7 @@ type ModelExpenseConnection @aws_cognito_user_pools {
 
 input ModelExpenseFilterInput {
   id: ModelIDInput
+  owners: ModelStringInput
   coupleId: ModelIDInput
   description: ModelStringInput
   amount: ModelIntInput
@@ -419,10 +513,10 @@ input ModelExpenseFilterInput {
   or: [ModelExpenseFilterInput]
   not: ModelExpenseFilterInput
   coupleExpensesId: ModelIDInput
-  owner: ModelStringInput
 }
 
 input ModelExpenseConditionInput {
+  owners: ModelStringInput
   coupleId: ModelIDInput
   description: ModelStringInput
   amount: ModelIntInput
@@ -439,41 +533,6 @@ input ModelExpenseConditionInput {
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   coupleExpensesId: ModelIDInput
-  owner: ModelStringInput
-}
-
-input CreateExpenseInput {
-  id: ID
-  coupleId: ID!
-  description: String!
-  amount: Int!
-  paidBy: String!
-  splitType: String!
-  partner1Share: Int!
-  partner2Share: Int!
-  category: String!
-  date: AWSDate!
-  note: String
-  coupleExpensesId: ID
-}
-
-input UpdateExpenseInput {
-  id: ID!
-  coupleId: ID
-  description: String
-  amount: Int
-  paidBy: String
-  splitType: String
-  partner1Share: Int
-  partner2Share: Int
-  category: String
-  date: AWSDate
-  note: String
-  coupleExpensesId: ID
-}
-
-input DeleteExpenseInput {
-  id: ID!
 }
 
 input ModelSubscriptionExpenseFilterInput {
@@ -492,7 +551,7 @@ input ModelSubscriptionExpenseFilterInput {
   updatedAt: ModelSubscriptionStringInput
   and: [ModelSubscriptionExpenseFilterInput]
   or: [ModelSubscriptionExpenseFilterInput]
-  owner: ModelStringInput
+  owners: ModelStringInput
 }
 
 type ModelSettlementConnection @aws_cognito_user_pools {
@@ -502,6 +561,7 @@ type ModelSettlementConnection @aws_cognito_user_pools {
 
 input ModelSettlementFilterInput {
   id: ModelIDInput
+  owners: ModelStringInput
   coupleId: ModelIDInput
   amount: ModelIntInput
   paidBy: ModelStringInput
@@ -514,10 +574,10 @@ input ModelSettlementFilterInput {
   or: [ModelSettlementFilterInput]
   not: ModelSettlementFilterInput
   coupleSettlementsId: ModelIDInput
-  owner: ModelStringInput
 }
 
 input ModelSettlementConditionInput {
+  owners: ModelStringInput
   coupleId: ModelIDInput
   amount: ModelIntInput
   paidBy: ModelStringInput
@@ -530,33 +590,6 @@ input ModelSettlementConditionInput {
   createdAt: ModelStringInput
   updatedAt: ModelStringInput
   coupleSettlementsId: ModelIDInput
-  owner: ModelStringInput
-}
-
-input CreateSettlementInput {
-  id: ID
-  coupleId: ID!
-  amount: Int!
-  paidBy: String!
-  paidTo: String!
-  date: AWSDate!
-  note: String
-  coupleSettlementsId: ID
-}
-
-input UpdateSettlementInput {
-  id: ID!
-  coupleId: ID
-  amount: Int
-  paidBy: String
-  paidTo: String
-  date: AWSDate
-  note: String
-  coupleSettlementsId: ID
-}
-
-input DeleteSettlementInput {
-  id: ID!
 }
 
 input ModelSubscriptionSettlementFilterInput {
@@ -571,5 +604,15 @@ input ModelSubscriptionSettlementFilterInput {
   updatedAt: ModelSubscriptionStringInput
   and: [ModelSubscriptionSettlementFilterInput]
   or: [ModelSubscriptionSettlementFilterInput]
-  owner: ModelStringInput
+  owners: ModelStringInput
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
 }

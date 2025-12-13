@@ -8,6 +8,14 @@
           ],
           "category": "auth",
           "resourceName": "rickshareahea33e0e6"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "coupleWriteService"
         }
       ],
       "output": {
@@ -61,6 +69,20 @@
     }
   },
   "function": {
+    "coupleWriteService": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "rickshareah"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "processReceipt": {
       "build": true,
       "dependsOn": [
@@ -81,40 +103,6 @@
       "lastPushTimeStamp": "2025-12-11T17:42:09.900Z",
       "service": "amplifyhosting",
       "type": "cicd"
-    }
-  },
-  "parameters": {
-    "AMPLIFY_function_processReceipt_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processReceipt"
-        }
-      ]
-    },
-    "AMPLIFY_function_processReceipt_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processReceipt"
-        }
-      ]
-    },
-    "AMPLIFY_hosting_amplifyhosting_appId": {
-      "usedBy": [
-        {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
-        }
-      ]
-    },
-    "AMPLIFY_hosting_amplifyhosting_type": {
-      "usedBy": [
-        {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
-        }
-      ]
     }
   },
   "storage": {

@@ -1,0 +1,23 @@
+{
+  "fieldName": "createExpenseTrusted",
+  "identity": {
+    "sub": "test-user-id",
+    "claims": {
+      "sub": "test-user-id",
+      "email": "test@example.com"
+    }
+  },
+  "arguments": {
+    "input": {
+      "coupleId": "test-couple-id",
+      "description": "Test expense",
+      "amount": 1000,
+      "paidBy": "test-user-id",
+      "splitType": "equal",
+      "partner1Share": 500,
+      "partner2Share": 500,
+      "category": "food",
+      "date": "2025-01-01"
+    }
+  }
+}

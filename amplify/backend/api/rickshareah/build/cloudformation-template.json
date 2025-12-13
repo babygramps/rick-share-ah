@@ -127,7 +127,7 @@
                         "ApiId"
                     ]
                 },
-                "Expires": 1766267221
+                "Expires": 1766273217
             }
         },
         "GraphQLAPINONEDS95A13CF0": {
@@ -289,10 +289,10 @@
                             "Outputs.transformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId"
                         ]
                     },
-                    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId": {
+                    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunctionA71F805FFunctionId": {
                         "Fn::GetAtt": [
                             "Couple",
-                            "Outputs.transformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId"
+                            "Outputs.transformerrootstackCoupleCoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunctionA71F805FFunctionId"
                         ]
                     }
                 },
@@ -401,10 +401,10 @@
                             "Outputs.transformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId"
                         ]
                     },
-                    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId": {
+                    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunctionA71F805FFunctionId": {
                         "Fn::GetAtt": [
                             "Couple",
-                            "Outputs.transformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId"
+                            "Outputs.transformerrootstackCoupleCoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunctionA71F805FFunctionId"
                         ]
                     }
                 },

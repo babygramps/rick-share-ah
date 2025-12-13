@@ -1478,7 +1478,7 @@
         "TypeName": "Query"
       }
     },
-    "CoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunction33FA7522": {
+    "CoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunction6B7C5938": {
       "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
@@ -1488,7 +1488,7 @@
           "Ref": "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name"
         },
         "FunctionVersion": "2018-05-29",
-        "Name": "CoupleOwnerDataResolverFn",
+        "Name": "CoupleOwnersDataResolverFn",
         "RequestMappingTemplateS3Location": {
           "Fn::Join": [
             "",
@@ -1501,7 +1501,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Couple.owner.req.vtl"
+              "/resolvers/Couple.owners.req.vtl"
             ]
           ]
         },
@@ -1517,25 +1517,25 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Couple.owner.res.vtl"
+              "/resolvers/Couple.owners.res.vtl"
             ]
           ]
         }
       }
     },
-    "CoupleownerResolver": {
+    "CoupleownersResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
-        "FieldName": "owner",
+        "FieldName": "owners",
         "Kind": "PIPELINE",
         "PipelineConfig": {
           "Functions": [
             {
               "Fn::GetAtt": [
-                "CoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunction33FA7522",
+                "CoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunction6B7C5938",
                 "FunctionId"
               ]
             }
@@ -1545,7 +1545,7 @@
           "Fn::Join": [
             "",
             [
-              "$util.qr($ctx.stash.put(\"typeName\", \"Couple\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"owner\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              "$util.qr($ctx.stash.put(\"typeName\", \"Couple\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"owners\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
@@ -1670,10 +1670,10 @@
         ]
       }
     },
-    "transformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId": {
+    "transformerrootstackCoupleCoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunctionA71F805FFunctionId": {
       "Value": {
         "Fn::GetAtt": [
-          "CoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunction33FA7522",
+          "CoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunction6B7C5938",
           "FunctionId"
         ]
       }

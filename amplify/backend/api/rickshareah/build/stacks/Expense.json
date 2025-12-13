@@ -70,7 +70,7 @@
     "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId": {
       "Type": "String"
     },
-    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId": {
+    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunctionA71F805FFunctionId": {
       "Type": "String"
     }
   },
@@ -126,6 +126,10 @@
             "AttributeType": "S"
           },
           {
+            "AttributeName": "date",
+            "AttributeType": "S"
+          },
+          {
             "AttributeName": "coupleExpensesId",
             "AttributeType": "S"
           }
@@ -146,6 +150,10 @@
               {
                 "AttributeName": "coupleId",
                 "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "date",
+                "KeyType": "RANGE"
               }
             ],
             "Projection": {
@@ -1181,7 +1189,7 @@
         "TypeName": "Subscription"
       }
     },
-    "QueryExpensesByCoupleIdDataResolverFnQueryExpensesByCoupleIdDataResolverFnAppSyncFunction4E5AC604": {
+    "QueryExpensesByCoupleIdAndDateDataResolverFnQueryExpensesByCoupleIdAndDateDataResolverFnAppSyncFunctionEE388431": {
       "Type": "AWS::AppSync::FunctionConfiguration",
       "Properties": {
         "ApiId": {
@@ -1194,7 +1202,7 @@
           ]
         },
         "FunctionVersion": "2018-05-29",
-        "Name": "QueryExpensesByCoupleIdDataResolverFn",
+        "Name": "QueryExpensesByCoupleIdAndDateDataResolverFn",
         "RequestMappingTemplateS3Location": {
           "Fn::Join": [
             "",
@@ -1207,7 +1215,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Query.expensesByCoupleId.req.vtl"
+              "/resolvers/Query.expensesByCoupleIdAndDate.req.vtl"
             ]
           ]
         },
@@ -1223,7 +1231,7 @@
               {
                 "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
               },
-              "/resolvers/Query.expensesByCoupleId.res.vtl"
+              "/resolvers/Query.expensesByCoupleIdAndDate.res.vtl"
             ]
           ]
         }
@@ -1232,13 +1240,13 @@
         "ExpenseDataSource"
       ]
     },
-    "QueryexpensesByCoupleIdResolver": {
+    "QueryexpensesByCoupleIdAndDateResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
-        "FieldName": "expensesByCoupleId",
+        "FieldName": "expensesByCoupleIdAndDate",
         "Kind": "PIPELINE",
         "PipelineConfig": {
           "Functions": [
@@ -1250,7 +1258,7 @@
             },
             {
               "Fn::GetAtt": [
-                "QueryExpensesByCoupleIdDataResolverFnQueryExpensesByCoupleIdDataResolverFnAppSyncFunction4E5AC604",
+                "QueryExpensesByCoupleIdAndDateDataResolverFnQueryExpensesByCoupleIdAndDateDataResolverFnAppSyncFunctionEE388431",
                 "FunctionId"
               ]
             }
@@ -1260,7 +1268,7 @@
           "Fn::Join": [
             "",
             [
-              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"expensesByCoupleId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"expensesByCoupleIdAndDate\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
@@ -1276,18 +1284,18 @@
         "TypeName": "Query"
       }
     },
-    "ExpenseownerResolver": {
+    "ExpenseownersResolver": {
       "Type": "AWS::AppSync::Resolver",
       "Properties": {
         "ApiId": {
           "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
         },
-        "FieldName": "owner",
+        "FieldName": "owners",
         "Kind": "PIPELINE",
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId"
+              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnersDataResolverFnCoupleOwnersDataResolverFnAppSyncFunctionA71F805FFunctionId"
             }
           ]
         },
@@ -1295,7 +1303,7 @@
           "Fn::Join": [
             "",
             [
-              "$util.qr($ctx.stash.put(\"typeName\", \"Expense\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"owner\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              "$util.qr($ctx.stash.put(\"typeName\", \"Expense\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"owners\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"NONE\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
