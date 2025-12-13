@@ -1,18 +1,53 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { BalanceDisplay } from '../components/dashboard/BalanceDisplay';
 import { ExpenseCard } from '../components/expenses/ExpenseCard';
+import { SettlementCard } from '../components/settlements/SettlementCard';
 import { SettleUpModal } from '../components/settlements/SettleUpModal';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import type { Expense, Settlement } from '../types';
+
+// Union type for activity items
+type ActivityItem = 
+  | { type: 'expense'; data: Expense; date: string }
+  | { type: 'settlement'; data: Settlement; date: string };
 
 export function Dashboard() {
-  const { expenses, balance } = useApp();
+  const { expenses, settlements, balance } = useApp();
   const [showSettleModal, setShowSettleModal] = useState(false);
 
-  // Get recent expenses (last 5)
-  const recentExpenses = expenses.slice(0, 5);
+  // Combine and sort expenses and settlements for recent activity
+  const recentActivity = useMemo<ActivityItem[]>(() => {
+    const items: ActivityItem[] = [];
+    
+    // Add expenses
+    for (const expense of expenses) {
+      items.push({ type: 'expense', data: expense, date: expense.date });
+    }
+    
+    // Add settlements
+    for (const settlement of settlements) {
+      items.push({ type: 'settlement', data: settlement, date: settlement.date });
+    }
+    
+    // Sort by date descending, then by createdAt descending (most recent first)
+    items.sort((a, b) => {
+      const dateCompare = new Date(b.date).getTime() - new Date(a.date).getTime();
+      if (dateCompare !== 0) return dateCompare;
+      
+      // Same date - use createdAt for secondary sort (most recently created first)
+      const aCreatedAt = a.data.createdAt ? new Date(a.data.createdAt).getTime() : 0;
+      const bCreatedAt = b.data.createdAt ? new Date(b.data.createdAt).getTime() : 0;
+      return bCreatedAt - aCreatedAt;
+    });
+    
+    // Return only the 5 most recent items
+    return items.slice(0, 5);
+  }, [expenses, settlements]);
+
+  const totalActivityCount = expenses.length + settlements.length;
 
   return (
     <div className="space-y-6">
@@ -36,11 +71,11 @@ export function Dashboard() {
         </Button>
       </div>
 
-      {/* Recent expenses */}
+      {/* Recent activity */}
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">Recent Activity</h2>
-          {expenses.length > 5 && (
+          {totalActivityCount > 5 && (
             <Link 
               to="/history" 
               className="font-mono text-sm text-[var(--color-coral)] hover:underline"
@@ -50,10 +85,10 @@ export function Dashboard() {
           )}
         </div>
 
-        {recentExpenses.length === 0 ? (
+        {recentActivity.length === 0 ? (
           <Card className="text-center py-12">
             <div className="text-5xl mb-4">🌱</div>
-            <h3 className="font-bold text-lg mb-2">No expenses yet!</h3>
+            <h3 className="font-bold text-lg mb-2">No activity yet!</h3>
             <p className="font-mono text-sm text-[var(--color-plum)]/70 mb-6">
               Start tracking your shared expenses
             </p>
@@ -63,13 +98,17 @@ export function Dashboard() {
           </Card>
         ) : (
           <div className="space-y-3">
-            {recentExpenses.map((expense, index) => (
+            {recentActivity.map((item, index) => (
               <div 
-                key={expense.id} 
+                key={`${item.type}-${item.data.id}`}
                 className={`animate-slide-up stagger-${Math.min(index + 1, 5)}`}
                 style={{ opacity: 0, animationFillMode: 'forwards' }}
               >
-                <ExpenseCard expense={expense} showActions={false} />
+                {item.type === 'expense' ? (
+                  <ExpenseCard expense={item.data} showActions={false} />
+                ) : (
+                  <SettlementCard settlement={item.data} showActions={false} />
+                )}
               </div>
             ))}
           </div>
@@ -84,5 +123,3 @@ export function Dashboard() {
     </div>
   );
 }
-
-
