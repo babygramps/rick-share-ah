@@ -414,6 +414,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const loadUserData = async (userId: string) => {
     try {
+      console.log('[loadUserData] Starting for userId:', userId);
+      
       // Find couple where user is partner1 or partner2
       const coupleResult = await getClient().graphql({
         query: queries.listCouples,
@@ -427,17 +429,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
         }
       });
 
+      console.log('[loadUserData] Full query result:', JSON.stringify(coupleResult, null, 2));
       const couples = (coupleResult as any).data?.listCouples?.items || [];
+      console.log('[loadUserData] Found couples:', couples.length, couples);
       
       if (couples.length > 0) {
         const userCouple = couples[0];
+        console.log('[loadUserData] Setting couple:', userCouple.id, userCouple.name);
         setCouple(userCouple);
         
         // Load expenses and settlements for this couple
         await loadCoupleData(userCouple.id);
+      } else {
+        console.log('[loadUserData] No couples found for user');
       }
     } catch (error) {
-      console.error('Error loading user data:', error);
+      console.error('[loadUserData] Error loading user data:', error);
     }
   };
 
@@ -447,27 +454,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
       
       // Load expenses (now with sort key on date)
       const expenseResult = await getClient().graphql({
-        query: queries.expensesByCoupleId,
+        query: queries.expensesByCoupleIdAndDate,
         variables: { 
           coupleId,
           sortDirection: 'DESC'
         }
       });
       console.log('Expense query result:', expenseResult);
-      const loadedExpenses = (expenseResult as any).data?.expensesByCoupleId?.items || [];
+      const loadedExpenses = (expenseResult as any).data?.expensesByCoupleIdAndDate?.items || [];
       console.log('Loaded expenses:', loadedExpenses.length, loadedExpenses);
       setExpenses(loadedExpenses);
 
       // Load settlements (now with sort key on date)
       const settlementResult = await getClient().graphql({
-        query: queries.settlementsByCoupleId,
+        query: queries.settlementsByCoupleIdAndDate,
         variables: { 
           coupleId,
           sortDirection: 'DESC'
         }
       });
       console.log('Settlement query result:', settlementResult);
-      const loadedSettlements = (settlementResult as any).data?.settlementsByCoupleId?.items || [];
+      const loadedSettlements = (settlementResult as any).data?.settlementsByCoupleIdAndDate?.items || [];
       console.log('Loaded settlements:', loadedSettlements.length);
       setSettlements(loadedSettlements);
     } catch (error) {
