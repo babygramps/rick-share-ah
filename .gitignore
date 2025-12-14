@@ -48,3 +48,6 @@ npm-debug.log*
 
 # Vite
 .vite/
+
+# Amplify backup folder (created by CLI during push operations)
+amplify-backup/

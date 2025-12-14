@@ -3,6 +3,8 @@ frontend:
   phases:
     preBuild:
       commands:
+        # Remove amplify-backup if it exists (prevents CLI backup failures)
+        - rm -rf amplify-backup || true
         - npm ci
     build:
       commands:
