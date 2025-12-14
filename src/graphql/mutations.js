@@ -8,6 +8,7 @@ export const createCouple = /* GraphQL */ `
   ) {
     createCouple(input: $input, condition: $condition) {
       id
+      owners
       name
       partner1Id
       partner1Name
@@ -35,7 +36,6 @@ export const createCouple = /* GraphQL */ `
       lastCalculatedAt
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -47,6 +47,7 @@ export const updateCouple = /* GraphQL */ `
   ) {
     updateCouple(input: $input, condition: $condition) {
       id
+      owners
       name
       partner1Id
       partner1Name
@@ -74,7 +75,6 @@ export const updateCouple = /* GraphQL */ `
       lastCalculatedAt
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -86,6 +86,7 @@ export const deleteCouple = /* GraphQL */ `
   ) {
     deleteCouple(input: $input, condition: $condition) {
       id
+      owners
       name
       partner1Id
       partner1Name
@@ -113,7 +114,6 @@ export const deleteCouple = /* GraphQL */ `
       lastCalculatedAt
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -125,9 +125,11 @@ export const createExpense = /* GraphQL */ `
   ) {
     createExpense(input: $input, condition: $condition) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -147,7 +149,6 @@ export const createExpense = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       description
@@ -162,7 +163,6 @@ export const createExpense = /* GraphQL */ `
       createdAt
       updatedAt
       coupleExpensesId
-      owner
       __typename
     }
   }
@@ -174,9 +174,11 @@ export const updateExpense = /* GraphQL */ `
   ) {
     updateExpense(input: $input, condition: $condition) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -196,7 +198,6 @@ export const updateExpense = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       description
@@ -211,7 +212,6 @@ export const updateExpense = /* GraphQL */ `
       createdAt
       updatedAt
       coupleExpensesId
-      owner
       __typename
     }
   }
@@ -223,9 +223,11 @@ export const deleteExpense = /* GraphQL */ `
   ) {
     deleteExpense(input: $input, condition: $condition) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -245,7 +247,6 @@ export const deleteExpense = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       description
@@ -260,7 +261,6 @@ export const deleteExpense = /* GraphQL */ `
       createdAt
       updatedAt
       coupleExpensesId
-      owner
       __typename
     }
   }
@@ -272,9 +272,11 @@ export const createSettlement = /* GraphQL */ `
   ) {
     createSettlement(input: $input, condition: $condition) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -294,7 +296,6 @@ export const createSettlement = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       amount
@@ -305,7 +306,6 @@ export const createSettlement = /* GraphQL */ `
       createdAt
       updatedAt
       coupleSettlementsId
-      owner
       __typename
     }
   }
@@ -317,9 +317,11 @@ export const updateSettlement = /* GraphQL */ `
   ) {
     updateSettlement(input: $input, condition: $condition) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -339,7 +341,6 @@ export const updateSettlement = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       amount
@@ -350,7 +351,6 @@ export const updateSettlement = /* GraphQL */ `
       createdAt
       updatedAt
       coupleSettlementsId
-      owner
       __typename
     }
   }
@@ -362,9 +362,11 @@ export const deleteSettlement = /* GraphQL */ `
   ) {
     deleteSettlement(input: $input, condition: $condition) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -384,7 +386,6 @@ export const deleteSettlement = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       amount
@@ -395,7 +396,6 @@ export const deleteSettlement = /* GraphQL */ `
       createdAt
       updatedAt
       coupleSettlementsId
-      owner
       __typename
     }
   }
@@ -418,6 +418,407 @@ export const processReceipt = /* GraphQL */ `
       }
       rawText
       imageUrl
+      __typename
+    }
+  }
+`;
+export const createCoupleTrusted = /* GraphQL */ `
+  mutation CreateCoupleTrusted($input: CreateCoupleInput!) {
+    createCoupleTrusted(input: $input) {
+      success
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
+      clientMutationId
+      __typename
+    }
+  }
+`;
+export const joinCoupleByInviteCode = /* GraphQL */ `
+  mutation JoinCoupleByInviteCode($input: JoinCoupleInput!) {
+    joinCoupleByInviteCode(input: $input) {
+      success
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
+      clientMutationId
+      __typename
+    }
+  }
+`;
+export const createExpenseTrusted = /* GraphQL */ `
+  mutation CreateExpenseTrusted($input: CreateExpenseInput!) {
+    createExpenseTrusted(input: $input) {
+      success
+      expense {
+        id
+        owners
+        coupleId
+        description
+        amount
+        paidBy
+        splitType
+        partner1Share
+        partner2Share
+        category
+        date
+        note
+        createdAt
+        updatedAt
+        coupleExpensesId
+        __typename
+      }
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
+      clientMutationId
+      __typename
+    }
+  }
+`;
+export const updateExpenseTrusted = /* GraphQL */ `
+  mutation UpdateExpenseTrusted($input: UpdateExpenseInput!) {
+    updateExpenseTrusted(input: $input) {
+      success
+      expense {
+        id
+        owners
+        coupleId
+        description
+        amount
+        paidBy
+        splitType
+        partner1Share
+        partner2Share
+        category
+        date
+        note
+        createdAt
+        updatedAt
+        coupleExpensesId
+        __typename
+      }
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
+      clientMutationId
+      __typename
+    }
+  }
+`;
+export const deleteExpenseTrusted = /* GraphQL */ `
+  mutation DeleteExpenseTrusted($input: DeleteExpenseInput!) {
+    deleteExpenseTrusted(input: $input) {
+      success
+      expense {
+        id
+        owners
+        coupleId
+        description
+        amount
+        paidBy
+        splitType
+        partner1Share
+        partner2Share
+        category
+        date
+        note
+        createdAt
+        updatedAt
+        coupleExpensesId
+        __typename
+      }
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
+      clientMutationId
+      __typename
+    }
+  }
+`;
+export const createSettlementTrusted = /* GraphQL */ `
+  mutation CreateSettlementTrusted($input: CreateSettlementInput!) {
+    createSettlementTrusted(input: $input) {
+      success
+      settlement {
+        id
+        owners
+        coupleId
+        amount
+        paidBy
+        paidTo
+        date
+        note
+        createdAt
+        updatedAt
+        coupleSettlementsId
+        __typename
+      }
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
+      clientMutationId
+      __typename
+    }
+  }
+`;
+export const updateSettlementTrusted = /* GraphQL */ `
+  mutation UpdateSettlementTrusted($input: UpdateSettlementInput!) {
+    updateSettlementTrusted(input: $input) {
+      success
+      settlement {
+        id
+        owners
+        coupleId
+        amount
+        paidBy
+        paidTo
+        date
+        note
+        createdAt
+        updatedAt
+        coupleSettlementsId
+        __typename
+      }
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
+      clientMutationId
+      __typename
+    }
+  }
+`;
+export const deleteSettlementTrusted = /* GraphQL */ `
+  mutation DeleteSettlementTrusted($input: DeleteSettlementInput!) {
+    deleteSettlementTrusted(input: $input) {
+      success
+      settlement {
+        id
+        owners
+        coupleId
+        amount
+        paidBy
+        paidTo
+        date
+        note
+        createdAt
+        updatedAt
+        coupleSettlementsId
+        __typename
+      }
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
+      clientMutationId
+      __typename
+    }
+  }
+`;
+export const recalculateCoupleAggregates = /* GraphQL */ `
+  mutation RecalculateCoupleAggregates($coupleId: ID!) {
+    recalculateCoupleAggregates(coupleId: $coupleId) {
+      success
+      couple {
+        id
+        owners
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        expenseCount
+        settlementCount
+        partner1TotalPaid
+        partner2TotalPaid
+        partner1TotalOwes
+        partner2TotalOwes
+        netBalance
+        lastCalculatedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      error
       __typename
     }
   }

@@ -2,12 +2,10 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateCouple = /* GraphQL */ `
-  subscription OnCreateCouple(
-    $filter: ModelSubscriptionCoupleFilterInput
-    $owner: String
-  ) {
-    onCreateCouple(filter: $filter, owner: $owner) {
+  subscription OnCreateCouple($filter: ModelSubscriptionCoupleFilterInput) {
+    onCreateCouple(filter: $filter) {
       id
+      owners
       name
       partner1Id
       partner1Name
@@ -35,18 +33,15 @@ export const onCreateCouple = /* GraphQL */ `
       lastCalculatedAt
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
 `;
 export const onUpdateCouple = /* GraphQL */ `
-  subscription OnUpdateCouple(
-    $filter: ModelSubscriptionCoupleFilterInput
-    $owner: String
-  ) {
-    onUpdateCouple(filter: $filter, owner: $owner) {
+  subscription OnUpdateCouple($filter: ModelSubscriptionCoupleFilterInput) {
+    onUpdateCouple(filter: $filter) {
       id
+      owners
       name
       partner1Id
       partner1Name
@@ -74,18 +69,15 @@ export const onUpdateCouple = /* GraphQL */ `
       lastCalculatedAt
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
 `;
 export const onDeleteCouple = /* GraphQL */ `
-  subscription OnDeleteCouple(
-    $filter: ModelSubscriptionCoupleFilterInput
-    $owner: String
-  ) {
-    onDeleteCouple(filter: $filter, owner: $owner) {
+  subscription OnDeleteCouple($filter: ModelSubscriptionCoupleFilterInput) {
+    onDeleteCouple(filter: $filter) {
       id
+      owners
       name
       partner1Id
       partner1Name
@@ -113,21 +105,19 @@ export const onDeleteCouple = /* GraphQL */ `
       lastCalculatedAt
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
 `;
 export const onCreateExpense = /* GraphQL */ `
-  subscription OnCreateExpense(
-    $filter: ModelSubscriptionExpenseFilterInput
-    $owner: String
-  ) {
-    onCreateExpense(filter: $filter, owner: $owner) {
+  subscription OnCreateExpense($filter: ModelSubscriptionExpenseFilterInput) {
+    onCreateExpense(filter: $filter) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -147,7 +137,6 @@ export const onCreateExpense = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       description
@@ -162,21 +151,19 @@ export const onCreateExpense = /* GraphQL */ `
       createdAt
       updatedAt
       coupleExpensesId
-      owner
       __typename
     }
   }
 `;
 export const onUpdateExpense = /* GraphQL */ `
-  subscription OnUpdateExpense(
-    $filter: ModelSubscriptionExpenseFilterInput
-    $owner: String
-  ) {
-    onUpdateExpense(filter: $filter, owner: $owner) {
+  subscription OnUpdateExpense($filter: ModelSubscriptionExpenseFilterInput) {
+    onUpdateExpense(filter: $filter) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -196,7 +183,6 @@ export const onUpdateExpense = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       description
@@ -211,21 +197,19 @@ export const onUpdateExpense = /* GraphQL */ `
       createdAt
       updatedAt
       coupleExpensesId
-      owner
       __typename
     }
   }
 `;
 export const onDeleteExpense = /* GraphQL */ `
-  subscription OnDeleteExpense(
-    $filter: ModelSubscriptionExpenseFilterInput
-    $owner: String
-  ) {
-    onDeleteExpense(filter: $filter, owner: $owner) {
+  subscription OnDeleteExpense($filter: ModelSubscriptionExpenseFilterInput) {
+    onDeleteExpense(filter: $filter) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -245,7 +229,6 @@ export const onDeleteExpense = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       description
@@ -260,7 +243,6 @@ export const onDeleteExpense = /* GraphQL */ `
       createdAt
       updatedAt
       coupleExpensesId
-      owner
       __typename
     }
   }
@@ -268,13 +250,14 @@ export const onDeleteExpense = /* GraphQL */ `
 export const onCreateSettlement = /* GraphQL */ `
   subscription OnCreateSettlement(
     $filter: ModelSubscriptionSettlementFilterInput
-    $owner: String
   ) {
-    onCreateSettlement(filter: $filter, owner: $owner) {
+    onCreateSettlement(filter: $filter) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -294,7 +277,6 @@ export const onCreateSettlement = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       amount
@@ -305,7 +287,6 @@ export const onCreateSettlement = /* GraphQL */ `
       createdAt
       updatedAt
       coupleSettlementsId
-      owner
       __typename
     }
   }
@@ -313,13 +294,14 @@ export const onCreateSettlement = /* GraphQL */ `
 export const onUpdateSettlement = /* GraphQL */ `
   subscription OnUpdateSettlement(
     $filter: ModelSubscriptionSettlementFilterInput
-    $owner: String
   ) {
-    onUpdateSettlement(filter: $filter, owner: $owner) {
+    onUpdateSettlement(filter: $filter) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -339,7 +321,6 @@ export const onUpdateSettlement = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       amount
@@ -350,7 +331,6 @@ export const onUpdateSettlement = /* GraphQL */ `
       createdAt
       updatedAt
       coupleSettlementsId
-      owner
       __typename
     }
   }
@@ -358,13 +338,14 @@ export const onUpdateSettlement = /* GraphQL */ `
 export const onDeleteSettlement = /* GraphQL */ `
   subscription OnDeleteSettlement(
     $filter: ModelSubscriptionSettlementFilterInput
-    $owner: String
   ) {
-    onDeleteSettlement(filter: $filter, owner: $owner) {
+    onDeleteSettlement(filter: $filter) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -384,7 +365,6 @@ export const onDeleteSettlement = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       amount
@@ -395,7 +375,6 @@ export const onDeleteSettlement = /* GraphQL */ `
       createdAt
       updatedAt
       coupleSettlementsId
-      owner
       __typename
     }
   }

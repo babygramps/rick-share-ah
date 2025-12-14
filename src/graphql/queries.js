@@ -5,6 +5,7 @@ export const getCouple = /* GraphQL */ `
   query GetCouple($id: ID!) {
     getCouple(id: $id) {
       id
+      owners
       name
       partner1Id
       partner1Name
@@ -32,7 +33,6 @@ export const getCouple = /* GraphQL */ `
       lastCalculatedAt
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -46,6 +46,7 @@ export const listCouples = /* GraphQL */ `
     listCouples(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -65,7 +66,6 @@ export const listCouples = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
@@ -90,6 +90,7 @@ export const couplesByInviteCode = /* GraphQL */ `
     ) {
       items {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -109,7 +110,6 @@ export const couplesByInviteCode = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
@@ -121,9 +121,11 @@ export const getExpense = /* GraphQL */ `
   query GetExpense($id: ID!) {
     getExpense(id: $id) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -143,7 +145,6 @@ export const getExpense = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       description
@@ -158,7 +159,6 @@ export const getExpense = /* GraphQL */ `
       createdAt
       updatedAt
       coupleExpensesId
-      owner
       __typename
     }
   }
@@ -172,6 +172,7 @@ export const listExpenses = /* GraphQL */ `
     listExpenses(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        owners
         coupleId
         description
         amount
@@ -185,7 +186,6 @@ export const listExpenses = /* GraphQL */ `
         createdAt
         updatedAt
         coupleExpensesId
-        owner
         __typename
       }
       nextToken
@@ -193,16 +193,18 @@ export const listExpenses = /* GraphQL */ `
     }
   }
 `;
-export const expensesByCoupleId = /* GraphQL */ `
-  query ExpensesByCoupleId(
+export const expensesByCoupleIdAndDate = /* GraphQL */ `
+  query ExpensesByCoupleIdAndDate(
     $coupleId: ID!
+    $date: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelExpenseFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    expensesByCoupleId(
+    expensesByCoupleIdAndDate(
       coupleId: $coupleId
+      date: $date
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -210,6 +212,7 @@ export const expensesByCoupleId = /* GraphQL */ `
     ) {
       items {
         id
+        owners
         coupleId
         description
         amount
@@ -223,7 +226,6 @@ export const expensesByCoupleId = /* GraphQL */ `
         createdAt
         updatedAt
         coupleExpensesId
-        owner
         __typename
       }
       nextToken
@@ -235,9 +237,11 @@ export const getSettlement = /* GraphQL */ `
   query GetSettlement($id: ID!) {
     getSettlement(id: $id) {
       id
+      owners
       coupleId
       couple {
         id
+        owners
         name
         partner1Id
         partner1Name
@@ -257,7 +261,6 @@ export const getSettlement = /* GraphQL */ `
         lastCalculatedAt
         createdAt
         updatedAt
-        owner
         __typename
       }
       amount
@@ -268,7 +271,6 @@ export const getSettlement = /* GraphQL */ `
       createdAt
       updatedAt
       coupleSettlementsId
-      owner
       __typename
     }
   }
@@ -282,6 +284,7 @@ export const listSettlements = /* GraphQL */ `
     listSettlements(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        owners
         coupleId
         amount
         paidBy
@@ -291,7 +294,6 @@ export const listSettlements = /* GraphQL */ `
         createdAt
         updatedAt
         coupleSettlementsId
-        owner
         __typename
       }
       nextToken
@@ -299,16 +301,18 @@ export const listSettlements = /* GraphQL */ `
     }
   }
 `;
-export const settlementsByCoupleId = /* GraphQL */ `
-  query SettlementsByCoupleId(
+export const settlementsByCoupleIdAndDate = /* GraphQL */ `
+  query SettlementsByCoupleIdAndDate(
     $coupleId: ID!
+    $date: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelSettlementFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    settlementsByCoupleId(
+    settlementsByCoupleIdAndDate(
       coupleId: $coupleId
+      date: $date
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -316,6 +320,7 @@ export const settlementsByCoupleId = /* GraphQL */ `
     ) {
       items {
         id
+        owners
         coupleId
         amount
         paidBy
@@ -325,7 +330,6 @@ export const settlementsByCoupleId = /* GraphQL */ `
         createdAt
         updatedAt
         coupleSettlementsId
-        owner
         __typename
       }
       nextToken
