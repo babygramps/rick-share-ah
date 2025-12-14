@@ -1,4 +1,6 @@
 {
-  "scriptRecursionBreaker": true
+  "pluginId": "amplify-nodejs-function-runtime-provider",
+  "functionRuntime": "nodejs",
+  "useLegacyBuild": false,
+  "defaultEditorFile": "src/index.js"
 }
-
