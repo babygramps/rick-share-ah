@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { ScanOverlay, type ScanOverlayMode, type ScanOverlayOutput } from './ScanOverlay';
-import { ScanResults, type ScanApplySelection } from './ScanResults';
+import { ScanResults, type ScanApplySelection, type ScanOverrides } from './ScanResults';
 import type { ReceiptLineItemAssignment } from '../../types';
 import { computeLineItemSplitPercent } from './LineItemAssigner';
 import { useReceiptScan } from '../../hooks/useReceiptScan';
@@ -31,6 +31,7 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
   const [scanId, setScanId] = useState<string | null>(null);
   const [scan, setScan] = useState<any>(null);
   const [lineItemAssignments, setLineItemAssignments] = useState<ReceiptLineItemAssignment[]>([]);
+  const [overrides, setOverrides] = useState<ScanOverrides>({});
 
   const { isUploading, isProcessing, error, uploadAndProcess } = useReceiptScan();
 
@@ -69,6 +70,7 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
     setScanId(null);
     setScan(null);
     setLineItemAssignments([]);
+    setOverrides({});
     setSelection({ description: true, amount: true, date: true, category: true });
     setMode('camera');
   };
@@ -115,19 +117,24 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
   const apply = () => {
     if (!scan) return;
 
+    // Use overrides if available, otherwise fall back to scan values
+    const effectiveMerchant = overrides.merchantName ?? scan.merchantName;
+    const effectiveAmount = overrides.totalAmount !== undefined ? overrides.totalAmount : scan.totalAmount;
+    const effectiveDate = overrides.date ?? scan.date;
+
     const payload: ReceiptScannerApplyPayload = {
       imageKey: imageKey || undefined,
       confidence: scan?.confidence ?? undefined,
     };
 
-    if (selection.description && scan.merchantName) {
-      payload.description = String(scan.merchantName);
+    if (selection.description && effectiveMerchant) {
+      payload.description = String(effectiveMerchant);
     }
-    if (selection.amount && typeof scan.totalAmount === 'number') {
-      payload.amountCents = scan.totalAmount;
+    if (selection.amount && typeof effectiveAmount === 'number') {
+      payload.amountCents = effectiveAmount;
     }
-    if (selection.date && scan.date) {
-      payload.date = String(scan.date);
+    if (selection.date && effectiveDate) {
+      payload.date = String(effectiveDate);
     }
     if (selection.category && scan.category) {
       payload.category = String(scan.category);
@@ -136,7 +143,7 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
     // If we have line items, compute a clean percentage split for the total.
     if (
       selection.amount &&
-      typeof scan.totalAmount === 'number' &&
+      typeof effectiveAmount === 'number' &&
       Array.isArray(lineItemAssignments) &&
       lineItemAssignments.length > 0
     ) {
@@ -147,7 +154,7 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
       }
     }
 
-    console.log('[receipt-scan] apply', { scanId, payload });
+    console.log('[receipt-scan] apply', { scanId, payload, overrides });
     onApply(payload);
     reset();
     onClose();
@@ -161,6 +168,8 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
           scan={scan}
           selection={selection}
           onSelectionChange={setSelection}
+          overrides={overrides}
+          onOverridesChange={setOverrides}
           lineItemAssignments={lineItemAssignments}
           onLineItemAssignmentsChange={setLineItemAssignments}
           onApply={apply}
@@ -168,6 +177,7 @@ export function ReceiptScanner({ isOpen, onClose, onApply }: ReceiptScannerProps
             setScan(null);
             setScanId(null);
             setImageKey(null);
+            setOverrides({});
           }}
         />
       );

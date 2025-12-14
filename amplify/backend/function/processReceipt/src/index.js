@@ -113,11 +113,40 @@ function pickBestSummaryField(summaryFields, wantedTypes) {
   return matches[0];
 }
 
+/**
+ * Pick the best total amount, preferring TOTAL over SUBTOTAL.
+ * SUBTOTAL is only used as a fallback if no TOTAL or AMOUNT_DUE is found.
+ */
+function pickBestTotal(summaryFields) {
+  // First, try to find TOTAL or AMOUNT_DUE (the actual total including tax)
+  const actualTotal = pickBestSummaryField(summaryFields, ['TOTAL', 'AMOUNT_DUE']);
+  if (actualTotal) {
+    log('debug', 'pickBestTotal.foundActualTotal', { 
+      type: actualTotal.typeText, 
+      value: actualTotal.valueText,
+      confidence: actualTotal.confidence 
+    });
+    return actualTotal;
+  }
+  
+  // Fallback to SUBTOTAL only if no actual total found
+  const subtotal = pickBestSummaryField(summaryFields, ['SUBTOTAL']);
+  if (subtotal) {
+    log('debug', 'pickBestTotal.fallbackToSubtotal', { 
+      value: subtotal.valueText,
+      confidence: subtotal.confidence 
+    });
+    return subtotal;
+  }
+  
+  return null;
+}
+
 function parseAnalyzeExpenseResponse(resp) {
   const doc = resp?.ExpenseDocuments?.[0];
   const summaryFields = doc?.SummaryFields || [];
 
-  const total = pickBestSummaryField(summaryFields, ['TOTAL', 'AMOUNT_DUE', 'SUBTOTAL']);
+  const total = pickBestTotal(summaryFields);
   const vendor = pickBestSummaryField(summaryFields, ['VENDOR_NAME']);
   const date = pickBestSummaryField(summaryFields, ['INVOICE_RECEIPT_DATE', 'TRANSACTION_DATE']);
 
