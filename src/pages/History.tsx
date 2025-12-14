@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { ExpenseCard } from '../components/expenses/ExpenseCard';
 import { SettlementCard } from '../components/settlements/SettlementCard';
@@ -8,59 +8,20 @@ import { Modal } from '../components/ui/Modal';
 import { Card } from '../components/ui/Card';
 import { Select } from '../components/ui/Select';
 import { Button } from '../components/ui/Button';
-import type { Expense, Settlement, HistoryItem as ServerHistoryItem } from '../types';
+import type { Expense, Settlement } from '../types';
 import { CATEGORIES } from '../types';
 import { formatMonthKey, formatCurrency } from '../utils/helpers';
 
-// Union type for history items (supports both client-side and server-side data)
+// Union type for history items
 type HistoryItem = 
   | { type: 'expense'; data: Expense; date: string }
   | { type: 'settlement'; data: Settlement; date: string };
-
-// Convert server HistoryItem to local format for rendering
-function serverItemToLocal(item: ServerHistoryItem): HistoryItem {
-  if (item.type === 'expense') {
-    return {
-      type: 'expense',
-      date: item.date,
-      data: {
-        id: item.id,
-        coupleId: '', // Not needed for display
-        description: item.description || '',
-        amount: item.amount,
-        paidBy: item.paidBy,
-        splitType: item.splitType || 'equal',
-        partner1Share: item.partner1Share || 0,
-        partner2Share: item.partner2Share || 0,
-        category: item.category || 'other',
-        date: item.date,
-        note: item.note,
-        createdAt: item.createdAt,
-      },
-    };
-  } else {
-    return {
-      type: 'settlement',
-      date: item.date,
-      data: {
-        id: item.id,
-        coupleId: '', // Not needed for display
-        amount: item.amount,
-        paidBy: item.paidBy,
-        paidTo: item.paidTo || '',
-        date: item.date,
-        note: item.note,
-        createdAt: item.createdAt,
-      },
-    };
-  }
-}
 
 // Pagination constants
 const ITEMS_PER_PAGE = 20;
 
 export function History() {
-  const { expenses, settlements, couple, deleteExpense, deleteSettlement, isLoading, fetchHistory } = useApp();
+  const { expenses, settlements, couple, deleteExpense, deleteSettlement, isLoading } = useApp();
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [deletingExpense, setDeletingExpense] = useState<Expense | null>(null);
   const [editingSettlement, setEditingSettlement] = useState<Settlement | null>(null);
@@ -71,84 +32,11 @@ export function History() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [paidByFilter, setPaidByFilter] = useState<string>('all');
 
-  // Server-side pagination state
-  const [serverItems, setServerItems] = useState<HistoryItem[]>([]);
-  const [serverNextToken, setServerNextToken] = useState<string | null>(null);
-  const [serverTotalCount, setServerTotalCount] = useState<number>(0);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [useServerPagination, setUseServerPagination] = useState(false);
-  const [serverError, setServerError] = useState(false);
-
-  // Client-side pagination (fallback)
+  // Client-side pagination
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
 
-  // Check if server-side pagination is available (couple has aggregates)
-  const serverPaginationAvailable = couple && typeof couple.netBalance === 'number';
-
-  // Load initial data from server when filters change
-  const loadServerData = useCallback(async (reset: boolean = false) => {
-    if (!couple?.id) return;
-    
-    setIsLoadingMore(true);
-    setServerError(false);
-    
-    try {
-      console.log('[History] Loading from server, reset:', reset);
-      const result = await fetchHistory({
-        coupleId: couple.id,
-        limit: ITEMS_PER_PAGE,
-        nextToken: reset ? null : serverNextToken,
-        typeFilter: typeFilter === 'all' ? null : typeFilter,
-        categoryFilter: categoryFilter === 'all' ? null : categoryFilter,
-        paidByFilter: paidByFilter === 'all' ? null : paidByFilter,
-      });
-
-      const newItems = result.items.map(serverItemToLocal);
-      
-      if (reset) {
-        setServerItems(newItems);
-      } else {
-        setServerItems(prev => [...prev, ...newItems]);
-      }
-      
-      setServerNextToken(result.nextToken);
-      setServerTotalCount(result.totalCount);
-      setUseServerPagination(true);
-      
-      console.log('[History] Server data loaded:', {
-        itemCount: newItems.length,
-        totalCount: result.totalCount,
-        hasMore: !!result.nextToken,
-      });
-    } catch (error) {
-      console.error('[History] Server fetch error, falling back to client-side:', error);
-      setServerError(true);
-      setUseServerPagination(false);
-    } finally {
-      setIsLoadingMore(false);
-    }
-  }, [couple?.id, fetchHistory, serverNextToken, typeFilter, categoryFilter, paidByFilter]);
-
-  // Try server-side loading when couple changes or on mount
-  useEffect(() => {
-    if (serverPaginationAvailable && !serverError) {
-      loadServerData(true);
-    }
-  }, [serverPaginationAvailable]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Reset and reload when filters change
-  useEffect(() => {
-    if (useServerPagination && !serverError) {
-      loadServerData(true);
-    } else {
-      setDisplayCount(ITEMS_PER_PAGE);
-    }
-  }, [typeFilter, categoryFilter, paidByFilter]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Client-side: Combine and sort expenses and settlements (fallback)
+  // Combine and sort expenses and settlements
   const allItems = useMemo<HistoryItem[]>(() => {
-    if (useServerPagination) return []; // Skip if using server
-    
     const items: HistoryItem[] = [];
     
     // Add expenses
@@ -173,12 +61,10 @@ export function History() {
     });
     
     return items;
-  }, [expenses, settlements, useServerPagination]);
+  }, [expenses, settlements]);
 
-  // Client-side: Apply filters (fallback)
+  // Apply filters
   const filteredItems = useMemo(() => {
-    if (useServerPagination) return []; // Skip if using server
-    
     return allItems.filter(item => {
       // Type filter
       if (typeFilter !== 'all' && item.type !== typeFilter) return false;
@@ -194,31 +80,23 @@ export function History() {
       
       return true;
     });
-  }, [allItems, typeFilter, categoryFilter, paidByFilter, useServerPagination]);
+  }, [allItems, typeFilter, categoryFilter, paidByFilter]);
 
-  // Displayed items: from server or client
+  // Paginated items
   const displayedItems = useMemo(() => {
-    if (useServerPagination) {
-      return serverItems;
-    }
     return filteredItems.slice(0, displayCount);
-  }, [useServerPagination, serverItems, filteredItems, displayCount]);
+  }, [filteredItems, displayCount]);
 
   // Check if there are more items to load
-  const hasMore = useServerPagination 
-    ? serverNextToken !== null 
-    : displayCount < filteredItems.length;
+  const hasMore = displayCount < filteredItems.length;
+  const remainingCount = filteredItems.length - displayCount;
 
   // Handle load more
-  const handleLoadMore = useCallback(() => {
-    if (useServerPagination) {
-      loadServerData(false);
-    } else {
-      setDisplayCount(c => c + ITEMS_PER_PAGE);
-    }
-  }, [useServerPagination, loadServerData]);
+  const handleLoadMore = () => {
+    setDisplayCount(c => c + ITEMS_PER_PAGE);
+  };
 
-  // Group by month (using displayedItems for pagination)
+  // Group by month
   const groupedItems = useMemo(() => {
     const groups = new Map<string, HistoryItem[]>();
     
@@ -272,17 +150,12 @@ export function History() {
   };
 
   // Count items - prefer pre-computed aggregates from couple
-  const expenseCount = useServerPagination && couple?.expenseCount != null
+  const expenseCount = couple?.expenseCount != null
     ? couple.expenseCount
-    : filteredItems.filter(i => i.type === 'expense').length;
-  const settlementCount = useServerPagination && couple?.settlementCount != null
+    : expenses.length;
+  const settlementCount = couple?.settlementCount != null
     ? couple.settlementCount
-    : filteredItems.filter(i => i.type === 'settlement').length;
-  
-  // Remaining items for load more button
-  const remainingCount = useServerPagination 
-    ? serverTotalCount - serverItems.length 
-    : filteredItems.length - displayCount;
+    : settlements.length;
 
   // Helper to get partner name for settlement delete confirmation
   const getSettlementDescription = (settlement: Settlement) => {
@@ -317,24 +190,32 @@ export function History() {
               if (e.target.value === 'settlement') {
                 setCategoryFilter('all');
               }
+              // Reset pagination when filter changes
+              setDisplayCount(ITEMS_PER_PAGE);
             }}
           />
           <Select
             options={categoryOptions}
             value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
+            onChange={(e) => {
+              setCategoryFilter(e.target.value);
+              setDisplayCount(ITEMS_PER_PAGE);
+            }}
             disabled={typeFilter === 'settlement'}
           />
           <Select
             options={paidByOptions}
             value={paidByFilter}
-            onChange={(e) => setPaidByFilter(e.target.value)}
+            onChange={(e) => {
+              setPaidByFilter(e.target.value);
+              setDisplayCount(ITEMS_PER_PAGE);
+            }}
           />
         </div>
       </Card>
 
       {/* Loading skeleton */}
-      {(isLoading || (isLoadingMore && displayedItems.length === 0)) && (
+      {isLoading && (
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
             <Card key={i} className="animate-pulse">
@@ -351,7 +232,7 @@ export function History() {
         </div>
       )}
 
-      {/* Items list */}
+      {/* Empty state */}
       {!isLoading && filteredItems.length === 0 && (
         <Card className="text-center py-12">
           <div className="text-5xl mb-4">🔍</div>
@@ -406,9 +287,8 @@ export function History() {
               <Button
                 variant="secondary"
                 onClick={handleLoadMore}
-                disabled={isLoadingMore}
               >
-                {isLoadingMore ? 'Loading...' : `Load More (${remainingCount} remaining)`}
+                Load More ({remainingCount} remaining)
               </Button>
             </div>
           )}
