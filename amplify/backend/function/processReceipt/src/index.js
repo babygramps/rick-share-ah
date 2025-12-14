@@ -37,6 +37,66 @@ function parseMoneyToCents(text) {
   return Math.round(num * 100);
 }
 
+/**
+ * Normalize a date string to YYYY-MM-DD format for GraphQL AWSDate
+ * Handles formats like: 12/09/25, 12/09/2025, 2025-12-09, Dec 9 2025, etc.
+ */
+function normalizeDateToISO(dateText) {
+  if (!dateText) return null;
+  
+  const text = String(dateText).trim();
+  if (!text) return null;
+  
+  log('debug', 'normalizeDateToISO.input', { dateText: text });
+  
+  // Try parsing with Date constructor first (handles many formats)
+  let parsed = new Date(text);
+  
+  // If that didn't work, try common receipt formats
+  if (isNaN(parsed.getTime())) {
+    // Try MM/DD/YY or MM/DD/YYYY format
+    const slashMatch = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+    if (slashMatch) {
+      let [, month, day, year] = slashMatch;
+      // Convert 2-digit year to 4-digit
+      if (year.length === 2) {
+        const twoDigitYear = parseInt(year, 10);
+        // Assume 00-50 is 2000s, 51-99 is 1900s
+        year = twoDigitYear <= 50 ? `20${year}` : `19${year}`;
+      }
+      parsed = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+    }
+  }
+  
+  // Try DD-MM-YYYY or DD/MM/YYYY (European format) if still invalid
+  if (isNaN(parsed.getTime())) {
+    const euroMatch = text.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+    if (euroMatch) {
+      const [, day, month, year] = euroMatch;
+      // Only use European format if day > 12 (unambiguous)
+      if (parseInt(day, 10) > 12) {
+        parsed = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+      }
+    }
+  }
+  
+  // If still invalid, return null
+  if (isNaN(parsed.getTime())) {
+    log('warn', 'normalizeDateToISO.failed', { dateText: text });
+    return null;
+  }
+  
+  // Format as YYYY-MM-DD
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, '0');
+  const day = String(parsed.getDate()).padStart(2, '0');
+  
+  const isoDate = `${year}-${month}-${day}`;
+  log('debug', 'normalizeDateToISO.result', { dateText: text, isoDate });
+  
+  return isoDate;
+}
+
 function pickBestSummaryField(summaryFields, wantedTypes) {
   if (!Array.isArray(summaryFields)) return null;
   const matches = summaryFields
@@ -64,6 +124,7 @@ function parseAnalyzeExpenseResponse(resp) {
   const totalAmount = parseMoneyToCents(total?.valueText);
   const merchantName = vendor?.valueText ? String(vendor.valueText).trim() : null;
   const dateText = date?.valueText ? String(date.valueText).trim() : null;
+  const normalizedDate = normalizeDateToISO(dateText);
 
   const confidenceCandidates = [total?.confidence, vendor?.confidence, date?.confidence].filter(
     (c) => typeof c === 'number' && Number.isFinite(c)
@@ -114,7 +175,7 @@ function parseAnalyzeExpenseResponse(resp) {
   return {
     merchantName,
     totalAmount,
-    date: dateText,
+    date: normalizedDate,
     confidence,
     lineItems,
   };
