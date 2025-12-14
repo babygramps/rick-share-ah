@@ -23,13 +23,12 @@
     },
     "S3DeploymentRootKey": {
       "Type": "String",
-      "Description": "An S3 key relative to the S3DeploymentBucket that points to the root\nof the deployment directory."
+      "Description": "An S3 key relative to the S3DeploymentBucket that points to the root of the deployment directory."
     }
   },
   "Resources": {
     "EmptyResource": {
-      "Type": "Custom::EmptyResource",
-      "Condition": "AlwaysFalse"
+      "Type": "AWS::CloudFormation::WaitConditionHandle"
     }
   },
   "Conditions": {
@@ -44,18 +43,7 @@
           ]
         }
       ]
-    },
-    "AlwaysFalse": {
-      "Fn::Equals": [
-        "true",
-        "false"
-      ]
     }
   },
-  "Outputs": {
-    "EmptyOutput": {
-      "Description": "An empty output. You may delete this if you have at least one resource above.",
-      "Value": ""
-    }
-  }
+  "Outputs": {}
 }

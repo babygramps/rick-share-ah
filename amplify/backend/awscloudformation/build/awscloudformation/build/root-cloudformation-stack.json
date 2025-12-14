@@ -214,7 +214,7 @@
             ]
           },
           "S3DeploymentBucket": "amplify-rickshareah-dev-326e7-deployment",
-          "S3DeploymentRootKey": "amplify-appsync-files/da167dbf88e2123360b37790e755b0e20a6fca33",
+          "S3DeploymentRootKey": "amplify-appsync-files/20e7a651599466db83a4c40ec974bce8010ebc43",
           "env": "dev"
         }
       }
@@ -273,6 +273,17 @@
         }
       }
     },
+    "functioncoupleWriteService": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-rickshareah-dev-326e7-deployment/amplify-cfn-templates/function/coupleWriteService-cloudformation-template.json",
+        "Parameters": {
+          "deploymentBucketName": "amplify-rickshareah-dev-326e7-deployment",
+          "s3Key": "amplify-builds/coupleWriteService-575370352f443069684b-build.zip",
+          "env": "dev"
+        }
+      }
+    },
     "functionprocessReceipt": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
@@ -285,7 +296,7 @@
             ]
           },
           "deploymentBucketName": "amplify-rickshareah-dev-326e7-deployment",
-          "s3Key": "amplify-builds/processReceipt-3063364857672f754975-build.zip",
+          "s3Key": "amplify-builds/processReceipt-695771482b6f37315478-build.zip",
           "env": "dev"
         }
       }
