@@ -45,14 +45,28 @@ function computeTotals(assignments: ReceiptLineItemAssignment[]) {
 interface LineItemAssignerProps {
   assignments: ReceiptLineItemAssignment[];
   onAssignmentsChange: (next: ReceiptLineItemAssignment[]) => void;
+  /** The actual total amount in cents (including tax). If provided, splits are shown based on this. */
+  totalAmountCents?: number | null;
 }
 
-export function LineItemAssigner({ assignments, onAssignmentsChange }: LineItemAssignerProps) {
+export function LineItemAssigner({ assignments, onAssignmentsChange, totalAmountCents }: LineItemAssignerProps) {
   const { couple } = useApp();
   const p1Label = couple?.partner1Name || 'Partner 1';
   const p2Label = couple?.partner2Name || 'Partner 2';
 
   const totals = useMemo(() => computeTotals(assignments), [assignments]);
+  
+  // If we have an actual total (including tax), calculate the real split amounts
+  const hasActualTotal = typeof totalAmountCents === 'number' && totalAmountCents > 0;
+  const actualPartner1Cents = hasActualTotal 
+    ? Math.round((totalAmountCents * totals.partner1Pct) / 100)
+    : totals.partner1Cents;
+  const actualPartner2Cents = hasActualTotal 
+    ? totalAmountCents - actualPartner1Cents 
+    : totals.partner2Cents;
+  
+  // Calculate the difference (tax/fees not in line items)
+  const unaccountedCents = hasActualTotal ? totalAmountCents - totals.basisCents : 0;
 
   const setAll = (assignTo: LineItemAssignTo) => {
     console.log('[receipt-scan] lineItems.setAll', { assignTo, count: assignments.length });
@@ -186,18 +200,32 @@ export function LineItemAssigner({ assignments, onAssignmentsChange }: LineItemA
         })}
       </div>
 
-      <div className="border-t-2 border-[var(--color-plum)] pt-3 flex items-center justify-between gap-3">
-        <div className="font-mono text-xs text-[var(--color-plum)]/70">Assigned subtotal (items with prices)</div>
-        <div className="font-mono text-sm">{moneyFromCents(totals.basisCents)}</div>
+      <div className="border-t-2 border-[var(--color-plum)] pt-3 space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <div className="font-mono text-xs text-[var(--color-plum)]/70">Line items subtotal</div>
+          <div className="font-mono text-sm">{moneyFromCents(totals.basisCents)}</div>
+        </div>
+        {unaccountedCents > 0 && (
+          <div className="flex items-center justify-between gap-3">
+            <div className="font-mono text-xs text-[var(--color-plum)]/70">+ Tax/fees (split {totals.partner1Pct}/{totals.partner2Pct})</div>
+            <div className="font-mono text-sm text-[var(--color-plum)]/70">+{moneyFromCents(unaccountedCents)}</div>
+          </div>
+        )}
+        {hasActualTotal && (
+          <div className="flex items-center justify-between gap-3 font-bold">
+            <div className="font-mono text-xs">Receipt total</div>
+            <div className="font-mono text-sm">{moneyFromCents(totalAmountCents)}</div>
+          </div>
+        )}
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div className="border-2 border-[var(--color-plum)] bg-white p-2 shadow-[2px_2px_0px_var(--color-plum)]">
           <div className="font-mono text-xs text-[var(--color-plum)]/70">{p1Label}</div>
-          <div className="font-mono text-sm">{moneyFromCents(totals.partner1Cents)}</div>
+          <div className="font-mono text-sm font-bold">{moneyFromCents(actualPartner1Cents)}</div>
         </div>
         <div className="border-2 border-[var(--color-plum)] bg-white p-2 shadow-[2px_2px_0px_var(--color-plum)]">
           <div className="font-mono text-xs text-[var(--color-plum)]/70">{p2Label}</div>
-          <div className="font-mono text-sm">{moneyFromCents(totals.partner2Cents)}</div>
+          <div className="font-mono text-sm font-bold">{moneyFromCents(actualPartner2Cents)}</div>
         </div>
       </div>
     </div>

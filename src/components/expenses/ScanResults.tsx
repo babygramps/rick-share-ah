@@ -266,7 +266,11 @@ export function ScanResults({
           </p>
 
           {!!lineItemAssignments?.length && !!onLineItemAssignmentsChange && (
-            <LineItemAssigner assignments={lineItemAssignments} onAssignmentsChange={onLineItemAssignmentsChange} />
+            <LineItemAssigner 
+              assignments={lineItemAssignments} 
+              onAssignmentsChange={onLineItemAssignmentsChange}
+              totalAmountCents={effectiveAmount}
+            />
           )}
         </div>
       </div>
