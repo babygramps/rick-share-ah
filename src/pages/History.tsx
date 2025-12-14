@@ -8,6 +8,8 @@ import { Modal } from '../components/ui/Modal';
 import { Card } from '../components/ui/Card';
 import { Select } from '../components/ui/Select';
 import { Button } from '../components/ui/Button';
+import { DateRangeFilter, getDateRangeMs } from '../components/ui/DateRangeFilter';
+import type { DateRangeValue } from '../components/ui/DateRangeFilter';
 import type { Expense, Settlement } from '../types';
 import { CATEGORIES } from '../types';
 import { formatMonthKey, formatCurrency } from '../utils/helpers';
@@ -26,8 +28,8 @@ function useDebounce<T>(value: T, delay: number): T {
 
 // Union type for history items
 type HistoryItem = 
-  | { type: 'expense'; data: Expense; date: string }
-  | { type: 'settlement'; data: Settlement; date: string };
+  | { type: 'expense'; data: Expense; date: string; dateMs: number }
+  | { type: 'settlement'; data: Settlement; date: string; dateMs: number };
 
 const ITEMS_PER_PAGE = 15;
 
@@ -42,6 +44,8 @@ export function History() {
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [paidByFilter, setPaidByFilter] = useState<string>('all');
+  const [dateRange, setDateRange] = useState<DateRangeValue>({ preset: 'all' });
+  const dateRangeMs = useMemo(() => getDateRangeMs(dateRange), [dateRange]);
   
   // Search
   const [searchQuery, setSearchQuery] = useState('');
@@ -76,7 +80,7 @@ export function History() {
     }
     
     // Search in date
-    const dateStr = new Date(item.date).toLocaleDateString('en-US', { 
+    const dateStr = new Date(item.dateMs).toLocaleDateString('en-US', { 
       month: 'short', 
       day: 'numeric',
       year: 'numeric'
@@ -145,17 +149,17 @@ export function History() {
     
     // Add expenses
     for (const expense of expenses) {
-      items.push({ type: 'expense', data: expense, date: expense.date });
+      items.push({ type: 'expense', data: expense, date: expense.date, dateMs: new Date(expense.date).getTime() });
     }
     
     // Add settlements
     for (const settlement of settlements) {
-      items.push({ type: 'settlement', data: settlement, date: settlement.date });
+      items.push({ type: 'settlement', data: settlement, date: settlement.date, dateMs: new Date(settlement.date).getTime() });
     }
     
     // Sort by date descending, then by createdAt descending (most recent first)
     items.sort((a, b) => {
-      const dateCompare = new Date(b.date).getTime() - new Date(a.date).getTime();
+      const dateCompare = b.dateMs - a.dateMs;
       if (dateCompare !== 0) return dateCompare;
       
       // Same date - use createdAt for secondary sort (most recently created first)
@@ -170,6 +174,10 @@ export function History() {
   // Apply filters and search
   const filteredItems = useMemo(() => {
     return allItems.filter(item => {
+      // Date range filter
+      if (typeof dateRangeMs.startMs === 'number' && item.dateMs < dateRangeMs.startMs) return false;
+      if (typeof dateRangeMs.endMs === 'number' && item.dateMs > dateRangeMs.endMs) return false;
+
       // Type filter
       if (typeFilter !== 'all' && item.type !== typeFilter) return false;
       
@@ -187,12 +195,12 @@ export function History() {
       
       return true;
     });
-  }, [allItems, typeFilter, categoryFilter, paidByFilter, debouncedSearch, itemMatchesSearch]);
+  }, [allItems, dateRangeMs.startMs, dateRangeMs.endMs, typeFilter, categoryFilter, paidByFilter, debouncedSearch, itemMatchesSearch]);
 
   // Reset to page 1 when filters or search change
   useEffect(() => {
     setCurrentPage(1);
-  }, [typeFilter, categoryFilter, paidByFilter, debouncedSearch]);
+  }, [typeFilter, categoryFilter, paidByFilter, dateRange.preset, dateRange.from, dateRange.to, debouncedSearch]);
 
   // Pagination calculations
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
@@ -250,10 +258,11 @@ export function History() {
     setTypeFilter('all');
     setCategoryFilter('all');
     setPaidByFilter('all');
+    setDateRange({ preset: 'all' });
   };
   
   // Check if any filters are active
-  const hasActiveFilters = typeFilter !== 'all' || categoryFilter !== 'all' || paidByFilter !== 'all' || debouncedSearch !== '';
+  const hasActiveFilters = typeFilter !== 'all' || categoryFilter !== 'all' || paidByFilter !== 'all' || debouncedSearch !== '' || dateRangeMs.isActive;
 
   const typeOptions = [
     { value: 'all', label: 'All Activity', emoji: '📋' },
@@ -375,11 +384,25 @@ export function History() {
               onChange={(e) => setPaidByFilter(e.target.value)}
             />
           </div>
+
+          {/* Date range */}
+          <DateRangeFilter value={dateRange} onChange={setDateRange} />
           
           {/* Active filters indicator & clear button */}
           {hasActiveFilters && (
             <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-2 flex-wrap">
+                {dateRangeMs.isActive && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--color-sky)]/30 border-2 border-[var(--color-plum)] text-xs font-mono rounded">
+                    📅 {dateRangeMs.label}
+                    <button
+                      onClick={() => setDateRange({ preset: 'all' })}
+                      className="ml-1 hover:text-[var(--color-coral)]"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
                 {debouncedSearch && (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[var(--color-sunshine)]/30 border-2 border-[var(--color-plum)] text-xs font-mono rounded">
                     🔍 "{debouncedSearch.length > 15 ? debouncedSearch.slice(0, 15) + '…' : debouncedSearch}"

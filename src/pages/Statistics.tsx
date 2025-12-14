@@ -1,25 +1,57 @@
 import { useState, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { Card, CardHeader, CardTitle } from '../components/ui/Card';
+import { DateRangeFilter, getDateRangeMs } from '../components/ui/DateRangeFilter';
+import type { DateRangeValue } from '../components/ui/DateRangeFilter';
 import { formatCurrency, getCategoryInfo, groupExpensesByMonth, formatMonthKey } from '../utils/helpers';
 import { CATEGORIES } from '../types';
 
-type TimeRange = 'all' | '30' | '90' | '365';
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export function Statistics() {
   const { expenses, couple } = useApp();
-  const [timeRange, setTimeRange] = useState<TimeRange>('all');
+  const [dateRange, setDateRange] = useState<DateRangeValue>({ preset: 'all' });
+  const dateRangeMs = useMemo(() => getDateRangeMs(dateRange), [dateRange]);
+
+  const expensesWithMs = useMemo(() => {
+    return expenses.map((exp) => ({
+      ...exp,
+      dateMs: new Date(exp.date).getTime(),
+    }));
+  }, [expenses]);
 
   // Filter expenses by time range
   const filteredExpenses = useMemo(() => {
-    if (timeRange === 'all') return expenses;
-    
-    const now = new Date();
-    const daysAgo = parseInt(timeRange);
-    const cutoff = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-    
-    return expenses.filter(exp => new Date(exp.date) >= cutoff);
-  }, [expenses, timeRange]);
+    if (!dateRangeMs.isActive) return expensesWithMs;
+
+    const startMs = dateRangeMs.startMs;
+    const endMs = dateRangeMs.endMs;
+
+    return expensesWithMs.filter((exp) => {
+      if (typeof startMs === 'number' && exp.dateMs < startMs) return false;
+      if (typeof endMs === 'number' && exp.dateMs > endMs) return false;
+      return true;
+    });
+  }, [expensesWithMs, dateRangeMs.isActive, dateRangeMs.startMs, dateRangeMs.endMs]);
+
+  const avgPerDayDivisor = useMemo(() => {
+    if (dateRange.preset === '30' || dateRange.preset === '90' || dateRange.preset === '365') {
+      return parseInt(dateRange.preset, 10);
+    }
+
+    const earliestMs = Math.min(...expensesWithMs.map((e) => e.dateMs), Date.now());
+
+    if (dateRange.preset === 'all') {
+      const days = Math.ceil((Date.now() - earliestMs) / MS_PER_DAY);
+      return Math.max(1, days);
+    }
+
+    // custom (may be partially bounded)
+    const startMs = typeof dateRangeMs.startMs === 'number' ? dateRangeMs.startMs : earliestMs;
+    const endMs = typeof dateRangeMs.endMs === 'number' ? dateRangeMs.endMs : Date.now();
+    const days = Math.ceil((endMs - startMs) / MS_PER_DAY);
+    return Math.max(1, days);
+  }, [dateRange.preset, dateRangeMs.startMs, dateRangeMs.endMs, expensesWithMs]);
 
   // Calculate totals
   const stats = useMemo(() => {
@@ -101,29 +133,7 @@ export function Statistics() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="text-2xl font-bold">📊 Statistics</h1>
         
-        {/* Time Range Selector */}
-        <div className="flex gap-1 bg-white border-3 border-[var(--color-plum)] p-1">
-          {[
-            { value: '30' as TimeRange, label: '30D' },
-            { value: '90' as TimeRange, label: '90D' },
-            { value: '365' as TimeRange, label: '1Y' },
-            { value: 'all' as TimeRange, label: 'All' },
-          ].map(option => (
-            <button
-              key={option.value}
-              onClick={() => setTimeRange(option.value)}
-              className={`
-                px-3 py-1 font-mono text-xs uppercase tracking-wider transition-colors
-                ${timeRange === option.value
-                  ? 'bg-[var(--color-plum)] text-white'
-                  : 'hover:bg-[var(--color-cream)]'
-                }
-              `}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
+        <DateRangeFilter value={dateRange} onChange={setDateRange} />
       </div>
 
       {/* Overview Cards */}
@@ -359,9 +369,7 @@ export function Statistics() {
             <p className="text-xs text-[var(--color-plum)]/60">Avg per Day</p>
             <p className="font-bold">
               {formatCurrency(
-                timeRange === 'all' 
-                  ? stats.totalSpending / Math.max(1, Math.ceil((Date.now() - new Date(expenses[expenses.length - 1]?.date || Date.now()).getTime()) / (1000 * 60 * 60 * 24)))
-                  : stats.totalSpending / parseInt(timeRange)
+                stats.totalSpending / avgPerDayDivisor
               )}
             </p>
           </div>
