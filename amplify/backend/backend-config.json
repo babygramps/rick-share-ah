@@ -8,14 +8,6 @@
           ],
           "category": "auth",
           "resourceName": "rickshareahea33e0e6"
-        },
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "coupleWriteService"
         }
       ],
       "output": {
