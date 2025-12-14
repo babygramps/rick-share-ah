@@ -10,9 +10,6 @@ backend:
             mkdir -p amplify/#current-cloud-backend/function
             cp -r amplify/backend/function/coupleWriteService amplify/#current-cloud-backend/function/
           fi
-    build:
-      commands:
-        - '# Backend build handled by Amplify'
 frontend:
   phases:
     preBuild:
