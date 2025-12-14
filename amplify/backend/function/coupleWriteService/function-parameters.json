@@ -3,6 +3,7 @@
     "api": {
       "rickshareah": ["Query", "Mutation"]
     }
-  }
+  },
+  "lambdaLayers": []
 }
 

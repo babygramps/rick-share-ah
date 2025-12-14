@@ -1,2 +1,6 @@
-{}
+{
+  "apirickshareahGraphQLAPIIdOutput": {
+    "Fn::GetAtt": ["apirickshareah", "Outputs.GraphQLAPIIdOutput"]
+  }
+}
 
