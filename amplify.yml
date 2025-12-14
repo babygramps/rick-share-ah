@@ -10,6 +10,10 @@ backend:
             mkdir -p amplify/#current-cloud-backend/function
             cp -r amplify/backend/function/coupleWriteService amplify/#current-cloud-backend/function/
           fi
+    build:
+      commands:
+        # This generates aws-exports.js and deploys any backend changes
+        - amplifyPush --simple
 frontend:
   phases:
     preBuild:
