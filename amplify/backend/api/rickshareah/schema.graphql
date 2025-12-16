@@ -55,6 +55,14 @@ type Settlement @model @auth(rules: [
   note: String
 }
 
+# User preferences for per-user settings like theme
+# Owner-only auth ensures users can only access their own preferences
+type UserPreferences @model @auth(rules: [{ allow: owner }]) {
+  id: ID!
+  userId: String! @index(name: "byUserId")
+  theme: String
+}
+
 # Receipt scanning result returned by Textract processing
 type LineItem @aws_cognito_user_pools {
   description: String

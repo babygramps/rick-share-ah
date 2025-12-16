@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Layout } from './components/layout/Layout';
 import { AuthForms } from './components/auth/AuthForms';
 import { CoupleSetup } from './components/couple/CoupleSetup';
@@ -62,6 +63,16 @@ function AuthRoute({ children }: { children: React.ReactNode }) {
   }
 
   return <>{children}</>;
+}
+
+// Theme wrapper that connects ThemeProvider to user state
+function ThemeWrapper({ children }: { children: React.ReactNode }) {
+  const { user } = useApp();
+  return (
+    <ThemeProvider userId={user?.id ?? null}>
+      {children}
+    </ThemeProvider>
+  );
 }
 
 function AppRoutes() {
@@ -149,7 +160,9 @@ function App() {
   return (
     <BrowserRouter>
       <AppProvider>
-        <AppRoutes />
+        <ThemeWrapper>
+          <AppRoutes />
+        </ThemeWrapper>
       </AppProvider>
     </BrowserRouter>
   );
