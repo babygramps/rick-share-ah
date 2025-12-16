@@ -203,3 +203,111 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-coral);
 }
+
+/* ==========================================
+   INTERIOR DESIGN-INSPIRED THEMES
+   Based on 2025/2026 Architectural Digest Trends
+   ========================================== */
+
+/* Theme transition for smooth switching */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body,
+.card-brutal,
+.btn-brutal,
+.input-brutal {
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+/* ------------------------------------------
+   Color Drenched - Bold burgundy monochrome
+   ------------------------------------------ */
+[data-theme="color-drenched"] {
+  --color-cream: #FDF6F0;
+  --color-coral: #722F37;
+  --color-sage: #A45A52;
+  --color-plum: #4A1C24;
+  --color-sunshine: #D4A574;
+  --color-sky: #8B6969;
+  --color-lavender: #C9A9A6;
+}
+
+/* ------------------------------------------
+   Moody Palette - Aubergine, olive & ochre
+   ------------------------------------------ */
+[data-theme="moody-palette"] {
+  --color-cream: #FEFAE0;
+  --color-coral: #614051;
+  --color-sage: #606C38;
+  --color-plum: #3D2B3D;
+  --color-sunshine: #DDA15E;
+  --color-sky: #BC6C25;
+  --color-lavender: #9B7B8E;
+}
+
+/* ------------------------------------------
+   Livable Luxury - Timeless elegance
+   ------------------------------------------ */
+[data-theme="livable-luxury"] {
+  --color-cream: #FAF9F6;
+  --color-coral: #1E3A5F;
+  --color-sage: #C9A961;
+  --color-plum: #2C3E50;
+  --color-sunshine: #E8D5B7;
+  --color-sky: #5D7B93;
+  --color-lavender: #D5C4D7;
+}
+
+/* ------------------------------------------
+   Vintage Soul - Antique charm with patina
+   ------------------------------------------ */
+[data-theme="vintage-soul"] {
+  --color-cream: #F5F0EB;
+  --color-coral: #B4838D;
+  --color-sage: #A68A64;
+  --color-plum: #5C5552;
+  --color-sunshine: #D4C5B9;
+  --color-sky: #8E9AAF;
+  --color-lavender: #C9B8C4;
+}
+
+/* ------------------------------------------
+   Dark Wood - Walnut & mahogany warmth
+   ------------------------------------------ */
+[data-theme="dark-wood"] {
+  --color-cream: #FBF7F4;
+  --color-coral: #5C4033;
+  --color-sage: #8B5A2B;
+  --color-plum: #3E2723;
+  --color-sunshine: #D4A574;
+  --color-sky: #6D4C41;
+  --color-lavender: #BCAAA4;
+}
+
+/* ------------------------------------------
+   Warmth & Comfort - Terracotta earth tones
+   ------------------------------------------ */
+[data-theme="warmth-comfort"] {
+  --color-cream: #FDF8F3;
+  --color-coral: #C2704E;
+  --color-sage: #D4B896;
+  --color-plum: #6B4D3A;
+  --color-sunshine: #E8DCC4;
+  --color-sky: #A67C52;
+  --color-lavender: #D7C4B5;
+}
+
+/* ------------------------------------------
+   Biophilic - Natural greens & organic
+   ------------------------------------------ */
+[data-theme="biophilic"] {
+  --color-cream: #F7F9F4;
+  --color-coral: #355E3B;
+  --color-sage: #7D8471;
+  --color-plum: #2D3B2D;
+  --color-sunshine: #C9B896;
+  --color-sky: #5F7161;
+  --color-lavender: #A8B5A0;
+}

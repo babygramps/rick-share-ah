@@ -5,6 +5,7 @@ import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { CSVUploader } from '../components/expenses/CSVUploader';
+import { ThemeSelector } from '../components/settings/ThemeSelector';
 import { formatCurrency } from '../utils/helpers';
 
 export function Settings() {
@@ -55,6 +56,14 @@ export function Settings() {
             <p className="font-mono text-sm">{user?.email}</p>
           </div>
         </div>
+      </Card>
+
+      {/* App Style / Theme */}
+      <Card>
+        <CardHeader>
+          <CardTitle>🎨 App Style</CardTitle>
+        </CardHeader>
+        <ThemeSelector />
       </Card>
 
       {/* Couple Info */}

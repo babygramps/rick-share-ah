@@ -4,12 +4,15 @@ import { Amplify } from 'aws-amplify'
 import awsconfig from './aws-exports'
 import './index.css'
 import App from './App.tsx'
+import { ThemeProvider } from './context/ThemeContext'
 
 // Configure Amplify
 Amplify.configure(awsconfig)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </StrictMode>,
 )
