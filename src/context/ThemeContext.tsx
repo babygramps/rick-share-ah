@@ -83,9 +83,12 @@ export function ThemeProvider({ children, userId }: ThemeProviderProps) {
 
   // Load preferences from backend when userId changes (login/logout)
   useEffect(() => {
+    // Normalize undefined to null for consistent comparison
+    const normalizedUserId = userId ?? null;
+    
     // Skip if userId hasn't changed
-    if (lastUserIdRef.current === userId) return;
-    lastUserIdRef.current = userId;
+    if (lastUserIdRef.current === normalizedUserId) return;
+    lastUserIdRef.current = normalizedUserId;
 
     if (!userId) {
       // User logged out - clear preferences ID but keep theme
