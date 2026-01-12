@@ -6,7 +6,9 @@ import {
   signOut, 
   getCurrentUser,
   confirmSignUp,
-  fetchUserAttributes
+  fetchUserAttributes,
+  resetPassword,
+  confirmResetPassword
 } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/api';
 import type { Couple, Expense, Settlement, User, Balance } from '../types';
@@ -36,6 +38,9 @@ interface AppContextType {
   signup: (email: string, password: string, name: string) => Promise<{ success: boolean; needsConfirmation?: boolean; error?: string }>;
   confirmAccount: (code: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
+  confirmPasswordReset: (code: string, newPassword: string) => Promise<{ success: boolean; error?: string }>;
+  setPasswordResetEmail: (email: string) => void;
 
   // Couple state
   couple: Couple | null;
@@ -75,6 +80,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [needsConfirmation, setNeedsConfirmation] = useState(false);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+  const [passwordResetEmail, setPasswordResetEmail] = useState<string | null>(null);
 
   // Check for existing auth session on mount
   useEffect(() => {
@@ -258,6 +264,43 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSettlements([]);
     setNeedsConfirmation(false);
     setPendingEmail(null);
+    setPasswordResetEmail(null);
+  };
+
+  const requestPasswordReset = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    // Note: Don't set isLoading here - it causes AuthRoute to remount AuthForms and reset mode state
+    try {
+      console.log('[auth] requestPasswordReset.start', { email });
+      await resetPassword({ username: email });
+      setPasswordResetEmail(email);
+      console.log('[auth] requestPasswordReset.success');
+      return { success: true };
+    } catch (error: any) {
+      console.error('[auth] requestPasswordReset.error', error);
+      return { success: false, error: error.message || 'Failed to send reset code' };
+    }
+  };
+
+  const confirmPasswordReset = async (code: string, newPassword: string): Promise<{ success: boolean; error?: string }> => {
+    if (!passwordResetEmail) {
+      return { success: false, error: 'No email address for password reset' };
+    }
+
+    // Note: Don't set isLoading here - it causes AuthRoute to remount AuthForms and reset mode state
+    try {
+      console.log('[auth] confirmPasswordReset.start', { email: passwordResetEmail });
+      await confirmResetPassword({
+        username: passwordResetEmail,
+        confirmationCode: code,
+        newPassword,
+      });
+      setPasswordResetEmail(null);
+      console.log('[auth] confirmPasswordReset.success');
+      return { success: true };
+    } catch (error: any) {
+      console.error('[auth] confirmPasswordReset.error', error);
+      return { success: false, error: error.message || 'Failed to reset password' };
+    }
   };
 
   // Couple functions
@@ -555,6 +598,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     signup,
     confirmAccount,
     logout,
+    requestPasswordReset,
+    confirmPasswordReset,
+    setPasswordResetEmail,
     couple,
     createCouple,
     joinCouple,

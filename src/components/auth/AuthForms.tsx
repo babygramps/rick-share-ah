@@ -5,15 +5,18 @@ import { Button } from '../ui/Button';
 import { useApp } from '../../context/AppContext';
 
 export function AuthForms() {
-  const [mode, setMode] = useState<'login' | 'signup' | 'confirm'>('login');
+  const [mode, setMode] = useState<'login' | 'signup' | 'confirm' | 'forgot' | 'resetConfirm'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [confirmCode, setConfirmCode] = useState('');
+  const [resetCode, setResetCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [isResetting, setIsResetting] = useState(false);
   
-  const { login, signup, confirmAccount, isLoading, needsConfirmation, pendingEmail } = useApp();
+  const { login, signup, confirmAccount, isLoading, needsConfirmation, pendingEmail, requestPasswordReset, confirmPasswordReset } = useApp();
 
   // Switch to confirm mode if needed
   if (needsConfirmation && mode !== 'confirm') {
@@ -67,6 +70,74 @@ export function AuthForms() {
       setConfirmCode('');
     } else {
       setError(result.error || 'Verification failed');
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+
+    if (!email.trim()) {
+      setError('Please enter your email address');
+      return;
+    }
+
+    console.log('[auth-forms] handleForgotPassword.start', { email });
+    setIsResetting(true);
+    try {
+      const result = await requestPasswordReset(email);
+      console.log('[auth-forms] handleForgotPassword.result', result);
+      if (result.success) {
+        setMessage('Check your email for a password reset code!');
+        console.log('[auth-forms] handleForgotPassword.success - switching to resetConfirm mode');
+        setMode('resetConfirm');
+      } else {
+        console.log('[auth-forms] handleForgotPassword.error', { error: result.error });
+        setError(result.error || 'Failed to send reset code');
+      }
+    } catch (err) {
+      console.error('[auth-forms] handleForgotPassword.exception', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  const handleResetConfirm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+
+    if (!resetCode.trim()) {
+      setError('Please enter the reset code');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+
+    console.log('[auth-forms] handleResetConfirm.start');
+    setIsResetting(true);
+    try {
+      const result = await confirmPasswordReset(resetCode, newPassword);
+      if (result.success) {
+        setMessage('Password reset successfully! You can now log in with your new password.');
+        setMode('login');
+        setResetCode('');
+        setNewPassword('');
+        console.log('[auth-forms] handleResetConfirm.success');
+      } else {
+        console.log('[auth-forms] handleResetConfirm.error', { error: result.error });
+        setError(result.error || 'Failed to reset password');
+      }
+    } catch (err) {
+      console.error('[auth-forms] handleResetConfirm.exception', err);
+      setError('An unexpected error occurred');
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -145,8 +216,146 @@ export function AuthForms() {
           </Card>
         )}
 
+        {/* Forgot Password Form */}
+        {mode === 'forgot' && (
+          <Card className="animate-slide-up">
+            <CardHeader>
+              <CardTitle>🔐 Reset Password</CardTitle>
+            </CardHeader>
+
+            <form onSubmit={handleForgotPassword} className="space-y-4">
+              <p className="font-mono text-sm text-[var(--color-plum)]/70">
+                Enter your email and we'll send you a code to reset your password.
+              </p>
+
+              <Input
+                label="Email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                icon="📧"
+              />
+
+              {error && (
+                <div className="bg-[var(--color-coral)]/10 border-2 border-[var(--color-coral)] p-3 font-mono text-sm text-[var(--color-coral)]">
+                  {error}
+                </div>
+              )}
+
+              {message && (
+                <div className="bg-[var(--color-sage)]/20 border-2 border-[var(--color-sage)] p-3 font-mono text-sm text-[var(--color-plum)]">
+                  {message}
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                isLoading={isResetting}
+              >
+                Send Reset Code
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('login');
+                  setError('');
+                  setMessage('');
+                }}
+                className="font-mono text-sm text-[var(--color-plum)] hover:text-[var(--color-coral)] transition-colors underline underline-offset-4"
+              >
+                Back to login
+              </button>
+            </div>
+          </Card>
+        )}
+
+        {/* Reset Password Confirmation Form */}
+        {mode === 'resetConfirm' && (
+          <Card className="animate-slide-up">
+            <CardHeader>
+              <CardTitle>🔑 Enter New Password</CardTitle>
+            </CardHeader>
+
+            <form onSubmit={handleResetConfirm} className="space-y-4">
+              <p className="font-mono text-sm text-[var(--color-plum)]/70">
+                We sent a reset code to <strong>{email}</strong>
+              </p>
+
+              <Input
+                label="Reset Code"
+                type="text"
+                placeholder="123456"
+                value={resetCode}
+                onChange={(e) => setResetCode(e.target.value)}
+                required
+                icon="🔑"
+                className="text-center text-2xl tracking-[0.3em]"
+              />
+
+              <Input
+                label="New Password"
+                type="password"
+                placeholder="••••••••"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                minLength={8}
+                icon="🔒"
+              />
+
+              <p className="font-mono text-xs text-[var(--color-plum)]/60">
+                Password must be at least 8 characters
+              </p>
+
+              {error && (
+                <div className="bg-[var(--color-coral)]/10 border-2 border-[var(--color-coral)] p-3 font-mono text-sm text-[var(--color-coral)]">
+                  {error}
+                </div>
+              )}
+
+              {message && (
+                <div className="bg-[var(--color-sage)]/20 border-2 border-[var(--color-sage)] p-3 font-mono text-sm text-[var(--color-plum)]">
+                  {message}
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                isLoading={isResetting}
+              >
+                Reset Password
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode('login');
+                  setError('');
+                  setMessage('');
+                  setResetCode('');
+                  setNewPassword('');
+                }}
+                className="font-mono text-sm text-[var(--color-plum)] hover:text-[var(--color-coral)] transition-colors underline underline-offset-4"
+              >
+                Back to login
+              </button>
+            </div>
+          </Card>
+        )}
+
         {/* Login/Signup Form */}
-        {mode !== 'confirm' && (
+        {(mode === 'login' || mode === 'signup') && (
           <Card className="animate-slide-up">
             <CardHeader>
               <CardTitle>
@@ -215,20 +424,35 @@ export function AuthForms() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setMode(mode === 'login' ? 'signup' : 'login');
-                  setError('');
-                  setMessage('');
-                }}
-                className="font-mono text-sm text-[var(--color-plum)] hover:text-[var(--color-coral)] transition-colors underline underline-offset-4"
-              >
-                {mode === 'login'
-                  ? "Don't have an account? Sign up"
-                  : 'Already have an account? Log in'}
-              </button>
+            <div className="mt-6 text-center space-y-3">
+              {mode === 'login' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('forgot');
+                    setError('');
+                    setMessage('');
+                  }}
+                  className="font-mono text-sm text-[var(--color-plum)]/70 hover:text-[var(--color-coral)] transition-colors underline underline-offset-4"
+                >
+                  Forgot password?
+                </button>
+              )}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode(mode === 'login' ? 'signup' : 'login');
+                    setError('');
+                    setMessage('');
+                  }}
+                  className="font-mono text-sm text-[var(--color-plum)] hover:text-[var(--color-coral)] transition-colors underline underline-offset-4"
+                >
+                  {mode === 'login'
+                    ? "Don't have an account? Sign up"
+                    : 'Already have an account? Log in'}
+                </button>
+              </div>
             </div>
           </Card>
         )}
