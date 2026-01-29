@@ -183,11 +183,26 @@ async function main() {
                     shareMap[couple.partner1Id] = half;
                     shareMap[couple.partner2Id] = exp.amount - half;
                 } else {
-                    shareMap[couple.partner1Id] = p1;
-                    shareMap[couple.partner2Id] = p2;
+                    // partner1Share/partner2Share are PERCENTAGES, not amounts!
+                    // Convert from percentage to cents
+                    const p1Amount = Math.round(exp.amount * p1 / 100);
+                    shareMap[couple.partner1Id] = p1Amount;
+                    shareMap[couple.partner2Id] = exp.amount - p1Amount; // Ensure it adds up exactly
                 }
                 shares = JSON.stringify(shareMap);
             }
+        }
+
+        // Map paidBy from "partner1"/"partner2" to actual user IDs
+        let paidBy = exp.paidBy;
+        const couple = couples.find(c => c.id === exp.coupleId);
+        if (couple) {
+            if (paidBy === 'partner1') {
+                paidBy = couple.partner1Id;
+            } else if (paidBy === 'partner2') {
+                paidBy = couple.partner2Id;
+            }
+            // Otherwise keep existing value (already a user ID or new data)
         }
 
         // Update Item
@@ -195,10 +210,11 @@ async function main() {
             await docClient.send(new UpdateCommand({
                 TableName: TABLE_EXPENSE,
                 Key: { id: exp.id },
-                UpdateExpression: "SET groupId = :gid, shares = :s",
+                UpdateExpression: "SET groupId = :gid, shares = :s, paidBy = :pb",
                 ExpressionAttributeValues: {
                     ":gid": newGroupId,
-                    ":s": shares
+                    ":s": shares,
+                    ":pb": paidBy
                 }
             }));
             process.stdout.write(".");
@@ -221,13 +237,33 @@ async function main() {
         const newGroupId = coupleToGroupMap[set.coupleId];
         if (!newGroupId) continue;
 
+        // Map paidBy and paidTo from "partner1"/"partner2" to actual user IDs
+        let paidBy = set.paidBy;
+        let paidTo = set.paidTo;
+        const couple = couples.find(c => c.id === set.coupleId);
+        if (couple) {
+            if (paidBy === 'partner1') {
+                paidBy = couple.partner1Id;
+            } else if (paidBy === 'partner2') {
+                paidBy = couple.partner2Id;
+            }
+
+            if (paidTo === 'partner1') {
+                paidTo = couple.partner1Id;
+            } else if (paidTo === 'partner2') {
+                paidTo = couple.partner2Id;
+            }
+        }
+
         try {
             await docClient.send(new UpdateCommand({
                 TableName: TABLE_SETTLEMENT,
                 Key: { id: set.id },
-                UpdateExpression: "SET groupId = :gid",
+                UpdateExpression: "SET groupId = :gid, paidBy = :pb, paidTo = :pt",
                 ExpressionAttributeValues: {
-                    ":gid": newGroupId
+                    ":gid": newGroupId,
+                    ":pb": paidBy,
+                    ":pt": paidTo
                 }
             }));
             process.stdout.write(".");

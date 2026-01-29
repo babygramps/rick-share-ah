@@ -82,4 +82,3 @@ amplify/backend/api/*/build/
 
 # Migration (Local only)
 migration/
-
