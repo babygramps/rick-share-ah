@@ -49,28 +49,28 @@
     "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
       "Type": "String"
     },
-    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCoupleauth0FunctionQuerygetCoupleauth0FunctionAppSyncFunctionC61301D3FunctionId": {
+    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId": {
       "Type": "String"
     },
-    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId": {
+    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId": {
       "Type": "String"
     },
     "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
       "Type": "String"
     },
-    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleMutationcreateCoupleinit0FunctionMutationcreateCoupleinit0FunctionAppSyncFunctionD775F212FunctionId": {
+    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId": {
       "Type": "String"
     },
-    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleMutationupdateCoupleinit0FunctionMutationupdateCoupleinit0FunctionAppSyncFunction92AD5DD6FunctionId": {
+    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId": {
       "Type": "String"
     },
-    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptiononCreateCoupleauth0FunctionSubscriptiononCreateCoupleauth0FunctionAppSyncFunctionAF9405DFFunctionId": {
+    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId": {
       "Type": "String"
     },
-    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId": {
+    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId": {
       "Type": "String"
     },
-    "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId": {
+    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId": {
       "Type": "String"
     }
   },
@@ -122,11 +122,11 @@
             "AttributeType": "S"
           },
           {
-            "AttributeName": "coupleId",
+            "AttributeName": "groupId",
             "AttributeType": "S"
           },
           {
-            "AttributeName": "coupleExpensesId",
+            "AttributeName": "coupleId",
             "AttributeType": "S"
           }
         ],
@@ -141,10 +141,10 @@
         },
         "GlobalSecondaryIndexes": [
           {
-            "IndexName": "byCouple",
+            "IndexName": "byGroup",
             "KeySchema": [
               {
-                "AttributeName": "coupleId",
+                "AttributeName": "groupId",
                 "KeyType": "HASH"
               }
             ],
@@ -169,10 +169,10 @@
             }
           },
           {
-            "IndexName": "gsi-Couple.expenses",
+            "IndexName": "byCoupleLegacy",
             "KeySchema": [
               {
-                "AttributeName": "coupleExpensesId",
+                "AttributeName": "coupleId",
                 "KeyType": "HASH"
               }
             ],
@@ -510,10 +510,10 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCoupleauth0FunctionQuerygetCoupleauth0FunctionAppSyncFunctionC61301D3FunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -605,10 +605,10 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCoupleauth0FunctionQuerygetCoupleauth0FunctionAppSyncFunctionC61301D3FunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -730,7 +730,7 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleMutationcreateCoupleinit0FunctionMutationcreateCoupleinit0FunctionAppSyncFunctionD775F212FunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -739,7 +739,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -882,7 +882,7 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleMutationupdateCoupleinit0FunctionMutationupdateCoupleinit0FunctionAppSyncFunction92AD5DD6FunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -891,7 +891,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -1040,7 +1040,7 @@
               ]
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -1081,13 +1081,13 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptiononCreateCoupleauth0FunctionSubscriptiononCreateCoupleauth0FunctionAppSyncFunctionAF9405DFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
             }
           ]
         },
@@ -1118,13 +1118,13 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptiononCreateCoupleauth0FunctionSubscriptiononCreateCoupleauth0FunctionAppSyncFunctionAF9405DFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
             }
           ]
         },
@@ -1155,13 +1155,13 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptiononCreateCoupleauth0FunctionSubscriptiononCreateCoupleauth0FunctionAppSyncFunctionAF9405DFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
             }
           ]
         },
@@ -1179,6 +1179,101 @@
         },
         "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)",
         "TypeName": "Subscription"
+      }
+    },
+    "QueryExpensesByGroupIdDataResolverFnQueryExpensesByGroupIdDataResolverFnAppSyncFunction7223B1E6": {
+      "Type": "AWS::AppSync::FunctionConfiguration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "DataSourceName": {
+          "Fn::GetAtt": [
+            "ExpenseDataSource",
+            "Name"
+          ]
+        },
+        "FunctionVersion": "2018-05-29",
+        "Name": "QueryExpensesByGroupIdDataResolverFn",
+        "RequestMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.expensesByGroupId.req.vtl"
+            ]
+          ]
+        },
+        "ResponseMappingTemplateS3Location": {
+          "Fn::Join": [
+            "",
+            [
+              "s3://",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentBucket7592718ARef"
+              },
+              "/",
+              {
+                "Ref": "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref"
+              },
+              "/resolvers/Query.expensesByGroupId.res.vtl"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "ExpenseDataSource"
+      ]
+    },
+    "QueryexpensesByGroupIdResolver": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+        },
+        "FieldName": "expensesByGroupId",
+        "Kind": "PIPELINE",
+        "PipelineConfig": {
+          "Functions": [
+            {
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId"
+            },
+            {
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
+            },
+            {
+              "Fn::GetAtt": [
+                "QueryExpensesByGroupIdDataResolverFnQueryExpensesByGroupIdDataResolverFnAppSyncFunction7223B1E6",
+                "FunctionId"
+              ]
+            }
+          ]
+        },
+        "RequestMappingTemplate": {
+          "Fn::Join": [
+            "",
+            [
+              "$util.qr($ctx.stash.put(\"typeName\", \"Query\"))\n$util.qr($ctx.stash.put(\"fieldName\", \"expensesByGroupId\"))\n$util.qr($ctx.stash.put(\"conditions\", []))\n$util.qr($ctx.stash.put(\"metadata\", {}))\n$util.qr($ctx.stash.metadata.put(\"dataSourceType\", \"AMAZON_DYNAMODB\"))\n$util.qr($ctx.stash.metadata.put(\"apiId\", \"",
+              {
+                "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n$util.qr($ctx.stash.put(\"tableName\", \"",
+              {
+                "Ref": "ExpenseTable"
+              },
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+            ]
+          ]
+        },
+        "ResponseMappingTemplate": "$util.toJson($ctx.prev.result)",
+        "TypeName": "Query"
       }
     },
     "QueryExpensesByCoupleIdDataResolverFnQueryExpensesByCoupleIdDataResolverFnAppSyncFunction4E5AC604": {
@@ -1243,10 +1338,10 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCoupleauth0FunctionQuerygetCoupleauth0FunctionAppSyncFunctionC61301D3FunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId"
             },
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             },
             {
               "Fn::GetAtt": [
@@ -1287,7 +1382,7 @@
         "PipelineConfig": {
           "Functions": [
             {
-              "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId"
+              "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId"
             }
           ]
         },

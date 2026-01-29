@@ -1,30 +1,49 @@
 // Core data types for Rick & Share-ah
 
-export interface Couple {
+export type GroupType = 'COUPLE' | 'GROUP';
+
+export interface GroupMember {
   id: string;
+  groupId: string;
+  userId: string;
   name: string;
-  partner1Id: string;
-  partner1Name: string;
-  partner1Email: string;
-  partner2Id?: string | null;
-  partner2Name?: string | null;
-  partner2Email?: string | null;
+  email?: string | null;
+  role?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Group {
+  id: string;
+  type: GroupType;
+  name: string;
   inviteCode?: string | null;
-  defaultSplitPercent: number;
+  members?: {
+    items: GroupMember[];
+  };
   createdAt?: string;
   updatedAt?: string;
   owner?: string;
 }
 
+// Deprecated Couple interface for refactoring support if needed, but ideally replaced by Group
+export type Couple = Group;
+
 export interface Expense {
   id: string;
-  coupleId: string;
+  groupId: string;
   description: string;
   amount: number;
-  paidBy: string;
+  paidBy: string; // userId
   splitType: string;
-  partner1Share: number;
-  partner2Share: number;
+
+  // Legacy/Couple fields (optional now)
+  partner1Share?: number | null;
+  partner2Share?: number | null;
+
+  // New: Map of userId -> cents
+  shares?: string | null; // AWSJSON comes as string usually, might need parsing
+
   category: string;
   date: string;
   note?: string | null;
@@ -35,10 +54,10 @@ export interface Expense {
 
 export interface Settlement {
   id: string;
-  coupleId: string;
+  groupId: string;
   amount: number;
-  paidBy: string;
-  paidTo: string;
+  paidBy: string; // userId
+  paidTo: string; // userId
   date: string;
   note?: string | null;
   createdAt?: string;
@@ -80,10 +99,16 @@ export const CATEGORIES: CategoryInfo[] = [
   { id: 'other', label: 'Other', emoji: '📦', color: '#5C374C' },
 ];
 
-export interface Balance {
+export interface PaymentSuggestion {
+  fromUserId: string;
+  toUserId: string;
   amount: number;
-  partner1Total: number;
-  partner2Total: number;
+}
+
+export interface Balance {
+  amount: number; // Net balance for current user
+  userBalances?: Record<string, number>; // Net balance for each user ID
+  suggestedPayments?: PaymentSuggestion[]; // Simplified debt transactions
 }
 
 export interface User {
@@ -105,10 +130,10 @@ export interface ReceiptLineItem {
   quantity?: number | null;
 }
 
-export type LineItemAssignTo = 'partner1' | 'partner2' | 'split' | 'custom';
+export type LineItemAssignTo = 'partner1' | 'partner2' | 'split' | 'custom' | string; // userId for custom
 
 export interface ReceiptLineItemAssignment extends ReceiptLineItem {
   id: string;
   assignTo: LineItemAssignTo;
-  customPercent?: number; // partner1 percent (0-100) when assignTo === 'custom'
+  customPercent?: number;
 }

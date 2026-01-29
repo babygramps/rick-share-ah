@@ -1,6 +1,6 @@
 import type { Expense } from '../../types';
 import { useApp } from '../../context/AppContext';
-import { formatCurrency, formatDate, getCategoryInfo, calculateExpenseSplit } from '../../utils/helpers';
+import { formatCurrency, formatDate, getCategoryInfo } from '../../utils/helpers';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 
@@ -12,35 +12,63 @@ interface ExpenseCardProps {
 }
 
 export function ExpenseCard({ expense, onEdit, onDelete, showActions = true }: ExpenseCardProps) {
-  const { couple } = useApp();
+  const { members, user } = useApp();
   const categoryInfo = getCategoryInfo(expense.category);
-  const split = calculateExpenseSplit(expense);
-  
-  const paidByName = expense.paidBy === 'partner1' 
-    ? couple?.partner1Name 
-    : couple?.partner2Name || 'Partner 2';
-  
-  const otherPartnerName = expense.paidBy === 'partner1'
-    ? couple?.partner2Name || 'Partner 2'
-    : couple?.partner1Name;
 
-  const amountOwed = expense.paidBy === 'partner1' 
-    ? split.partner2Owes 
-    : split.partner1Owes;
+  // Resolve Payer
+  const payer = members.find(m => m.userId === expense.paidBy);
+  const paidByName = payer?.name || 'Unknown';
+  const isPayer = user?.id === expense.paidBy;
+
+  // Calculate my share/impact
+  let myShare = 0;
+  let isInvolved = false;
+
+  if (expense.shares) {
+    try {
+      const shares = JSON.parse(expense.shares); // Record<userId, number> (cents)
+      if (shares[user?.id || '']) {
+        myShare = shares[user?.id || ''];
+        isInvolved = true;
+      }
+    } catch (e) { console.error(e) }
+  } else {
+    // Legacy fallback (assume 50/50 if not specified, or parse legacy fields if critical)
+    // For now, if no shares JSON, we might assume equal split or legacy Couple logic
+    // But simpler to just start fresh for Group mode.
+    // If we really need legacy support, we'd check partner1Share/partner2Share
+  }
+
+  const amountImpact = isPayer ? (expense.amount - myShare) : myShare; // If I paid, I get back (Amount - MyShare). If I didn't pay, I owe MyShare.
+
+  // Text to display
+  let statusText = '';
+  let statusColor = 'var(--color-plum)';
+
+  if (isPayer) {
+    statusText = `you lent ${formatCurrency(amountImpact)}`;
+    statusColor = 'var(--color-sage)';
+  } else if (isInvolved) {
+    statusText = `you owe ${formatCurrency(myShare)}`;
+    statusColor = 'var(--color-coral)';
+  } else {
+    statusText = 'not involved';
+    statusColor = 'var(--color-plum)';
+  }
 
   return (
-    <Card 
-      hover 
-      padding="none" 
+    <Card
+      hover
+      padding="none"
       className="overflow-hidden animate-slide-up"
     >
       <div className="flex">
         {/* Category color bar */}
-        <div 
+        <div
           className="w-2 flex-shrink-0"
           style={{ backgroundColor: categoryInfo.color }}
         />
-        
+
         <div className="flex-1 p-4">
           <div className="flex items-start justify-between gap-4">
             {/* Left side - expense info */}
@@ -51,50 +79,26 @@ export function ExpenseCard({ expense, onEdit, onDelete, showActions = true }: E
                   {expense.description}
                 </h3>
               </div>
-              
+
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-[var(--color-plum)]/70">
                 <span>{formatDate(expense.date)}</span>
                 <span className="bg-[var(--color-cream)] px-2 py-0.5 border border-[var(--color-plum)]/20">
                   {categoryInfo.label}
                 </span>
-              </div>
-            </div>
-
-            {/* Right side - amount */}
-            <div className="text-right flex-shrink-0">
-              <p className="font-mono text-2xl font-bold">
-                {formatCurrency(expense.amount)}
-              </p>
-            </div>
-          </div>
-
-          {/* Payment info */}
-          <div className="mt-3 pt-3 border-t-2 border-dashed border-[var(--color-plum)]/20">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span 
-                  className="px-2 py-1 text-xs font-mono font-bold uppercase border-2 border-[var(--color-plum)]"
-                  style={{ 
-                    backgroundColor: expense.paidBy === 'partner1' 
-                      ? 'var(--color-coral)' 
-                      : 'var(--color-sage)',
-                    color: expense.paidBy === 'partner1' ? 'white' : 'var(--color-plum)'
-                  }}
-                >
-                  {paidByName} paid
-                </span>
-                
-                <span className="font-mono text-xs text-[var(--color-plum)]/70">
-                  {expense.splitType === 'equal' 
-                    ? 'Split 50/50' 
-                    : `${expense.partner1Share}/${expense.partner2Share}`}
+                <span>
+                  {paidByName} paid {formatCurrency(expense.amount)}
                 </span>
               </div>
-
-              <p className="font-mono text-sm font-bold">
-                {otherPartnerName} owes {formatCurrency(amountOwed)}
-              </p>
             </div>
+
+            {/* Right side - User impact */}
+            {isInvolved && (
+              <div className="text-right flex-shrink-0">
+                <p className="font-mono text-xs uppercase font-bold" style={{ color: statusColor }}>
+                  {statusText}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Note if present */}
@@ -124,4 +128,3 @@ export function ExpenseCard({ expense, onEdit, onDelete, showActions = true }: E
     </Card>
   );
 }
-

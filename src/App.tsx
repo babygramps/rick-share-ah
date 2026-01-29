@@ -3,12 +3,13 @@ import { AppProvider, useApp } from './context/AppContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Layout } from './components/layout/Layout';
 import { AuthForms } from './components/auth/AuthForms';
-import { CoupleSetup } from './components/couple/CoupleSetup';
+import { GroupSetup } from './components/group/GroupSetup';
 import { Dashboard } from './pages/Dashboard';
 import { AddExpense } from './pages/AddExpense';
 import { History } from './pages/History';
 import { Statistics } from './pages/Statistics';
 import { Settings } from './pages/Settings';
+import { Migration } from './pages/Migration';
 
 // Protected route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -32,12 +33,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-// Require couple setup
-function RequireCouple({ children }: { children: React.ReactNode }) {
-  const { couple } = useApp();
+// Require group setup
+function RequireGroup({ children }: { children: React.ReactNode }) {
+  const { group } = useApp();
 
-  if (!couple) {
-    return <CoupleSetup />;
+  if (!group) {
+    return <GroupSetup />;
   }
 
   return <>{children}</>;
@@ -93,11 +94,11 @@ function AppRoutes() {
         path="/"
         element={
           <ProtectedRoute>
-            <RequireCouple>
+            <RequireGroup>
               <Layout>
                 <Dashboard />
               </Layout>
-            </RequireCouple>
+            </RequireGroup>
           </ProtectedRoute>
         }
       />
@@ -105,11 +106,11 @@ function AppRoutes() {
         path="/add"
         element={
           <ProtectedRoute>
-            <RequireCouple>
+            <RequireGroup>
               <Layout>
                 <AddExpense />
               </Layout>
-            </RequireCouple>
+            </RequireGroup>
           </ProtectedRoute>
         }
       />
@@ -117,11 +118,11 @@ function AppRoutes() {
         path="/history"
         element={
           <ProtectedRoute>
-            <RequireCouple>
+            <RequireGroup>
               <Layout>
                 <History />
               </Layout>
-            </RequireCouple>
+            </RequireGroup>
           </ProtectedRoute>
         }
       />
@@ -129,11 +130,11 @@ function AppRoutes() {
         path="/stats"
         element={
           <ProtectedRoute>
-            <RequireCouple>
+            <RequireGroup>
               <Layout>
                 <Statistics />
               </Layout>
-            </RequireCouple>
+            </RequireGroup>
           </ProtectedRoute>
         }
       />
@@ -141,11 +142,11 @@ function AppRoutes() {
         path="/settings"
         element={
           <ProtectedRoute>
-            <RequireCouple>
+            <RequireGroup>
               <Layout>
                 <Settings />
               </Layout>
-            </RequireCouple>
+            </RequireGroup>
           </ProtectedRoute>
         }
       />

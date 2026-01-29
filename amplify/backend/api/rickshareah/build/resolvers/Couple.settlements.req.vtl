@@ -15,7 +15,7 @@
   #set( $query = {
   "expression": "#partitionKey = :partitionKey",
   "expressionNames": {
-      "#partitionKey": "coupleSettlementsId"
+      "#partitionKey": "coupleId"
   },
   "expressionValues": {
       ":partitionKey": $util.dynamodb.toDynamoDB($partitionKeyValue)
@@ -67,6 +67,6 @@ $util.toJson($context.args.nextToken)
     #else
 null
     #end,
-      "index": "gsi-Couple.settlements"
+      "index": "byCoupleLegacy"
   }
 #end

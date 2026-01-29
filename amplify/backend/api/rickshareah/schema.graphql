@@ -1,7 +1,24 @@
-# Couple can be:
-# - Created by owner (partner1)
-# - Read/Updated by any authenticated user (needed for partner2 to join via invite code)
-# Note: Invite code verification in app logic provides security for join
+# Group can be a COUPLE (2 people) or a GROUP (3+ people)
+enum GroupType {
+  COUPLE
+  GROUP
+}
+
+type Group @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read, update] }
+]) {
+  id: ID!
+  type: GroupType!
+  name: String!
+  inviteCode: String @index(name: "byInviteCode")
+  members: [GroupMember] @hasMany(indexName: "byGroup", fields: ["id"])
+  expenses: [Expense] @hasMany(indexName: "byGroup", fields: ["id"])
+  settlements: [Settlement] @hasMany(indexName: "byGroup", fields: ["id"])
+  ownerId: String 
+}
+
+# Legacy Couple Support (For Migration)
 type Couple @model @auth(rules: [
   { allow: owner },
   { allow: private, operations: [read, update] }
@@ -16,38 +33,67 @@ type Couple @model @auth(rules: [
   partner2Email: String
   inviteCode: String @index(name: "byInviteCode")
   defaultSplitPercent: Int!
-  expenses: [Expense] @hasMany
-  settlements: [Settlement] @hasMany
+  expenses: [Expense] @hasMany(indexName: "byCoupleLegacy", fields: ["id"])
+  settlements: [Settlement] @hasMany(indexName: "byCoupleLegacy", fields: ["id"])
 }
 
-# Expenses: owner can do everything, but we need both partners to access
-# Using private for now - both authenticated partners can read/write
+type GroupMember @model @auth(rules: [
+  { allow: owner },
+  { allow: private, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  groupId: ID! @index(name: "byGroup")
+  group: Group @belongsTo(fields: ["groupId"])
+  userId: String! @index(name: "byUser")
+  name: String!
+  email: String
+  role: String # "admin", "member"
+}
+
 type Expense @model @auth(rules: [
   { allow: owner },
   { allow: private, operations: [read, create, update, delete] }
 ]) {
   id: ID!
-  coupleId: ID! @index(name: "byCouple")
+  
+  # New Group Link (Optional during migration)
+  groupId: ID @index(name: "byGroup")
+  group: Group @belongsTo(fields: ["groupId"])
+  
+  # Legacy Couple Link
+  coupleId: ID @index(name: "byCoupleLegacy")
   couple: Couple @belongsTo(fields: ["coupleId"])
+  
   description: String!
   amount: Int!
   paidBy: String!
+  
   splitType: String!
-  partner1Share: Int!
-  partner2Share: Int!
+  
+  partner1Share: Int 
+  partner2Share: Int
+  
+  shares: AWSJSON  
+  
   category: String!
   date: AWSDate!
   note: String
 }
 
-# Settlements: same auth as expenses
 type Settlement @model @auth(rules: [
   { allow: owner },
   { allow: private, operations: [read, create, update, delete] }
 ]) {
   id: ID!
-  coupleId: ID! @index(name: "byCouple")
+  
+  # New Group Link (Optional during migration)
+  groupId: ID @index(name: "byGroup")
+  group: Group @belongsTo(fields: ["groupId"])
+  
+  # Legacy Couple Link
+  coupleId: ID @index(name: "byCoupleLegacy")
   couple: Couple @belongsTo(fields: ["coupleId"])
+  
   amount: Int!
   paidBy: String!
   paidTo: String!
@@ -55,36 +101,8 @@ type Settlement @model @auth(rules: [
   note: String
 }
 
-# User preferences for per-user settings like theme
-# Owner-only auth ensures users can only access their own preferences
 type UserPreferences @model @auth(rules: [{ allow: owner }]) {
   id: ID!
   userId: String! @index(name: "byUserId")
   theme: String
-}
-
-# Receipt scanning result returned by Textract processing
-type LineItem @aws_cognito_user_pools {
-  description: String
-  price: Int
-  quantity: Int
-}
-
-type ReceiptScan @aws_cognito_user_pools {
-  id: ID!
-  status: String!
-  merchantName: String
-  totalAmount: Int
-  date: AWSDate
-  category: String
-  confidence: Float
-  lineItems: [LineItem]
-  rawText: String
-  imageUrl: String
-}
-
-type Mutation {
-  processReceipt(imageKey: String!): ReceiptScan 
-    @function(name: "processReceipt-${env}")
-    @auth(rules: [{ allow: private }])
 }

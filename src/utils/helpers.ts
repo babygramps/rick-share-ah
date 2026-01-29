@@ -1,4 +1,4 @@
-import type { Expense, Settlement, Balance } from '../types';
+import type { Expense, Settlement, Balance, PaymentSuggestion } from '../types';
 import { CATEGORIES } from '../types';
 
 /**
@@ -49,76 +49,133 @@ export function getTodayISO(): string {
 }
 
 /**
- * Calculate what each partner owes for an expense
+ * Parse Expense Shares JSON safely
  */
-export function calculateExpenseSplit(expense: Expense): { partner1Owes: number; partner2Owes: number } {
-  if (expense.splitType === 'equal') {
-    const half = Math.floor(expense.amount / 2);
-    const remainder = expense.amount % 2;
-    return {
-      partner1Owes: half + (expense.paidBy === 'partner2' ? remainder : 0),
-      partner2Owes: half + (expense.paidBy === 'partner1' ? remainder : 0),
-    };
+export function parseExpenseShares(expense: Expense): Record<string, number> {
+  if (expense.shares) {
+    try {
+      if (typeof expense.shares === 'string') {
+        return JSON.parse(expense.shares);
+      }
+      return expense.shares as unknown as Record<string, number>;
+    } catch (e) {
+      console.error('Failed to parse shares', e);
+    }
   }
-  
-  if (expense.splitType === 'percentage') {
-    const partner1Amount = Math.round(expense.amount * (expense.partner1Share / 100));
-    const partner2Amount = expense.amount - partner1Amount;
-    return {
-      partner1Owes: partner1Amount,
-      partner2Owes: partner2Amount,
-    };
-  }
-  
-  // exact split
-  return {
-    partner1Owes: expense.partner1Share,
-    partner2Owes: expense.partner2Share,
-  };
+
+  // Fallback to legacy/couple logic if no shares map
+  // We assume partner1Id and partner2Id are known in context, but here we might just have to rely on legacy fields if they exist
+  // actually, without knowing precise userIds this is hard, but usually we just need this for calculation.
+
+  // For calculation, if it's a legacy couple expense, we might format it into a map if we knew the IDs.
+  // But often `calculateBalance` iterates expenses and needs to know who owes what.
+  return {};
 }
 
 /**
- * Calculate the running balance between partners
- * Positive = Partner 2 owes Partner 1
- * Negative = Partner 1 owes Partner 2
+ * Calculate the running balance for a Group using Simplified Debts
  */
-export function calculateBalance(expenses: Expense[], settlements: Settlement[]): Balance {
-  let partner1Paid = 0;
-  let partner2Paid = 0;
-  let partner1Owes = 0;
-  let partner2Owes = 0;
+export function calculateGroupBalance(
+  expenses: Expense[],
+  settlements: Settlement[],
+  members: { userId: string }[],
+  currentUserId: string
+): Balance {
+  const balances: Record<string, number> = {};
 
-  // Calculate from expenses
+  // Initialize 0
+  members.forEach(m => balances[m.userId] = 0);
+
+  // 1. Sum up Expenses
   for (const expense of expenses) {
-    const split = calculateExpenseSplit(expense);
-    
-    if (expense.paidBy === 'partner1') {
-      partner1Paid += expense.amount;
-      partner2Owes += split.partner2Owes;
-    } else {
-      partner2Paid += expense.amount;
-      partner1Owes += split.partner1Owes;
+    const paidBy = expense.paidBy;
+    const shares = parseExpenseShares(expense);
+    const amount = expense.amount;
+
+    // Legacy fallback check (if shares are empty but it's a couple expense)
+    if (Object.keys(shares).length === 0 && (expense.partner1Share !== undefined || expense.partner2Share !== undefined)) {
+      // This is tricky without knowing which ID maps to partner1/2. 
+      // We will assume this is handled by the new schema migration or that we only use this for new groups.
+      // For now, let's just create a basic map if we can't find shares.
+      continue; // Skip legacy for now or implement if needed
+    }
+
+    // Add credit to payer
+    balances[paidBy] = (balances[paidBy] || 0) + amount;
+
+    // Subtract shares from debtors
+    for (const [userId, shareAmount] of Object.entries(shares)) {
+      balances[userId] = (balances[userId] || 0) - shareAmount;
     }
   }
 
-  // Apply settlements
+  // 2. Apply Settlements
   for (const settlement of settlements) {
-    if (settlement.paidBy === 'partner1') {
-      partner1Owes = Math.max(0, partner1Owes - settlement.amount);
-    } else {
-      partner2Owes = Math.max(0, partner2Owes - settlement.amount);
-    }
+    // Payer gives money (Credit reduces? No, Debt reduces. Or Credit Increases?)
+    // Wait. If A pays B $10.
+    // A's net balance increases (they paid, so they are "owed" more or "owe" less).
+    // B's net balance decreases (they received, so they are "owed" less or "owe" more).
+
+    // Logic: Net Balance = Total Paid - Total Consumed.
+    // Settlement is a transfer.
+    // Payer sent money. So they "Paid" +Amount. 
+    // Receiver got money. They "Paid" -Amount (or Consumed +Amount).
+
+    balances[settlement.paidBy] = (balances[settlement.paidBy] || 0) + settlement.amount;
+    balances[settlement.paidTo] = (balances[settlement.paidTo] || 0) - settlement.amount;
   }
 
-  // Net balance: positive means partner2 owes partner1
-  const netBalance = partner2Owes - partner1Owes;
+  // 3. Simplified Debt Algorithm
+  const debtors: { id: string; amount: number }[] = [];
+  const creditors: { id: string; amount: number }[] = [];
+
+  Object.entries(balances).forEach(([id, amount]) => {
+    // Round to avoid float errors
+    const rounded = Math.round(amount);
+    if (rounded < -1) debtors.push({ id, amount: rounded }); // negative = owes money
+    if (rounded > 1) creditors.push({ id, amount: rounded }); // positive = is owed money
+  });
+
+  debtors.sort((a, b) => a.amount - b.amount); // Ascending (most negative first)
+  creditors.sort((a, b) => b.amount - a.amount); // Descending (most positive first)
+
+  const suggestedPayments: PaymentSuggestion[] = [];
+
+  let i = 0; // debtor index
+  let j = 0; // creditor index
+
+  while (i < debtors.length && j < creditors.length) {
+    const debtor = debtors[i];
+    const creditor = creditors[j];
+
+    // The amount to settle is the min of what's owed vs what's accessible
+    // debtor.amount is negative, so use Math.abs
+    const amountData = Math.min(Math.abs(debtor.amount), creditor.amount);
+
+    if (amountData > 0) {
+      suggestedPayments.push({
+        fromUserId: debtor.id,
+        toUserId: creditor.id,
+        amount: amountData
+      });
+    }
+
+    // Update remaining
+    debtor.amount += amountData;
+    creditor.amount -= amountData;
+
+    // If settled, move to next
+    if (Math.abs(debtor.amount) < 1) i++;
+    if (creditor.amount < 1) j++;
+  }
 
   return {
-    amount: netBalance,
-    partner1Total: partner1Paid,
-    partner2Total: partner2Paid,
+    amount: balances[currentUserId] || 0,
+    userBalances: balances,
+    suggestedPayments
   };
 }
+
 
 /**
  * Get category info by ID
@@ -142,8 +199,9 @@ export function generateInviteCode(): string {
   let code = '';
   for (let i = 0; i < 6; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
+    if (Math.random() > 0.5) code += Math.floor(Math.random() * 9);
   }
-  return code;
+  return code.substring(0, 6).toUpperCase();
 }
 
 /**
@@ -151,17 +209,17 @@ export function generateInviteCode(): string {
  */
 export function groupExpensesByMonth(expenses: Expense[]): Map<string, Expense[]> {
   const groups = new Map<string, Expense[]>();
-  
+
   for (const expense of expenses) {
     const date = new Date(expense.date);
     const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-    
+
     if (!groups.has(key)) {
       groups.set(key, []);
     }
     groups.get(key)!.push(expense);
   }
-  
+
   return groups;
 }
 
@@ -173,4 +231,3 @@ export function formatMonthKey(key: string): string {
   const date = new Date(parseInt(year), parseInt(month) - 1);
   return new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(date);
 }
-

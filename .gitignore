@@ -32,6 +32,7 @@ amplifytools.xcconfig
 .idea/
 *.swp
 *.swo
+.editorconfig
 
 # OS
 .DS_Store
@@ -68,3 +69,21 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+# Ide settings
+.agent/
+.agents/
+.cursor/
+.gemini/
+.vscode/
+
+# Migration (Local only)
+migration/node_modules/
+migration/backup-*.json
+
+# Amplify Build Artifacts (including .vtl files)
+amplify/backend/api/*/build/
+
+# Migration (Local only)
+migration/node_modules/
+migration/backup-*.json

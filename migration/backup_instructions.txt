@@ -1,0 +1,113 @@
+/*
+  Usage: 
+  1. Login to the app in your browser (localhost:5173).
+  2. Copy the `localStorage` values for Amplify auth (or just run this in the browser console if easier, but Node script is better if we can auth).
+  
+  Actually, running in the BROWSER CONSOLE is the easiest way to avoid auth setup complexity for a one-off script.
+  
+  Instructions:
+  1. Open your running app (localhost:5173).
+  2. Open DevTools Console.
+  3. Paste this entire script.
+  4. Run `backupData()`.
+  5. Copy the JSON output and save it to `migration/backup.json`.
+*/
+
+async function backupData() {
+  const STATUS = {
+      couples: 0,
+      expenses: 0,
+      settlements: 0
+  };
+
+  // 1. Fetch Couples
+  const listCouples = `
+      query ListCouples {
+          listCouples {
+            items {
+              id
+              name
+              partner1Id
+              partner1Name
+              partner1Email
+              partner2Id
+              partner2Name
+              partner2Email
+              inviteCode
+              defaultSplitPercent
+              createdAt
+              updatedAt
+              owner
+            }
+          }
+      }
+  `;
+
+  // 2. Fetch Expenses (using scan or by couple if needed, but scan is easier for full migration)
+  const listExpenses = `
+      query ListExpenses {
+          listExpenses {
+            items {
+              id
+              coupleId
+              description
+              amount
+              paidBy
+              splitType
+              partner1Share
+              partner2Share
+              category
+              date
+              note
+              createdAt
+              updatedAt
+              owner
+            }
+          }
+      }
+  `;
+
+  // 3. Fetch Settlements
+  const listSettlements = `
+      query ListSettlements {
+          listSettlements {
+            items {
+              id
+              coupleId
+              amount
+              paidBy
+              paidTo
+              date
+              note
+              createdAt
+              updatedAt
+              owner
+            }
+          }
+      }
+  `;
+
+  // Helper to request graphQL
+  async function graphql(query) {
+      // Use the internal Amplify API client if available globally, or fetch manually
+      // Assuming 'aws-amplify' is imported as 'Amplify' or we access the configured API
+      // In the console, we might not have 'API'.
+      // Easier check: Is there a global `window['aws-amplify']`? 
+      // Unlikely unless exposed.
+      
+      // Better approach: We'll construct a fetch request using the aws-exports config usually found in window or local storage?
+      // No.
+      
+      // FALLBACK: Use the existing `_client` if exposed on `window`?
+      // Since I can't guarantee `window` access from here (Coding Agent), I will write this as a script that imports the Amplify config.
+      // BUT Node.js auth is hard.
+      
+      // Let's write a React Component "DataExporters.tsx" that the user can temporarily drop into App.tsx?
+      // Or just a utility function we can paste into `App.tsx` temporarily?
+      
+      return null;
+  }
+}
+
+// ... changing tactics. Writing a Node script is hard because of Auth.
+// Writing a React Component is easy because Auth is handled.

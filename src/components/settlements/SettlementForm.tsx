@@ -14,24 +14,20 @@ interface SettlementFormProps {
 }
 
 export function SettlementForm({ settlement, onSubmit, onCancel }: SettlementFormProps) {
-  const { couple, updateSettlement } = useApp();
+  const { members, user, updateSettlement } = useApp();
 
   const [amount, setAmount] = useState((settlement.amount / 100).toFixed(2));
   const [paidBy, setPaidBy] = useState(settlement.paidBy);
+  const [paidTo, setPaidTo] = useState(settlement.paidTo);
   const [date, setDate] = useState(formatDateForInput(settlement.date));
   const [note, setNote] = useState(settlement.note || '');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const partner1Name = couple?.partner1Name || 'Partner 1';
-  const partner2Name = couple?.partner2Name || 'Partner 2';
-
-  const partnerOptions = [
-    { value: 'partner1', label: partner1Name },
-    { value: 'partner2', label: partner2Name },
-  ];
-
-  const receivingPartner = paidBy === 'partner1' ? partner2Name : partner1Name;
+  const memberOptions = members.map(m => ({
+    value: m.userId,
+    label: m.userId === user?.id ? `${m.name} (You)` : m.name
+  }));
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -39,6 +35,10 @@ export function SettlementForm({ settlement, onSubmit, onCancel }: SettlementFor
     const amountCents = parseCurrencyInput(amount);
     if (amountCents <= 0) {
       newErrors.amount = 'Please enter a valid amount';
+    }
+
+    if (paidBy === paidTo) {
+      newErrors.paidBy = 'Cannot pay to self';
     }
 
     if (!date) {
@@ -51,14 +51,13 @@ export function SettlementForm({ settlement, onSubmit, onCancel }: SettlementFor
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validate()) return;
 
     setIsSubmitting(true);
 
     try {
       const amountCents = parseCurrencyInput(amount);
-      const paidTo = paidBy === 'partner1' ? 'partner2' : 'partner1';
 
       await updateSettlement(settlement.id, {
         amount: amountCents,
@@ -84,15 +83,20 @@ export function SettlementForm({ settlement, onSubmit, onCancel }: SettlementFor
       </CardHeader>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Select
-          label="Who paid?"
-          options={partnerOptions}
-          value={paidBy}
-          onChange={(e) => setPaidBy(e.target.value)}
-        />
-
-        <div className="bg-[var(--color-cream)] p-3 text-center font-mono text-sm border-2 border-dashed border-[var(--color-plum)]/20">
-          → Paid to <strong>{receivingPartner}</strong>
+        <div className="grid grid-cols-2 gap-4">
+          <Select
+            label="Who paid?"
+            options={memberOptions}
+            value={paidBy}
+            onChange={(e) => setPaidBy(e.target.value)}
+            error={errors.paidBy}
+          />
+          <Select
+            label="Paid to?"
+            options={memberOptions}
+            value={paidTo}
+            onChange={(e) => setPaidTo(e.target.value)}
+          />
         </div>
 
         <Input
@@ -127,16 +131,16 @@ export function SettlementForm({ settlement, onSubmit, onCancel }: SettlementFor
         )}
 
         <div className="flex gap-3 pt-2">
-          <Button 
-            type="button" 
-            variant="ghost" 
+          <Button
+            type="button"
+            variant="ghost"
             onClick={onCancel}
             disabled={isSubmitting}
           >
             Cancel
           </Button>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="flex-1"
             disabled={isSubmitting}
           >
@@ -147,4 +151,3 @@ export function SettlementForm({ settlement, onSubmit, onCancel }: SettlementFor
     </Card>
   );
 }
-

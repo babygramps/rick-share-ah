@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { 
-  signIn, 
-  signUp, 
-  signOut, 
+import {
+  signIn,
+  signUp,
+  signOut,
   getCurrentUser,
   confirmSignUp,
   fetchUserAttributes,
@@ -11,8 +11,8 @@ import {
   confirmResetPassword
 } from 'aws-amplify/auth';
 import { generateClient } from 'aws-amplify/api';
-import type { Couple, Expense, Settlement, User, Balance } from '../types';
-import { calculateBalance, generateInviteCode } from '../utils/helpers';
+import type { Group, GroupMember, Expense, Settlement, User, Balance, GroupType } from '../types';
+import { calculateGroupBalance, generateInviteCode } from '../utils/helpers';
 import * as queries from '../graphql/queries';
 import * as mutations from '../graphql/mutations';
 
@@ -42,30 +42,31 @@ interface AppContextType {
   confirmPasswordReset: (code: string, newPassword: string) => Promise<{ success: boolean; error?: string }>;
   setPasswordResetEmail: (email: string) => void;
 
-  // Couple state
-  couple: Couple | null;
-  createCouple: (name: string, partnerName: string) => Promise<{ success: boolean; error?: string }>;
-  joinCouple: (inviteCode: string, partnerName: string) => Promise<{ success: boolean; error?: string }>;
-  updateCouple: (updates: Partial<Couple>) => Promise<void>;
+  // Group state
+  group: Group | null;
+  members: GroupMember[];
+  createGroup: (name: string, type: GroupType, memberName: string) => Promise<{ success: boolean; error?: string }>;
+  joinGroup: (inviteCode: string, memberName: string) => Promise<{ success: boolean; error?: string }>;
+  updateGroup: (updates: Partial<Group>) => Promise<void>;
 
   // Expenses
   expenses: Expense[];
-  addExpense: (expense: Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  addExpense: (expense: Omit<Expense, 'id' | 'groupId' | 'createdAt' | 'updatedAt'>) => Promise<void>;
   addExpenseBatch: (
-    expenses: Array<Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>>
+    expenses: Array<Omit<Expense, 'id' | 'groupId' | 'createdAt' | 'updatedAt'>>
   ) => Promise<{ created: number; failed: number }>;
   updateExpense: (id: string, updates: Partial<Expense>) => Promise<void>;
   deleteExpense: (id: string) => Promise<void>;
 
   // Settlements
   settlements: Settlement[];
-  addSettlement: (settlement: Omit<Settlement, 'id' | 'coupleId' | 'createdAt'>) => Promise<void>;
+  addSettlement: (settlement: Omit<Settlement, 'id' | 'groupId' | 'createdAt'>) => Promise<void>;
   updateSettlement: (id: string, updates: Partial<Settlement>) => Promise<void>;
   deleteSettlement: (id: string) => Promise<void>;
 
   // Calculated values
   balance: Balance;
-  
+
   // Refresh data
   refreshData: () => Promise<void>;
 }
@@ -74,7 +75,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [couple, setCouple] = useState<Couple | null>(null);
+  const [group, setGroup] = useState<Group | null>(null);
+  const [members, setMembers] = useState<GroupMember[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [settlements, setSettlements] = useState<Settlement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -91,14 +93,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       const currentUser = await getCurrentUser();
       const attributes = await fetchUserAttributes();
-      
+
       setUser({
         id: currentUser.userId,
         email: attributes.email || '',
         name: attributes.name || attributes.email?.split('@')[0] || 'User',
       });
-      
-      // Load user's couple data
+
+      // Load user's group data
       await loadUserData(currentUser.userId);
     } catch (error) {
       // Not signed in
@@ -111,62 +113,78 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const loadUserData = async (userId: string) => {
     try {
-      // Find couple where user is partner1 or partner2
-      const coupleResult = await getClient().graphql({
-        query: queries.listCouples,
+      // Find memberships for this user
+      const membershipResult = await getClient().graphql({
+        query: queries.listGroupMembers,
         variables: {
-          filter: {
-            or: [
-              { partner1Id: { eq: userId } },
-              { partner2Id: { eq: userId } }
-            ]
-          }
+          filter: { userId: { eq: userId } }
         }
       });
 
-      const couples = (coupleResult as any).data?.listCouples?.items || [];
-      
-      if (couples.length > 0) {
-        const userCouple = couples[0];
-        setCouple(userCouple);
-        
-        // Load expenses and settlements for this couple
-        await loadCoupleData(userCouple.id);
+      const memberships = (membershipResult as any).data?.listGroupMembers?.items || [];
+
+      if (memberships.length > 0) {
+        // Use the first group found (Multi-group support can be added later)
+        const membership = memberships[0];
+        let userGroup = membership.group;
+
+        // If nested group data is missing (e.g. depth limit), fetch it directly
+        if (!userGroup || !userGroup.name) {
+          const groupResult = await getClient().graphql({
+            query: queries.getGroup,
+            variables: { id: membership.groupId }
+          });
+          userGroup = (groupResult as any).data?.getGroup;
+        }
+
+        if (userGroup) {
+          setGroup(userGroup);
+          await loadGroupData(userGroup.id);
+        }
+      } else {
+        setGroup(null);
+        setMembers([]);
+        setExpenses([]);
+        setSettlements([]);
       }
     } catch (error) {
       console.error('Error loading user data:', error);
     }
   };
 
-  const loadCoupleData = async (coupleId: string) => {
+  const loadGroupData = async (groupId: string) => {
     try {
-      console.log('Loading couple data for coupleId:', coupleId);
-      
-      // Load expenses (no sortDirection - index doesn't have a sort key)
-      const expenseResult = await getClient().graphql({
-        query: queries.expensesByCoupleId,
-        variables: { coupleId }
+      console.log('Loading group data for groupId:', groupId);
+
+      // Load Members
+      const membersResult = await getClient().graphql({
+        query: queries.listGroupMembers,
+        variables: { filter: { groupId: { eq: groupId } } }
       });
-      console.log('Expense query result:', expenseResult);
-      const loadedExpenses = (expenseResult as any).data?.expensesByCoupleId?.items || [];
+      const loadedMembers = (membersResult as any).data?.listGroupMembers?.items || [];
+      setMembers(loadedMembers);
+
+      // Load expenses
+      const expenseResult = await getClient().graphql({
+        query: queries.expensesByGroup,
+        variables: { groupId }
+      });
+      const loadedExpenses = (expenseResult as any).data?.expensesByGroup?.items || [];
       // Sort client-side by date descending
       loadedExpenses.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      console.log('Loaded expenses:', loadedExpenses.length, loadedExpenses);
       setExpenses(loadedExpenses);
 
-      // Load settlements (no sortDirection - index doesn't have a sort key)
+      // Load settlements
       const settlementResult = await getClient().graphql({
-        query: queries.settlementsByCoupleId,
-        variables: { coupleId }
+        query: queries.settlementsByGroup,
+        variables: { groupId }
       });
-      console.log('Settlement query result:', settlementResult);
-      const loadedSettlements = (settlementResult as any).data?.settlementsByCoupleId?.items || [];
+      const loadedSettlements = (settlementResult as any).data?.settlementsByGroup?.items || [];
       // Sort client-side by date descending
       loadedSettlements.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      console.log('Loaded settlements:', loadedSettlements.length);
       setSettlements(loadedSettlements);
     } catch (error) {
-      console.error('Error loading couple data:', error);
+      console.error('Error loading group data:', error);
     }
   };
 
@@ -181,7 +199,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     try {
       const result = await signIn({ username: email, password });
-      
       if (result.isSignedIn) {
         await checkAuthState();
         return { success: true };
@@ -191,18 +208,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
         return { success: false, error: 'Please verify your email first' };
       }
-      
       return { success: false, error: 'Login failed' };
     } catch (error: any) {
       console.error('Login error:', error);
       setIsLoading(false);
-      
       if (error.name === 'UserNotConfirmedException') {
         setPendingEmail(email);
         setNeedsConfirmation(true);
         return { success: false, error: 'Please verify your email first' };
       }
-      
       return { success: false, error: error.message || 'Login failed' };
     }
   };
@@ -220,9 +234,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           },
         },
       });
-
       setIsLoading(false);
-      
       if (result.isSignUpComplete) {
         return { success: true };
       } else {
@@ -238,10 +250,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const confirmAccount = async (code: string): Promise<{ success: boolean; error?: string }> => {
-    if (!pendingEmail) {
-      return { success: false, error: 'No pending email to confirm' };
-    }
-
+    if (!pendingEmail) return { success: false, error: 'No pending email to confirm' };
     try {
       await confirmSignUp({ username: pendingEmail, confirmationCode: code });
       setNeedsConfirmation(false);
@@ -259,7 +268,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       console.error('Logout error:', error);
     }
     setUser(null);
-    setCouple(null);
+    setGroup(null);
+    setMembers([]);
     setExpenses([]);
     setSettlements([]);
     setNeedsConfirmation(false);
@@ -268,12 +278,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const requestPasswordReset = async (email: string): Promise<{ success: boolean; error?: string }> => {
-    // Note: Don't set isLoading here - it causes AuthRoute to remount AuthForms and reset mode state
     try {
-      console.log('[auth] requestPasswordReset.start', { email });
       await resetPassword({ username: email });
       setPasswordResetEmail(email);
-      console.log('[auth] requestPasswordReset.success');
       return { success: true };
     } catch (error: any) {
       console.error('[auth] requestPasswordReset.error', error);
@@ -282,20 +289,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const confirmPasswordReset = async (code: string, newPassword: string): Promise<{ success: boolean; error?: string }> => {
-    if (!passwordResetEmail) {
-      return { success: false, error: 'No email address for password reset' };
-    }
-
-    // Note: Don't set isLoading here - it causes AuthRoute to remount AuthForms and reset mode state
+    if (!passwordResetEmail) return { success: false, error: 'No email address for password reset' };
     try {
-      console.log('[auth] confirmPasswordReset.start', { email: passwordResetEmail });
       await confirmResetPassword({
         username: passwordResetEmail,
         confirmationCode: code,
         newPassword,
       });
       setPasswordResetEmail(null);
-      console.log('[auth] confirmPasswordReset.success');
       return { success: true };
     } catch (error: any) {
       console.error('[auth] confirmPasswordReset.error', error);
@@ -303,126 +304,141 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Couple functions
-  const createCouple = async (name: string, partnerName: string): Promise<{ success: boolean; error?: string }> => {
+  // Group functions
+  const createGroup = async (name: string, type: GroupType, memberName: string): Promise<{ success: boolean; error?: string }> => {
     if (!user) return { success: false, error: 'Not logged in' };
 
     try {
       const inviteCode = generateInviteCode();
-      
-      const result = await getClient().graphql({
-        query: mutations.createCouple,
+
+      const groupResult = await getClient().graphql({
+        query: mutations.createGroup,
         variables: {
           input: {
             name,
-            partner1Id: user.id,
-            partner1Name: partnerName,
-            partner1Email: user.email,
+            type,
             inviteCode,
-            defaultSplitPercent: 50,
           }
         }
       });
+      const newGroup = (groupResult as any).data?.createGroup;
 
-      const newCouple = (result as any).data?.createCouple;
-      if (newCouple) {
-        setCouple(newCouple);
-        return { success: true };
-      }
-      
-      return { success: false, error: 'Failed to create couple' };
+      if (!newGroup) throw new Error('Failed to create group record');
+
+      const memberResult = await getClient().graphql({
+        query: mutations.createGroupMember,
+        variables: {
+          input: {
+            groupId: newGroup.id,
+            userId: user.id,
+            name: memberName,
+            email: user.email,
+            role: 'owner'
+          }
+        }
+      });
+      const newMember = (memberResult as any).data?.createGroupMember;
+
+      setGroup(newGroup);
+      setMembers([newMember]);
+      return { success: true };
+
     } catch (error: any) {
-      console.error('Create couple error:', error);
-      return { success: false, error: error.message || 'Failed to create couple' };
+      console.error('Create group error:', error);
+      return { success: false, error: error.message || 'Failed to create group' };
     }
   };
 
-  const joinCouple = async (inviteCode: string, partnerName: string): Promise<{ success: boolean; error?: string }> => {
+  const joinGroup = async (inviteCode: string, memberName: string): Promise<{ success: boolean; error?: string }> => {
     if (!user) return { success: false, error: 'Not logged in' };
 
     try {
-      // Find couple by invite code
       const result = await getClient().graphql({
-        query: queries.listCouples,
+        query: queries.groupsByInviteCode,
         variables: {
-          filter: { inviteCode: { eq: inviteCode } }
+          inviteCode: inviteCode,
+          limit: 1
         }
       });
 
-      const couples = (result as any).data?.listCouples?.items || [];
-      
-      if (couples.length === 0) {
+      const groups = (result as any).data?.groupsByInviteCode?.items || [];
+
+      if (groups.length === 0) {
         return { success: false, error: 'Invalid invite code. Please check and try again.' };
       }
 
-      const coupleToJoin = couples[0];
-      
-      if (coupleToJoin.partner2Id) {
-        return { success: false, error: 'This couple already has two partners.' };
+      const groupToJoin = groups[0];
+
+      if (groupToJoin.type === 'COUPLE') {
+        const membersCheck = await getClient().graphql({
+          query: queries.listGroupMembers,
+          variables: { filter: { groupId: { eq: groupToJoin.id } } }
+        });
+        const count = (membersCheck as any).data?.listGroupMembers?.items?.length || 0;
+        if (count >= 2) {
+          return { success: false, error: 'This couple already has two partners.' };
+        }
       }
 
-      // Update the couple to add partner2
-      // Note: We don't clear inviteCode here because partner2 doesn't have permission
-      // to modify owner-protected fields. The code becomes invalid anyway once partner2Id is set.
-      const updateResult = await getClient().graphql({
-        query: mutations.updateCouple,
+      const memberResult = await getClient().graphql({
+        query: mutations.createGroupMember,
         variables: {
           input: {
-            id: coupleToJoin.id,
-            partner2Id: user.id,
-            partner2Name: partnerName,
-            partner2Email: user.email,
+            groupId: groupToJoin.id,
+            userId: user.id,
+            name: memberName,
+            email: user.email,
+            role: 'member'
           }
         }
       });
 
-      const updatedCouple = (updateResult as any).data?.updateCouple;
-      if (updatedCouple) {
-        setCouple(updatedCouple);
-        await loadCoupleData(updatedCouple.id);
+      const newMember = (memberResult as any).data?.createGroupMember;
+      if (newMember) {
+        setGroup(groupToJoin);
+        await loadGroupData(groupToJoin.id);
         return { success: true };
       }
 
-      return { success: false, error: 'Failed to join couple' };
+      return { success: false, error: 'Failed to join group' };
     } catch (error: any) {
-      console.error('Join couple error:', error);
-      return { success: false, error: error.message || 'Failed to join couple' };
+      console.error('Join group error:', error);
+      return { success: false, error: error.message || 'Failed to join group' };
     }
   };
 
-  const updateCouple = async (updates: Partial<Couple>) => {
-    if (!couple) return;
+  const updateGroup = async (updates: Partial<Group>) => {
+    if (!group) return;
 
     try {
       const result = await getClient().graphql({
-        query: mutations.updateCouple,
+        query: mutations.updateGroup,
         variables: {
           input: {
-            id: couple.id,
+            id: group.id,
             ...updates,
           }
         }
       });
-
-      const updatedCouple = (result as any).data?.updateCouple;
-      if (updatedCouple) {
-        setCouple(updatedCouple);
+      const updatedGroup = (result as any).data?.updateGroup;
+      if (updatedGroup) {
+        setGroup(updatedGroup);
       }
     } catch (error) {
-      console.error('Update couple error:', error);
+      console.error('Update group error:', error);
     }
   };
 
   // Expense functions
-  const addExpense = async (expense: Omit<Expense, 'id' | 'coupleId' | 'createdAt' | 'updatedAt'>) => {
-    if (!couple) return;
+  const addExpense = async (expense: Omit<Expense, 'id' | 'groupId' | 'createdAt' | 'updatedAt'>) => {
+    if (!group) return;
 
     try {
       const result = await getClient().graphql({
         query: mutations.createExpense,
         variables: {
           input: {
-            coupleId: couple.id,
+            groupId: group.id,
             ...expense,
           }
         }
@@ -438,9 +454,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const addExpenseBatch: AppContextType['addExpenseBatch'] = async (batch) => {
-    if (!couple) return { created: 0, failed: batch.length };
+    if (!group) return { created: 0, failed: batch.length };
 
-    console.log('[csv-import] addExpenseBatch.start', { count: batch.length, coupleId: couple.id });
+    console.log('[csv-import] addExpenseBatch.start', { count: batch.length, groupId: group.id });
 
     const created: Expense[] = [];
     let failed = 0;
@@ -452,7 +468,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           query: mutations.createExpense,
           variables: {
             input: {
-              coupleId: couple.id,
+              groupId: group.id,
               ...expense,
             }
           }
@@ -469,10 +485,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         failed += 1;
         console.error('[csv-import] addExpenseBatch.itemError', { index: i, error });
       }
-
-      if ((i + 1) % 25 === 0) {
-        console.log('[csv-import] addExpenseBatch.progress', { done: i + 1, total: batch.length, created: created.length, failed });
-      }
     }
 
     if (created.length > 0) {
@@ -482,8 +494,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         return next;
       });
     }
-
-    console.log('[csv-import] addExpenseBatch.done', { created: created.length, failed });
     return { created: created.length, failed };
   };
 
@@ -498,7 +508,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
           }
         }
       });
-
       const updatedExpense = (result as any).data?.updateExpense;
       if (updatedExpense) {
         setExpenses(prev =>
@@ -525,20 +534,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   // Settlement functions
-  const addSettlement = async (settlement: Omit<Settlement, 'id' | 'coupleId' | 'createdAt'>) => {
-    if (!couple) return;
-
+  const addSettlement = async (settlement: Omit<Settlement, 'id' | 'groupId' | 'createdAt'>) => {
+    if (!group) return;
     try {
       const result = await getClient().graphql({
         query: mutations.createSettlement,
         variables: {
           input: {
-            coupleId: couple.id,
+            groupId: group.id,
             ...settlement,
           }
         }
       });
-
       const newSettlement = (result as any).data?.createSettlement;
       if (newSettlement) {
         setSettlements(prev => [newSettlement, ...prev]);
@@ -559,7 +566,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
           }
         }
       });
-
       const updatedSettlement = (result as any).data?.updateSettlement;
       if (updatedSettlement) {
         setSettlements(prev =>
@@ -586,7 +592,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   // Calculate balance
-  const balance = calculateBalance(expenses, settlements);
+  const balance = calculateGroupBalance(expenses, settlements, members, user?.id || '');
 
   const value: AppContextType = {
     user,
@@ -601,10 +607,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     requestPasswordReset,
     confirmPasswordReset,
     setPasswordResetEmail,
-    couple,
-    createCouple,
-    joinCouple,
-    updateCouple,
+    group,
+    members,
+    createGroup,
+    joinGroup,
+    updateGroup,
     expenses,
     addExpense,
     addExpenseBatch,

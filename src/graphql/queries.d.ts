@@ -1,10 +1,11 @@
-export const getCouple: string;
-export const listCouples: string;
-export const getExpense: string;
-export const listExpenses: string;
-export const expensesByCoupleId: string;
-export const getSettlement: string;
-export const listSettlements: string;
-export const settlementsByCoupleId: string;
-
-
+export declare const getGroup: string;
+export declare const listGroups: string;
+export declare const getGroupMember: string;
+export declare const listGroupMembers: string;
+export declare const groupsByInviteCode: string;
+export declare const expensesByGroup: string;
+export declare const settlementsByGroup: string;
+export declare const listExpenses: string;
+export declare const listSettlements: string;
+export declare const getExpense: string;
+export declare const getSettlement: string;

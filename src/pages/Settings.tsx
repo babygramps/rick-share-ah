@@ -9,23 +9,19 @@ import { ThemeSelector } from '../components/settings/ThemeSelector';
 import { formatCurrency } from '../utils/helpers';
 
 export function Settings() {
-  const { user, couple, updateCouple, settlements, expenses, logout } = useApp();
-  
-  const [isEditingCouple, setIsEditingCouple] = useState(false);
-  const [coupleName, setCoupleName] = useState(couple?.name || '');
-  const [partner1Name, setPartner1Name] = useState(couple?.partner1Name || '');
-  const [partner2Name, setPartner2Name] = useState(couple?.partner2Name || '');
+  const { user, group, members, updateGroup, settlements, expenses, logout } = useApp();
+
+  const [isEditingGroup, setIsEditingGroup] = useState(false);
+  const [groupName, setGroupName] = useState(group?.name || '');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showCsvImport, setShowCsvImport] = useState(false);
 
-  const handleSaveCouple = async () => {
-    if (coupleName.trim() && partner1Name.trim()) {
-      await updateCouple({
-        name: coupleName.trim(),
-        partner1Name: partner1Name.trim(),
-        partner2Name: partner2Name.trim() || null,
+  const handleSaveGroup = async () => {
+    if (groupName.trim()) {
+      await updateGroup({
+        name: groupName.trim(),
       });
-      setIsEditingCouple(false);
+      setIsEditingGroup(false);
     }
   };
 
@@ -35,7 +31,7 @@ export function Settings() {
 
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const _totalSettlements = settlements.reduce((sum, set) => sum + set.amount, 0);
-  void _totalSettlements; // Used for future stats display
+  void _totalSettlements;
 
   return (
     <div className="space-y-6 max-w-lg mx-auto">
@@ -66,64 +62,66 @@ export function Settings() {
         <ThemeSelector />
       </Card>
 
-      {/* Couple Info */}
+      {/* Group Info */}
       <Card>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle>💕 Couple Info</CardTitle>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => setIsEditingCouple(!isEditingCouple)}
+          <CardTitle>{group?.type === 'COUPLE' ? '💕 Couple Info' : '🏘️ Group Info'}</CardTitle>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsEditingGroup(!isEditingGroup)}
           >
-            {isEditingCouple ? 'Cancel' : 'Edit'}
+            {isEditingGroup ? 'Cancel' : 'Edit'}
           </Button>
         </CardHeader>
 
-        {isEditingCouple ? (
+        {isEditingGroup ? (
           <div className="space-y-4">
             <Input
-              label="Couple Name"
-              value={coupleName}
-              onChange={(e) => setCoupleName(e.target.value)}
-              placeholder="Our awesome name"
+              label="Group Name"
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+              placeholder="Our awesome space"
             />
-            <Input
-              label="Your Name"
-              value={partner1Name}
-              onChange={(e) => setPartner1Name(e.target.value)}
-              placeholder="Your nickname"
-            />
-            <Input
-              label="Partner's Name"
-              value={partner2Name}
-              onChange={(e) => setPartner2Name(e.target.value)}
-              placeholder="Their nickname"
-            />
-            <Button onClick={handleSaveCouple} className="w-full">
+            {/* Note: Editing member names is complex as they are separate GroupMember records. 
+                For MVP, we just edit the Group Name. Users can update their own names in Account settings if implemented. */}
+            <Button onClick={handleSaveGroup} className="w-full">
               Save Changes
             </Button>
           </div>
         ) : (
           <div className="space-y-3">
             <div>
-              <p className="font-mono text-xs uppercase text-[var(--color-plum)]/60">Couple Name</p>
-              <p className="font-bold text-lg">{couple?.name}</p>
+              <p className="font-mono text-xs uppercase text-[var(--color-plum)]/60">Name</p>
+              <p className="font-bold text-lg">{group?.name}</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[var(--color-coral)]/10 border-2 border-[var(--color-coral)] p-3">
-                <p className="font-mono text-xs uppercase text-[var(--color-plum)]/60">Partner 1</p>
-                <p className="font-bold">{couple?.partner1Name}</p>
-              </div>
-              <div className="bg-[var(--color-sage)]/20 border-2 border-[var(--color-sage)] p-3">
-                <p className="font-mono text-xs uppercase text-[var(--color-plum)]/60">Partner 2</p>
-                <p className="font-bold">{couple?.partner2Name || 'Not joined yet'}</p>
+
+            {/* Members List */}
+            <div>
+              <p className="font-mono text-xs uppercase text-[var(--color-plum)]/60 mb-2">Members</p>
+              <div className="grid grid-cols-2 gap-4">
+                {members.map(m => (
+                  <div key={m.userId} className={`border-2 p-3 ${m.userId === user?.id ? 'bg-[var(--color-coral)]/10 border-[var(--color-coral)]' : 'bg-[var(--color-sage)]/20 border-[var(--color-sage)]'}`}>
+                    <p className="font-mono text-xs uppercase text-[var(--color-plum)]/60">
+                      {m.userId === user?.id ? 'You' : 'Member'}
+                    </p>
+                    <p className="font-bold">{m.name}</p>
+                  </div>
+                ))}
               </div>
             </div>
-            {couple?.inviteCode && (
-              <div className="bg-[var(--color-sunshine)]/30 border-2 border-[var(--color-sunshine)] p-3 text-center">
+
+            {group?.inviteCode && (
+              <div className="bg-[var(--color-sunshine)]/30 border-2 border-[var(--color-sunshine)] p-3 text-center mt-4">
                 <p className="font-mono text-xs uppercase mb-1">Invite Code</p>
                 <p className="font-mono text-2xl font-bold tracking-[0.2em]">
-                  {couple.inviteCode}
+                  {group.inviteCode}
+                </p>
+                <p className="font-mono text-xs text-[var(--color-plum)]/60 mt-1" onClick={() => {
+                  navigator.clipboard.writeText(group.inviteCode || '');
+                  // toast or something
+                }}>
+                  (Tap to copy)
                 </p>
               </div>
             )}
@@ -191,8 +189,8 @@ export function Settings() {
                 Delete all expenses and settlements
               </p>
             </div>
-            <Button 
-              variant="danger" 
+            <Button
+              variant="danger"
               size="sm"
               onClick={() => setShowClearConfirm(true)}
             >
@@ -239,8 +237,7 @@ export function Settings() {
             <Button
               variant="danger"
               onClick={async () => {
-                // Note: In a real app, you'd delete all expenses/settlements from DynamoDB
-                // For now, just close the modal
+                // Not implemented
                 setShowClearConfirm(false);
                 alert('Clear data feature requires backend implementation. For now, please delete items individually.');
               }}
@@ -260,9 +257,8 @@ export function Settings() {
       {/* Footer */}
       <p className="text-center font-mono text-xs text-[var(--color-plum)]/40 pb-4">
         Rick & Share-ah v1.0 💕<br />
-        Made with love for couples
+        Made with love for groups & couples
       </p>
     </div>
   );
 }
-

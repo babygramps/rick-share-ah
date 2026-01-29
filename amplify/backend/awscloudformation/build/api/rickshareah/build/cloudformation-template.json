@@ -127,7 +127,7 @@
             "ApiId"
           ]
         },
-        "Expires": 1766337244
+        "Expires": 1770316358
       }
     },
     "GraphQLAPINONEDS95A13CF0": {
@@ -139,11 +139,12 @@
             "ApiId"
           ]
         },
+        "Description": "None Data Source for Pipeline functions",
         "Name": "NONE_DS",
         "Type": "NONE"
       }
     },
-    "Couple": {
+    "Group": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
         "Parameters": {
@@ -204,7 +205,231 @@
               {
                 "Ref": "S3DeploymentRootKey"
               },
+              "/stacks/Group.json"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "GraphQLAPITransformerSchema3CB2AE18"
+      ]
+    },
+    "Couple": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "DynamoDBModelTableReadIOPS": {
+            "Ref": "DynamoDBModelTableReadIOPS"
+          },
+          "DynamoDBModelTableWriteIOPS": {
+            "Ref": "DynamoDBModelTableWriteIOPS"
+          },
+          "DynamoDBBillingMode": {
+            "Ref": "DynamoDBBillingMode"
+          },
+          "DynamoDBEnablePointInTimeRecovery": {
+            "Ref": "DynamoDBEnablePointInTimeRecovery"
+          },
+          "DynamoDBEnableServerSideEncryption": {
+            "Ref": "DynamoDBEnableServerSideEncryption"
+          },
+          "referencetotransformerrootstackenv10C5A902Ref": {
+            "Ref": "env"
+          },
+          "referencetotransformerrootstackGraphQLAPI20497F53ApiId": {
+            "Fn::GetAtt": [
+              "GraphQLAPI",
+              "ApiId"
+            ]
+          },
+          "referencetotransformerrootstackS3DeploymentBucket7592718ARef": {
+            "Ref": "S3DeploymentBucket"
+          },
+          "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
+            "Ref": "S3DeploymentRootKey"
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
+            "Fn::GetAtt": [
+              "GraphQLAPINONEDS95A13CF0",
+              "Name"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId"
+            ]
+          }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://s3.",
+              {
+                "Ref": "AWS::Region"
+              },
+              ".",
+              {
+                "Ref": "AWS::URLSuffix"
+              },
+              "/",
+              {
+                "Ref": "S3DeploymentBucket"
+              },
+              "/",
+              {
+                "Ref": "S3DeploymentRootKey"
+              },
               "/stacks/Couple.json"
+            ]
+          ]
+        }
+      },
+      "DependsOn": [
+        "GraphQLAPITransformerSchema3CB2AE18"
+      ]
+    },
+    "GroupMember": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "DynamoDBModelTableReadIOPS": {
+            "Ref": "DynamoDBModelTableReadIOPS"
+          },
+          "DynamoDBModelTableWriteIOPS": {
+            "Ref": "DynamoDBModelTableWriteIOPS"
+          },
+          "DynamoDBBillingMode": {
+            "Ref": "DynamoDBBillingMode"
+          },
+          "DynamoDBEnablePointInTimeRecovery": {
+            "Ref": "DynamoDBEnablePointInTimeRecovery"
+          },
+          "DynamoDBEnableServerSideEncryption": {
+            "Ref": "DynamoDBEnableServerSideEncryption"
+          },
+          "referencetotransformerrootstackenv10C5A902Ref": {
+            "Ref": "env"
+          },
+          "referencetotransformerrootstackGraphQLAPI20497F53ApiId": {
+            "Fn::GetAtt": [
+              "GraphQLAPI",
+              "ApiId"
+            ]
+          },
+          "referencetotransformerrootstackS3DeploymentBucket7592718ARef": {
+            "Ref": "S3DeploymentBucket"
+          },
+          "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
+            "Ref": "S3DeploymentRootKey"
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
+            "Fn::GetAtt": [
+              "GraphQLAPINONEDS95A13CF0",
+              "Name"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId"
+            ]
+          }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "",
+            [
+              "https://s3.",
+              {
+                "Ref": "AWS::Region"
+              },
+              ".",
+              {
+                "Ref": "AWS::URLSuffix"
+              },
+              "/",
+              {
+                "Ref": "S3DeploymentBucket"
+              },
+              "/",
+              {
+                "Ref": "S3DeploymentRootKey"
+              },
+              "/stacks/GroupMember.json"
             ]
           ]
         }
@@ -247,16 +472,16 @@
           "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
             "Ref": "S3DeploymentRootKey"
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCoupleauth0FunctionQuerygetCoupleauth0FunctionAppSyncFunctionC61301D3FunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleQuerygetCoupleauth0FunctionQuerygetCoupleauth0FunctionAppSyncFunctionC61301D3FunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             ]
           },
           "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
@@ -265,34 +490,34 @@
               "Name"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleMutationcreateCoupleinit0FunctionMutationcreateCoupleinit0FunctionAppSyncFunctionD775F212FunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleMutationcreateCoupleinit0FunctionMutationcreateCoupleinit0FunctionAppSyncFunctionD775F212FunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleMutationupdateCoupleinit0FunctionMutationupdateCoupleinit0FunctionAppSyncFunction92AD5DD6FunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleMutationupdateCoupleinit0FunctionMutationupdateCoupleinit0FunctionAppSyncFunction92AD5DD6FunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptiononCreateCoupleauth0FunctionSubscriptiononCreateCoupleauth0FunctionAppSyncFunctionAF9405DFFunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleSubscriptiononCreateCoupleauth0FunctionSubscriptiononCreateCoupleauth0FunctionAppSyncFunctionAF9405DFFunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId"
             ]
           }
         },
@@ -359,16 +584,16 @@
           "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
             "Ref": "S3DeploymentRootKey"
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCoupleauth0FunctionQuerygetCoupleauth0FunctionAppSyncFunctionC61301D3FunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleQuerygetCoupleauth0FunctionQuerygetCoupleauth0FunctionAppSyncFunctionC61301D3FunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGroupauth0FunctionQuerygetGroupauth0FunctionAppSyncFunction9512CF08FunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleQuerygetCouplepostAuth0FunctionQuerygetCouplepostAuth0FunctionAppSyncFunctionF42FA7CFFunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
             ]
           },
           "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
@@ -377,34 +602,34 @@
               "Name"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleMutationcreateCoupleinit0FunctionMutationcreateCoupleinit0FunctionAppSyncFunctionD775F212FunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleMutationcreateCoupleinit0FunctionMutationcreateCoupleinit0FunctionAppSyncFunctionD775F212FunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleMutationupdateCoupleinit0FunctionMutationupdateCoupleinit0FunctionAppSyncFunction92AD5DD6FunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleMutationupdateCoupleinit0FunctionMutationupdateCoupleinit0FunctionAppSyncFunction92AD5DD6FunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptiononCreateCoupleauth0FunctionSubscriptiononCreateCoupleauth0FunctionAppSyncFunctionAF9405DFFunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleSubscriptiononCreateCoupleauth0FunctionSubscriptiononCreateCoupleauth0FunctionAppSyncFunctionAF9405DFFunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptiononCreateGroupauth0FunctionSubscriptiononCreateGroupauth0FunctionAppSyncFunction60AED8BAFunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleSubscriptionOnCreateCoupleDataResolverFnSubscriptionOnCreateCoupleDataResolverFnAppSyncFunctionAA80512AFunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
             ]
           },
-          "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId": {
             "Fn::GetAtt": [
-              "Couple",
-              "Outputs.transformerrootstackCoupleCoupleOwnerDataResolverFnCoupleOwnerDataResolverFnAppSyncFunctionF15D4DD9FunctionId"
+              "Group",
+              "Outputs.transformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId"
             ]
           }
         },
@@ -437,10 +662,25 @@
         "GraphQLAPITransformerSchema3CB2AE18"
       ]
     },
-    "FunctionDirectiveStack": {
+    "UserPreferences": {
       "Type": "AWS::CloudFormation::Stack",
       "Properties": {
         "Parameters": {
+          "DynamoDBModelTableReadIOPS": {
+            "Ref": "DynamoDBModelTableReadIOPS"
+          },
+          "DynamoDBModelTableWriteIOPS": {
+            "Ref": "DynamoDBModelTableWriteIOPS"
+          },
+          "DynamoDBBillingMode": {
+            "Ref": "DynamoDBBillingMode"
+          },
+          "DynamoDBEnablePointInTimeRecovery": {
+            "Ref": "DynamoDBEnablePointInTimeRecovery"
+          },
+          "DynamoDBEnableServerSideEncryption": {
+            "Ref": "DynamoDBEnableServerSideEncryption"
+          },
           "referencetotransformerrootstackenv10C5A902Ref": {
             "Ref": "env"
           },
@@ -450,16 +690,46 @@
               "ApiId"
             ]
           },
+          "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
+            "Fn::GetAtt": [
+              "GraphQLAPINONEDS95A13CF0",
+              "Name"
+            ]
+          },
           "referencetotransformerrootstackS3DeploymentBucket7592718ARef": {
             "Ref": "S3DeploymentBucket"
           },
           "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
             "Ref": "S3DeploymentRootKey"
           },
-          "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId": {
             "Fn::GetAtt": [
-              "GraphQLAPINONEDS95A13CF0",
-              "Name"
+              "Group",
+              "Outputs.transformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupGroupOwnerDataResolverFnGroupOwnerDataResolverFnAppSyncFunctionA8FF4E50FunctionId"
             ]
           }
         },
@@ -483,7 +753,7 @@
               {
                 "Ref": "S3DeploymentRootKey"
               },
-              "/stacks/FunctionDirectiveStack.json"
+              "/stacks/UserPreferences.json"
             ]
           ]
         }
@@ -514,6 +784,18 @@
           "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
             "Ref": "S3DeploymentRootKey"
           },
+          "referencetotransformerrootstackGroupMemberNestedStackGroupMemberNestedStackResource88F65E03OutputstransformerrootstackGroupMemberGroupMemberDataSource126298F2Name": {
+            "Fn::GetAtt": [
+              "GroupMember",
+              "Outputs.transformerrootstackGroupMemberGroupMemberDataSource126298F2Name"
+            ]
+          },
+          "referencetotransformerrootstackGroupMemberNestedStackGroupMemberNestedStackResource88F65E03OutputstransformerrootstackGroupMemberGroupMemberTable9A7A7956Ref": {
+            "Fn::GetAtt": [
+              "GroupMember",
+              "Outputs.transformerrootstackGroupMemberGroupMemberTable9A7A7956Ref"
+            ]
+          },
           "referencetotransformerrootstackExpenseNestedStackExpenseNestedStackResource7D8E85F1OutputstransformerrootstackExpenseExpenseDataSource0CC5DD60Name": {
             "Fn::GetAtt": [
               "Expense",
@@ -536,6 +818,18 @@
             "Fn::GetAtt": [
               "Settlement",
               "Outputs.transformerrootstackSettlementSettlementTable3B492906Ref"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupDataSource880557D2Name": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupGroupDataSource880557D2Name"
+            ]
+          },
+          "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupTable65233FE2Ref": {
+            "Fn::GetAtt": [
+              "Group",
+              "Outputs.transformerrootstackGroupGroupTable65233FE2Ref"
             ]
           },
           "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleDataSource19D7BE60Name": {
@@ -580,6 +874,8 @@
         "Couple",
         "Expense",
         "GraphQLAPITransformerSchema3CB2AE18",
+        "Group",
+        "GroupMember",
         "Settlement"
       ]
     },
@@ -626,10 +922,12 @@
       "DependsOn": [
         "GraphQLAPI",
         "GraphQLAPITransformerSchema3CB2AE18",
+        "Group",
         "Couple",
+        "GroupMember",
         "Expense",
         "Settlement",
-        "FunctionDirectiveStack",
+        "UserPreferences",
         "ConnectionStack"
       ]
     }

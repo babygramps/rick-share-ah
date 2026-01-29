@@ -3,15 +3,20 @@ import { formatCurrency } from '../../utils/helpers';
 import { Card } from '../ui/Card';
 
 export function BalanceDisplay() {
-  const { couple, balance } = useApp();
+  const { group, members, balance, user } = useApp();
 
-  const partner1Name = couple?.partner1Name || 'Partner 1';
-  const partner2Name = couple?.partner2Name || 'Partner 2';
+  const isSettled = Math.abs(balance.amount) < 100 && (!balance.suggestedPayments || balance.suggestedPayments.length === 0);
 
-  const isSettled = Math.abs(balance.amount) < 100; // Less than $1
-  const partner1Owes = balance.amount < 0;
-  const owingPartner = partner1Owes ? partner1Name : partner2Name;
-  const owedPartner = partner1Owes ? partner2Name : partner1Name;
+  // User's net position
+  const userNet = balance.amount;
+  const isOwed = userNet > 0;
+  const isOwing = userNet < 0;
+
+  // Resolve names helper
+  const getName = (userId: string) => {
+    if (userId === user?.id) return 'You';
+    return members.find(m => m.userId === userId)?.name || 'Unknown';
+  };
 
   return (
     <Card className="text-center animate-bounce-in" padding="lg">
@@ -24,26 +29,51 @@ export function BalanceDisplay() {
               All Settled Up!
             </h2>
             <p className="font-mono text-sm text-[var(--color-plum)]/70 mt-1">
-              You're all square 💚
+              Everyone is square 💚
             </p>
           </>
         ) : (
           <>
-            <div className="text-6xl mb-3">💸</div>
-            <p className="font-mono text-sm uppercase tracking-wider text-[var(--color-plum)]/70 mb-2">
-              {owingPartner} owes {owedPartner}
-            </p>
-            <h2 
-              className="text-5xl font-mono font-bold"
-              style={{ color: partner1Owes ? 'var(--color-coral)' : 'var(--color-sage)' }}
-            >
-              {formatCurrency(Math.abs(balance.amount))}
-            </h2>
+            <div className="text-6xl mb-3">
+              {userNet === 0 ? '⚖️' : (isOwed ? '💰' : '💸')}
+            </div>
+
+            {/* Main User Status */}
+            <div className="mb-6">
+              <p className="font-mono text-sm uppercase tracking-wider text-[var(--color-plum)]/70 mb-2">
+                Your Net Position
+              </p>
+              <h2
+                className="text-5xl font-mono font-bold"
+                style={{ color: isOwning ? 'var(--color-coral)' : (isOwed ? 'var(--color-sage)' : 'var(--color-plum)') }}
+              >
+                {userNet === 0 ? 'All Square' : (isOwning ? `You owe ${formatCurrency(Math.abs(userNet))}` : `You get ${formatCurrency(userNet)}`)}
+              </h2>
+            </div>
+
+            {/* Suggested Payments (Simplified Debts) */}
+            {balance.suggestedPayments && balance.suggestedPayments.length > 0 && (
+              <div className="mt-6 pt-6 border-t-2 border-dashed border-[var(--color-plum)]/10 text-left">
+                <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)]/50 mb-3 text-center">
+                  Suggested Payments
+                </p>
+                <div className="space-y-2">
+                  {balance.suggestedPayments.map((payment, idx) => (
+                    <div key={idx} className="flex justify-between items-center text-sm font-mono bg-[var(--color-cream)] p-2 rounded border border-[var(--color-plum)]/10">
+                      <span>
+                        <span className="font-bold text-[var(--color-coral)]">{getName(payment.fromUserId)}</span>
+                        <span className="mx-2 text-[var(--color-plum)]/50">→</span>
+                        <span className="font-bold text-[var(--color-sage)]">{getName(payment.toUserId)}</span>
+                      </span>
+                      <span className="font-bold">{formatCurrency(payment.amount)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
     </Card>
   );
 }
-
-

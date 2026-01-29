@@ -9,29 +9,33 @@ interface SettlementCardProps {
   onEdit?: () => void;
   onDelete?: () => void;
   showActions?: boolean;
+  currentUserId?: string;
 }
 
 export function SettlementCard({ settlement, onEdit, onDelete, showActions = true }: SettlementCardProps) {
-  const { couple } = useApp();
-  
-  const paidByName = settlement.paidBy === 'partner1' 
-    ? couple?.partner1Name 
-    : couple?.partner2Name;
-  const paidToName = settlement.paidTo === 'partner1' 
-    ? couple?.partner1Name 
-    : couple?.partner2Name;
+  const { members, user } = useApp();
+
+  const payer = members.find(m => m.userId === settlement.paidBy);
+  const payee = members.find(m => m.userId === settlement.paidTo);
+
+  const paidByName = payer?.name || 'Unknown';
+  const paidToName = payee?.name || 'Unknown';
+
+  // Visual distinction if current user is involved
+  const isPayer = user?.id === settlement.paidBy;
+  const isPayee = user?.id === settlement.paidTo;
 
   return (
     <Card hover className="relative overflow-hidden">
       {/* Settlement indicator stripe */}
-      <div 
+      <div
         className="absolute left-0 top-0 bottom-0 w-1.5"
         style={{ backgroundColor: 'var(--color-mint)' }}
       />
-      
+
       <div className="flex items-start gap-3 pl-4">
         {/* Settlement icon */}
-        <div 
+        <div
           className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 border-2 border-black shadow-brutal-sm"
           style={{ backgroundColor: 'var(--color-mint)' }}
         >
@@ -46,7 +50,7 @@ export function SettlementCard({ settlement, onEdit, onDelete, showActions = tru
                 Settlement
               </h3>
               <p className="font-mono text-xs text-[var(--color-plum)]/60 mt-0.5">
-                {paidByName} → {paidToName}
+                {isPayer ? 'You' : paidByName} → {isPayee ? 'You' : paidToName}
               </p>
             </div>
             <div className="text-right flex-shrink-0">
@@ -55,7 +59,7 @@ export function SettlementCard({ settlement, onEdit, onDelete, showActions = tru
               </p>
             </div>
           </div>
-          
+
           {/* Date and note */}
           <div className="flex items-center justify-between mt-2 text-xs font-mono text-[var(--color-plum)]/50">
             <span>{formatDate(settlement.date)}</span>

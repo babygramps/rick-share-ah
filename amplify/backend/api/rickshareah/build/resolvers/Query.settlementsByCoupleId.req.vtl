@@ -21,7 +21,7 @@
   "operation": "Query",
   "limit": $limit,
   "query": $modelQueryExpression,
-  "index": "byCouple"
+  "index": "byCoupleLegacy"
 } )
 #if( !$util.isNull($ctx.args.sortDirection)
                   && $ctx.args.sortDirection == "DESC" )

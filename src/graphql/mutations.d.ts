@@ -1,11 +1,10 @@
-export const createCouple: string;
-export const updateCouple: string;
-export const deleteCouple: string;
-export const createExpense: string;
-export const updateExpense: string;
-export const deleteExpense: string;
-export const createSettlement: string;
-export const updateSettlement: string;
-export const deleteSettlement: string;
-export const processReceipt: string;
-
+export declare const createGroup: string;
+export declare const updateGroup: string;
+export declare const createGroupMember: string;
+export declare const createExpense: string;
+export declare const updateExpense: string;
+export declare const deleteExpense: string;
+export declare const createSettlement: string;
+export declare const updateSettlement: string;
+export declare const deleteSettlement: string;
+export declare const processReceipt: string;

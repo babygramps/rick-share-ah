@@ -7,7 +7,7 @@ $util.qr($mergedValues.putAll($util.defaultIfNull($args.input, {})))
 ## set the typename **
 $util.qr($mergedValues.put("__typename", "Settlement"))
 #set( $nullIndexFields = [] )
-#set( $indexFields = ["coupleId"] )
+#set( $indexFields = ["groupId", "coupleId"] )
 #foreach( $entry in $util.map.copyAndRetainAllKeys($mergedValues, $indexFields).entrySet() )
   #if( $util.isNull($entry.value) )
     $util.qr($nullIndexFields.add($entry.key))

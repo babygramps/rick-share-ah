@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Expense } from '../../types';
 import { CATEGORIES } from '../../types';
 import { useApp } from '../../context/AppContext';
@@ -18,28 +18,46 @@ interface ExpenseFormProps {
 }
 
 export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
-  const { couple, addExpense, updateExpense } = useApp();
+  const { group, members, addExpense, updateExpense, user } = useApp();
   const isEditing = !!expense;
 
   const [description, setDescription] = useState(expense?.description || '');
   const [amount, setAmount] = useState(expense ? (expense.amount / 100).toFixed(2) : '');
-  const [paidBy, setPaidBy] = useState(expense?.paidBy || 'partner1');
-  const [splitType, setSplitType] = useState(expense?.splitType || 'equal');
-  const [partner1Share, setPartner1Share] = useState(expense?.partner1Share?.toString() || '50');
+  const [paidBy, setPaidBy] = useState(expense?.paidBy || user?.id || members[0]?.userId || '');
   const [category, setCategory] = useState(expense?.category || 'food');
   const [date, setDate] = useState(expense ? formatDateForInput(expense.date) : getTodayISO());
   const [note, setNote] = useState(expense?.note || '');
+
+  // Split Logic
+  const [splitType, setSplitType] = useState<'equal' | 'exact' | 'percentage'>(
+    (expense?.splitType as any) || 'equal'
+  );
+
+  // Map of userId -> share value (amount or percentage)
+  const [memberShares, setMemberShares] = useState<Record<string, string>>({});
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [aiFilled, setAiFilled] = useState<Record<string, boolean>>({});
 
-  // Calculate partner2Share based on splitType
-  const partner2Share = splitType === 'percentage' 
-    ? (100 - parseFloat(partner1Share || '0')).toString()
-    : splitType === 'exact'
-    ? (parseCurrencyInput(amount) - parseCurrencyInput(partner1Share)).toString()
-    : '50';
+  // Initialize shares if editing
+  useEffect(() => {
+    if (expense && expense.shares) {
+      try {
+        const parsed = JSON.parse(expense.shares);
+        // Convert values to string inputs
+        const shares: Record<string, string> = {};
+        Object.keys(parsed).forEach(uid => {
+          shares[uid] = expense.splitType === 'percentage'
+            ? parsed[uid].toString()
+            : (parsed[uid] / 100).toFixed(2);
+        });
+        setMemberShares(shares);
+      } catch (e) {
+        console.error("Failed to parse existing shares", e);
+      }
+    }
+  }, [expense]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -54,16 +72,26 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
     }
 
     if (splitType === 'percentage') {
-      const p1 = parseFloat(partner1Share);
-      if (isNaN(p1) || p1 < 0 || p1 > 100) {
-        newErrors.partner1Share = 'Must be 0-100%';
+      let total = 0;
+      members.forEach(m => {
+        const val = parseFloat(memberShares[m.userId] || '0');
+        if (val < 0) newErrors[`share_${m.userId}`] = 'Cannot be negative';
+        total += val;
+      });
+      if (Math.abs(total - 100) > 0.1) {
+        newErrors.split = `Percentages must total 100% (currently ${total.toFixed(1)}%)`;
       }
     }
 
     if (splitType === 'exact') {
-      const p1 = parseCurrencyInput(partner1Share);
-      if (p1 > amountCents) {
-        newErrors.partner1Share = "Can't be more than total";
+      let total = 0;
+      members.forEach(m => {
+        const val = parseCurrencyInput(memberShares[m.userId] || '0');
+        if (val < 0) newErrors[`share_${m.userId}`] = 'Cannot be negative';
+        total += val;
+      });
+      if (total !== amountCents) {
+        newErrors.split = `Amounts must equal total (diff: ${(total - amountCents) / 100})`;
       }
     }
 
@@ -77,21 +105,45 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
     if (!validate()) return;
 
     const amountCents = parseCurrencyInput(amount);
+
+    // Construct shares map
+    const finalShares: Record<string, number> = {};
+
+    if (splitType === 'equal') {
+      const splitCount = members.length;
+      const baseShare = Math.floor(amountCents / splitCount);
+      const remainder = amountCents % splitCount;
+
+      members.forEach((m, idx) => {
+        finalShares[m.userId] = baseShare + (idx < remainder ? 1 : 0);
+      });
+    } else if (splitType === 'percentage') {
+      let allocated = 0;
+      members.forEach((m, idx) => {
+        const pct = parseFloat(memberShares[m.userId] || '0');
+        const share = Math.round(amountCents * (pct / 100));
+        finalShares[m.userId] = share;
+        allocated += share;
+      });
+
+      // Adjust for rounding errors on the last person
+      const diff = amountCents - allocated;
+      if (diff !== 0 && members.length > 0) {
+        finalShares[members[0].userId] += diff;
+      }
+    } else {
+      // Exact
+      members.forEach(m => {
+        finalShares[m.userId] = parseCurrencyInput(memberShares[m.userId] || '0');
+      });
+    }
+
     const expenseData = {
       description: description.trim(),
       amount: amountCents,
       paidBy,
       splitType,
-      partner1Share: splitType === 'percentage' 
-        ? parseFloat(partner1Share) 
-        : splitType === 'exact'
-        ? parseCurrencyInput(partner1Share)
-        : 50,
-      partner2Share: splitType === 'percentage'
-        ? 100 - parseFloat(partner1Share)
-        : splitType === 'exact'
-        ? amountCents - parseCurrencyInput(partner1Share)
-        : 50,
+      shares: JSON.stringify(finalShares),
       category,
       date,
       note: note.trim() || undefined,
@@ -112,13 +164,13 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
     emoji: c.emoji,
   }));
 
-  const partnerOptions = [
-    { value: 'partner1', label: couple?.partner1Name || 'Partner 1' },
-    { value: 'partner2', label: couple?.partner2Name || 'Partner 2' },
-  ];
+  const payerOptions = members.map(m => ({
+    value: m.userId,
+    label: m.userId === user?.id ? `${m.name} (You)` : m.name
+  }));
 
   const splitOptions = [
-    { value: 'equal', label: '50/50 Split', emoji: '⚖️' },
+    { value: 'equal', label: 'Split Equally', emoji: '⚖️' },
     { value: 'percentage', label: 'By Percentage', emoji: '📊' },
     { value: 'exact', label: 'Exact Amounts', emoji: '💵' },
   ];
@@ -145,53 +197,22 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           onClose={() => setIsScannerOpen(false)}
           onApply={(payload) => {
             console.log('[receipt-scan] apply.to.form', payload);
-            const nextAi: Record<string, boolean> = {};
-
-            if (payload.description) {
-              setDescription(payload.description);
-              nextAi.description = true;
-            }
-            if (typeof payload.amountCents === 'number' && payload.amountCents > 0) {
-              setAmount((payload.amountCents / 100).toFixed(2));
-              nextAi.amount = true;
-            }
-
+            if (payload.description) setDescription(payload.description);
+            if (payload.amountCents) setAmount((payload.amountCents / 100).toFixed(2));
             const iso = normalizeDateToISO(payload.date || null);
-            if (iso) {
-              setDate(iso);
-              nextAi.date = true;
-            }
-
-            const suggested =
-              (payload.category as any) ||
-              suggestCategoryFromMerchant(payload.description || null);
-            if (suggested) {
-              setCategory(String(suggested));
-              nextAi.category = true;
-            }
-
-            if (payload.splitType === 'percentage' && typeof payload.partner1SharePercent === 'number') {
-              const pct = Math.max(0, Math.min(100, Math.round(payload.partner1SharePercent)));
-              setSplitType('percentage');
-              setPartner1Share(String(pct));
-              nextAi.splitType = true;
-              nextAi.partner1Share = true;
-              console.log('[receipt-scan] apply.to.form.split', { pct });
-            }
-
-            setAiFilled((prev) => ({ ...prev, ...nextAi }));
+            if (iso) setDate(iso);
+            // Basic fill only for now
           }}
         />
 
         {/* Description */}
         <Input
           label="What was it for?"
-          placeholder="e.g., Dinner at Luigi's"
+          placeholder="e.g., Dinner"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           error={errors.description}
           icon="📝"
-          className={aiFilled.description ? 'ai-filled' : ''}
         />
 
         {/* Amount */}
@@ -204,13 +225,12 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           onChange={(e) => setAmount(e.target.value)}
           error={errors.amount}
           icon="💵"
-          className={aiFilled.amount ? 'ai-filled' : ''}
         />
 
         {/* Who Paid */}
         <Select
           label="Who paid?"
-          options={partnerOptions}
+          options={payerOptions}
           value={paidBy}
           onChange={(e) => setPaidBy(e.target.value)}
         />
@@ -230,7 +250,6 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           value={date}
           onChange={(e) => setDate(e.target.value)}
           icon="📅"
-          className={aiFilled.date ? 'ai-filled' : ''}
         />
 
         {/* Split Type */}
@@ -238,39 +257,45 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
           label="How to split?"
           options={splitOptions}
           value={splitType}
-          onChange={(e) => setSplitType(e.target.value)}
-          className={aiFilled.splitType ? 'ai-filled' : ''}
+          onChange={(e) => setSplitType(e.target.value as any)}
         />
+
+        {errors.split && (
+          <div className="text-[var(--color-coral)] text-sm font-bold animate-pulse">
+            ⚠️ {errors.split}
+          </div>
+        )}
 
         {/* Custom split fields */}
         {splitType !== 'equal' && (
-          <div className="bg-[var(--color-cream)] p-4 border-2 border-dashed border-[var(--color-plum)]/30">
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label={`${couple?.partner1Name || 'Partner 1'}'s share`}
-                type="text"
-                inputMode="decimal"
-                placeholder={splitType === 'percentage' ? '50' : '0.00'}
-                value={partner1Share}
-                onChange={(e) => setPartner1Share(e.target.value)}
-                error={errors.partner1Share}
-                className={aiFilled.partner1Share ? 'ai-filled' : ''}
-              />
-              <div>
-                <label className="block font-mono text-sm font-bold uppercase tracking-wider mb-2 text-[var(--color-plum)]">
-                  {couple?.partner2Name || 'Partner 2'}'s share
-                </label>
-                <div className="input-brutal px-4 py-3 bg-[var(--color-plum)]/5">
-                  {splitType === 'percentage' 
-                    ? `${partner2Share}%` 
-                    : `$${(parseFloat(partner2Share) / 100).toFixed(2)}`}
-                </div>
-              </div>
+          <div className="bg-[var(--color-cream)] p-4 border-2 border-dashed border-[var(--color-plum)]/30 rounded">
+            <h4 className="font-bold mb-3 text-sm uppercase text-[var(--color-plum)]/70">Split Breakdown</h4>
+            <div className="space-y-3">
+              {members.map(m => (
+                <Input
+                  key={m.userId}
+                  label={m.userId === user?.id ? `${m.name} (You)` : m.name}
+                  type="text"
+                  inputMode="decimal"
+                  placeholder={splitType === 'percentage' ? '0' : '0.00'}
+                  value={memberShares[m.userId] || ''}
+                  onChange={(e) => setMemberShares(prev => ({ ...prev, [m.userId]: e.target.value }))}
+                  error={errors[`share_${m.userId}`]}
+                  icon={splitType === 'percentage' ? '%' : '💵'}
+                />
+              ))}
             </div>
+
+            {/* Helper totals */}
             {splitType === 'percentage' && (
-              <p className="mt-2 font-mono text-xs text-[var(--color-plum)]/60">
-                Enter percentages that add up to 100%
-              </p>
+              <div className="mt-2 text-right">
+                Total: {members.reduce((acc, m) => acc + parseFloat(memberShares[m.userId] || '0'), 0).toFixed(1)}%
+              </div>
+            )}
+            {splitType === 'exact' && (
+              <div className="mt-2 text-right">
+                Total: {(members.reduce((acc, m) => acc + parseCurrencyInput(memberShares[m.userId] || '0'), 0) / 100).toFixed(2)}
+              </div>
             )}
           </div>
         )}
@@ -298,4 +323,3 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
     </Card>
   );
 }
-

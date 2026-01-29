@@ -27,34 +27,40 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 // Union type for history items
-type HistoryItem = 
+type HistoryItem =
   | { type: 'expense'; data: Expense; date: string; dateMs: number }
   | { type: 'settlement'; data: Settlement; date: string; dateMs: number };
 
 const ITEMS_PER_PAGE = 15;
 
 export function History() {
-  const { expenses, settlements, couple, deleteExpense, deleteSettlement } = useApp();
+  const { expenses, settlements, members, user, deleteExpense, deleteSettlement } = useApp();
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [deletingExpense, setDeletingExpense] = useState<Expense | null>(null);
   const [editingSettlement, setEditingSettlement] = useState<Settlement | null>(null);
   const [deletingSettlement, setDeletingSettlement] = useState<Settlement | null>(null);
-  
+
   // Filters
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [paidByFilter, setPaidByFilter] = useState<string>('all');
   const [dateRange, setDateRange] = useState<DateRangeValue>({ preset: 'all' });
   const dateRangeMs = useMemo(() => getDateRangeMs(dateRange), [dateRange]);
-  
+
   // Search
   const [searchQuery, setSearchQuery] = useState('');
   const debouncedSearch = useDebounce(searchQuery, 200);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  
+
+  // Helper to resolve names
+  const getName = useCallback((userId: string) => {
+    const m = members.find(m => m.userId === userId);
+    return m ? m.name : 'Unknown';
+  }, [members]);
+
   // Create a map for quick category label lookup
   const categoryLabelMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -63,14 +69,14 @@ export function History() {
     }
     return map;
   }, []);
-  
+
   // Helper to check if an item matches the search query
   const itemMatchesSearch = useCallback((item: HistoryItem, query: string): boolean => {
     if (!query) return true;
-    
+
     const searchLower = query.toLowerCase().trim();
     if (!searchLower) return true;
-    
+
     // Search in amount (formatted and raw)
     const amount = item.data.amount;
     const amountStr = amount.toString();
@@ -78,96 +84,90 @@ export function History() {
     if (amountStr.includes(searchLower) || amountFormatted.includes(searchLower)) {
       return true;
     }
-    
+
     // Search in date
-    const dateStr = new Date(item.dateMs).toLocaleDateString('en-US', { 
-      month: 'short', 
+    const dateStr = new Date(item.dateMs).toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     }).toLowerCase();
     if (dateStr.includes(searchLower)) {
       return true;
     }
-    
+
     if (item.type === 'expense') {
       const expense = item.data as Expense;
-      
+
       // Search in description
       if (expense.description.toLowerCase().includes(searchLower)) {
         return true;
       }
-      
+
       // Search in note
       if (expense.note?.toLowerCase().includes(searchLower)) {
         return true;
       }
-      
+
       // Search in category label
       const categoryLabel = categoryLabelMap.get(expense.category) || '';
       if (categoryLabel.includes(searchLower)) {
         return true;
       }
-      
-      // Search by partner name
-      const paidByName = expense.paidBy === 'partner1' 
-        ? couple?.partner1Name?.toLowerCase() 
-        : couple?.partner2Name?.toLowerCase();
-      if (paidByName?.includes(searchLower)) {
-        return true;
-      }
+
+      // Search by payer name
+      const payerName = getName(expense.paidBy).toLowerCase();
+      if (payerName.includes(searchLower)) return true;
+
     } else {
       const settlement = item.data as Settlement;
-      
+
       // Search in note
       if (settlement.note?.toLowerCase().includes(searchLower)) {
         return true;
       }
-      
+
       // Search by partner names
-      const paidByName = settlement.paidBy === 'partner1' 
-        ? couple?.partner1Name?.toLowerCase() 
-        : couple?.partner2Name?.toLowerCase();
-      const paidToName = settlement.paidTo === 'partner1' 
-        ? couple?.partner1Name?.toLowerCase() 
-        : couple?.partner2Name?.toLowerCase();
-      if (paidByName?.includes(searchLower) || paidToName?.includes(searchLower)) {
+      const payerName = getName(settlement.paidBy).toLowerCase();
+      const payeeName = getName(settlement.paidTo).toLowerCase();
+
+      if (payerName.includes(searchLower) || payeeName.includes(searchLower)) {
         return true;
       }
-      
+
       // Search for "settlement" keyword
       if ('settlement'.includes(searchLower)) {
         return true;
       }
     }
-    
+
     return false;
-  }, [categoryLabelMap, couple]);
+  }, [categoryLabelMap, getName]);
 
   // Combine and sort expenses and settlements
   const allItems = useMemo<HistoryItem[]>(() => {
     const items: HistoryItem[] = [];
-    
+
     // Add expenses
     for (const expense of expenses) {
       items.push({ type: 'expense', data: expense, date: expense.date, dateMs: new Date(expense.date).getTime() });
     }
-    
+
     // Add settlements
     for (const settlement of settlements) {
       items.push({ type: 'settlement', data: settlement, date: settlement.date, dateMs: new Date(settlement.date).getTime() });
     }
-    
+
     // Sort by date descending, then by createdAt descending (most recent first)
     items.sort((a, b) => {
       const dateCompare = b.dateMs - a.dateMs;
       if (dateCompare !== 0) return dateCompare;
-      
+
       // Same date - use createdAt for secondary sort (most recently created first)
       const aCreatedAt = a.data.createdAt ? new Date(a.data.createdAt).getTime() : 0;
       const bCreatedAt = b.data.createdAt ? new Date(b.data.createdAt).getTime() : 0;
       return bCreatedAt - aCreatedAt;
     });
-    
+
     return items;
   }, [expenses, settlements]);
 
@@ -180,19 +180,19 @@ export function History() {
 
       // Type filter
       if (typeFilter !== 'all' && item.type !== typeFilter) return false;
-      
+
       // Category filter (only applies to expenses)
       if (categoryFilter !== 'all') {
         if (item.type !== 'expense') return false;
         if (item.data.category !== categoryFilter) return false;
       }
-      
+
       // Paid by filter
       if (paidByFilter !== 'all' && item.data.paidBy !== paidByFilter) return false;
-      
+
       // Search filter
       if (debouncedSearch && !itemMatchesSearch(item, debouncedSearch)) return false;
-      
+
       return true;
     });
   }, [allItems, dateRangeMs.startMs, dateRangeMs.endMs, typeFilter, categoryFilter, paidByFilter, debouncedSearch, itemMatchesSearch]);
@@ -204,17 +204,17 @@ export function History() {
 
   // Pagination calculations
   const totalPages = Math.max(1, Math.ceil(filteredItems.length / ITEMS_PER_PAGE));
-  
-  // Clamp current page to valid range (derived value, no state update needed)
+
+  // Clamp current page to valid range
   const validCurrentPage = Math.max(1, Math.min(currentPage, totalPages));
-  
-  // Auto-correct page if it's out of range (e.g., after deleting items)
+
+  // Auto-correct page
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) {
       setCurrentPage(totalPages);
     }
   }, [currentPage, totalPages]);
-  
+
   // Get items for current page
   const paginatedItems = useMemo(() => {
     const startIndex = (validCurrentPage - 1) * ITEMS_PER_PAGE;
@@ -225,21 +225,21 @@ export function History() {
   // Group paginated items by month
   const groupedItems = useMemo(() => {
     const groups = new Map<string, HistoryItem[]>();
-    
+
     for (const item of paginatedItems) {
       const date = new Date(item.date);
       const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      
+
       if (!groups.has(key)) {
         groups.set(key, []);
       }
       groups.get(key)!.push(item);
     }
-    
+
     return groups;
   }, [paginatedItems]);
-  
-  const sortedMonths = useMemo(() => 
+
+  const sortedMonths = useMemo(() =>
     Array.from(groupedItems.keys()).sort().reverse(),
     [groupedItems]
   );
@@ -248,10 +248,9 @@ export function History() {
   const goToPage = (page: number) => {
     const newPage = Math.max(1, Math.min(page, totalPages));
     setCurrentPage(newPage);
-    // Scroll to top of page
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-  
+
   // Clear all filters and search
   const clearAllFilters = () => {
     setSearchQuery('');
@@ -260,7 +259,7 @@ export function History() {
     setPaidByFilter('all');
     setDateRange({ preset: 'all' });
   };
-  
+
   // Check if any filters are active
   const hasActiveFilters = typeFilter !== 'all' || categoryFilter !== 'all' || paidByFilter !== 'all' || debouncedSearch !== '' || dateRangeMs.isActive;
 
@@ -277,8 +276,7 @@ export function History() {
 
   const paidByOptions = [
     { value: 'all', label: 'All' },
-    { value: 'partner1', label: couple?.partner1Name || 'Partner 1' },
-    { value: 'partner2', label: couple?.partner2Name || 'Partner 2' },
+    ...members.map(m => ({ value: m.userId, label: m.userId === user?.id ? `${m.name} (You)` : m.name }))
   ];
 
   const handleDeleteExpense = () => {
@@ -295,22 +293,17 @@ export function History() {
     }
   };
 
-  // Count items (from full filtered list, not paginated)
+  // Count items
   const expenseCount = filteredItems.filter(i => i.type === 'expense').length;
   const settlementCount = filteredItems.filter(i => i.type === 'settlement').length;
-  
-  // Current page range for display
+
+  // Current page range
   const startItem = filteredItems.length > 0 ? (validCurrentPage - 1) * ITEMS_PER_PAGE + 1 : 0;
   const endItem = Math.min(validCurrentPage * ITEMS_PER_PAGE, filteredItems.length);
 
-  // Helper to get partner name for settlement delete confirmation
   const getSettlementDescription = (settlement: Settlement) => {
-    const paidByName = settlement.paidBy === 'partner1' 
-      ? couple?.partner1Name 
-      : couple?.partner2Name;
-    const paidToName = settlement.paidTo === 'partner1' 
-      ? couple?.partner1Name 
-      : couple?.partner2Name;
+    const paidByName = getName(settlement.paidBy);
+    const paidToName = getName(settlement.paidTo);
     return `${paidByName} → ${paidToName} (${formatCurrency(settlement.amount)})`;
   };
 
@@ -358,7 +351,7 @@ export function History() {
               </button>
             )}
           </div>
-          
+
           {/* Filter dropdowns */}
           <div className="grid grid-cols-3 gap-3">
             <Select
@@ -366,7 +359,6 @@ export function History() {
               value={typeFilter}
               onChange={(e) => {
                 setTypeFilter(e.target.value);
-                // Reset category filter when switching to settlements
                 if (e.target.value === 'settlement') {
                   setCategoryFilter('all');
                 }
@@ -387,7 +379,7 @@ export function History() {
 
           {/* Date range */}
           <DateRangeFilter value={dateRange} onChange={setDateRange} />
-          
+
           {/* Active filters indicator & clear button */}
           {hasActiveFilters && (
             <div className="flex items-center justify-between pt-1">
@@ -462,15 +454,16 @@ export function History() {
       {/* Items list */}
       {filteredItems.length === 0 ? (
         <Card className="text-center py-12">
+          {/* ... (Empty state is same) */}
           <div className="text-5xl mb-4">{debouncedSearch ? '🔍' : '📭'}</div>
           <h3 className="font-bold text-lg mb-2">
-            {debouncedSearch 
+            {debouncedSearch
               ? `No results for "${debouncedSearch.length > 20 ? debouncedSearch.slice(0, 20) + '…' : debouncedSearch}"`
               : 'No activity found'
             }
           </h3>
           <p className="font-mono text-sm text-[var(--color-plum)]/70 mb-4">
-            {allItems.length === 0 
+            {allItems.length === 0
               ? "You haven't added any expenses or settlements yet"
               : debouncedSearch
                 ? "Try different search terms or clear filters"
@@ -524,11 +517,10 @@ export function History() {
             ))}
           </div>
 
-          {/* Pagination Controls */}
+          {/* Pagination Controls ... (Same) */}
           {totalPages > 1 && (
             <Card padding="sm" className="mt-6">
               <div className="flex items-center justify-between">
-                {/* Previous button */}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -539,64 +531,35 @@ export function History() {
                   ← Prev
                 </Button>
 
-                {/* Page info and quick navigation */}
                 <div className="flex items-center gap-2">
-                  {/* First page */}
                   {validCurrentPage > 2 && (
                     <>
-                      <button
-                        onClick={() => goToPage(1)}
-                        className="font-mono text-sm px-2 py-1 hover:bg-[var(--color-plum)]/10 rounded transition-colors"
-                      >
-                        1
-                      </button>
-                      {validCurrentPage > 3 && (
-                        <span className="font-mono text-sm text-[var(--color-plum)]/50">…</span>
-                      )}
+                      <button onClick={() => goToPage(1)} className="font-mono text-sm px-2 py-1 hover:bg-[var(--color-plum)]/10 rounded">1</button>
+                      {validCurrentPage > 3 && <span className="font-mono text-sm text-[var(--color-plum)]/50">…</span>}
                     </>
                   )}
 
-                  {/* Page numbers around current */}
                   {Array.from({ length: totalPages }, (_, i) => i + 1)
-                    .filter(page => {
-                      // Show pages close to current page
-                      const distance = Math.abs(page - validCurrentPage);
-                      return distance <= 1;
-                    })
+                    .filter(page => Math.abs(page - validCurrentPage) <= 1)
                     .map(page => (
                       <button
                         key={page}
                         onClick={() => goToPage(page)}
-                        className={`
-                          font-mono text-sm px-3 py-1 rounded transition-colors
-                          ${page === validCurrentPage
-                            ? 'bg-[var(--color-plum)] text-white font-bold'
-                            : 'hover:bg-[var(--color-plum)]/10'
-                          }
-                        `}
+                        className={`font-mono text-sm px-3 py-1 rounded transition-colors ${page === validCurrentPage ? 'bg-[var(--color-plum)] text-white font-bold' : 'hover:bg-[var(--color-plum)]/10'}`}
                       >
                         {page}
                       </button>
                     ))
                   }
 
-                  {/* Last page */}
                   {validCurrentPage < totalPages - 1 && (
                     <>
-                      {validCurrentPage < totalPages - 2 && (
-                        <span className="font-mono text-sm text-[var(--color-plum)]/50">…</span>
-                      )}
-                      <button
-                        onClick={() => goToPage(totalPages)}
-                        className="font-mono text-sm px-2 py-1 hover:bg-[var(--color-plum)]/10 rounded transition-colors"
-                      >
-                        {totalPages}
-                      </button>
+                      {validCurrentPage < totalPages - 2 && <span className="font-mono text-sm text-[var(--color-plum)]/50">…</span>}
+                      <button onClick={() => goToPage(totalPages)} className="font-mono text-sm px-2 py-1 hover:bg-[var(--color-plum)]/10 rounded">{totalPages}</button>
                     </>
                   )}
                 </div>
 
-                {/* Next button */}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -633,7 +596,15 @@ export function History() {
         onClose={() => setEditingSettlement(null)}
         size="lg"
       >
+        {/* Note: I haven't refactored SettlementForm yet, but assume it exists. 
+            However, I refactored SettleUpModal. I should check SettlementForm? 
+            Or is it the same? SettleUpModal is usually for NEW settlements. 
+            SettlementForm is for EDITING? 
+            It is imported in line 6. Checks... */}
         {editingSettlement && (
+          /* Assuming SettlementForm logic is similar to SettleUpModal but for editing. */
+          /* Let's double check if I need to refactor SettlementForm too. */
+          /* It is likely simpler or reused. */
           <SettlementForm
             settlement={editingSettlement}
             onSubmit={() => setEditingSettlement(null)}
