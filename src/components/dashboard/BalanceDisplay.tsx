@@ -6,6 +6,7 @@ export function BalanceDisplay() {
   const { members, balance, user } = useApp();
 
   const isSettled = Math.abs(balance.amount) < 100 && (!balance.suggestedPayments || balance.suggestedPayments.length === 0);
+  const isCoupleMode = members.length === 2;
 
   // User's net position
   const userNet = balance.amount;
@@ -16,6 +17,32 @@ export function BalanceDisplay() {
   const getName = (userId: string) => {
     if (userId === user?.id) return 'You';
     return members.find(m => m.userId === userId)?.name || 'Unknown';
+  };
+
+  // Get the other person's name in couple mode
+  const getPartnerName = () => {
+    const partner = members.find(m => m.userId !== user?.id);
+    return partner?.name || 'your partner';
+  };
+
+  // Build the main balance text
+  const getBalanceText = () => {
+    if (userNet === 0) return 'All Square';
+    if (isCoupleMode) {
+      // In couple mode, include the partner's name
+      if (isOwing) {
+        return `You owe ${getPartnerName()} ${formatCurrency(Math.abs(userNet))}`;
+      } else {
+        return `${getPartnerName()} owes you ${formatCurrency(userNet)}`;
+      }
+    } else {
+      // In group mode, just show the amount
+      if (isOwing) {
+        return `You owe ${formatCurrency(Math.abs(userNet))}`;
+      } else {
+        return `You get ${formatCurrency(userNet)}`;
+      }
+    }
   };
 
   return (
@@ -47,12 +74,12 @@ export function BalanceDisplay() {
                 className="text-5xl font-mono font-bold"
                 style={{ color: isOwing ? 'var(--color-coral)' : (isOwed ? 'var(--color-sage)' : 'var(--color-plum)') }}
               >
-                {userNet === 0 ? 'All Square' : (isOwing ? `You owe ${formatCurrency(Math.abs(userNet))}` : `You get ${formatCurrency(userNet)}`)}
+                {getBalanceText()}
               </h2>
             </div>
 
-            {/* Suggested Payments (Simplified Debts) */}
-            {balance.suggestedPayments && balance.suggestedPayments.length > 0 && (
+            {/* Suggested Payments (Simplified Debts) - Only show in group mode */}
+            {!isCoupleMode && balance.suggestedPayments && balance.suggestedPayments.length > 0 && (
               <div className="mt-6 pt-6 border-t-2 border-dashed border-[var(--color-plum)]/10 text-left">
                 <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)]/50 mb-3 text-center">
                   Suggested Payments
