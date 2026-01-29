@@ -77,13 +77,9 @@ amplifytools.xcconfig
 .gemini/
 .vscode/
 
-# Migration (Local only)
-migration/node_modules/
-migration/backup-*.json
-
 # Amplify Build Artifacts (including .vtl files)
 amplify/backend/api/*/build/
 
 # Migration (Local only)
-migration/node_modules/
-migration/backup-*.json
+migration/
+

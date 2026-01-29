@@ -50,14 +50,26 @@ export function getTodayISO(): string {
 
 /**
  * Parse Expense Shares JSON safely
+ * Handles double-encoded JSON from AWSJSON GraphQL field
  */
 export function parseExpenseShares(expense: Expense): Record<string, number> {
   if (expense.shares) {
     try {
-      if (typeof expense.shares === 'string') {
-        return JSON.parse(expense.shares);
+      let shares = expense.shares;
+
+      // Handle string input
+      if (typeof shares === 'string') {
+        let parsed = JSON.parse(shares);
+
+        // Check for double-encoding: if the first parse gives us a string, parse again
+        if (typeof parsed === 'string') {
+          parsed = JSON.parse(parsed);
+        }
+
+        return parsed;
       }
-      return expense.shares as unknown as Record<string, number>;
+
+      return shares as unknown as Record<string, number>;
     } catch (e) {
       console.error('Failed to parse shares', e);
     }
