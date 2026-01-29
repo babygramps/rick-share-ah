@@ -12,7 +12,7 @@ export function GroupSetup() {
     const [inviteCode, setInviteCode] = useState('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const { user, createGroup, joinGroup, group, logout } = useApp();
+    const { user, createGroup, joinGroup, logout } = useApp();
 
     const handleCreate = async (e: React.FormEvent, type: GroupType) => {
         e.preventDefault();

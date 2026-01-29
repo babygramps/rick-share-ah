@@ -4,7 +4,7 @@ import { CATEGORIES } from '../../types';
 import { useApp } from '../../context/AppContext';
 import { parseCurrencyInput, getTodayISO, formatDateForInput } from '../../utils/helpers';
 import { normalizeDateToISO } from '../../utils/receiptParser';
-import { suggestCategoryFromMerchant } from '../../utils/categoryMatcher';
+
 import { Card, CardHeader, CardTitle } from '../ui/Card';
 import { Input, TextArea } from '../ui/Input';
 import { Select } from '../ui/Select';
@@ -18,7 +18,7 @@ interface ExpenseFormProps {
 }
 
 export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
-  const { group, members, addExpense, updateExpense, user } = useApp();
+  const { members, addExpense, updateExpense, user } = useApp();
   const isEditing = !!expense;
 
   const [description, setDescription] = useState(expense?.description || '');
@@ -38,7 +38,6 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isScannerOpen, setIsScannerOpen] = useState(false);
-  const [aiFilled, setAiFilled] = useState<Record<string, boolean>>({});
 
   // Initialize shares if editing
   useEffect(() => {
@@ -119,7 +118,7 @@ export function ExpenseForm({ expense, onSubmit, onCancel }: ExpenseFormProps) {
       });
     } else if (splitType === 'percentage') {
       let allocated = 0;
-      members.forEach((m, idx) => {
+      members.forEach((m) => {
         const pct = parseFloat(memberShares[m.userId] || '0');
         const share = Math.round(amountCents * (pct / 100));
         finalShares[m.userId] = share;

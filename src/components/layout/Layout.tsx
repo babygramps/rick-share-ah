@@ -7,7 +7,7 @@ interface LayoutProps {
 }
 
 export function Layout({ children }: LayoutProps) {
-  const { user, couple, logout } = useApp();
+  const { user, group, logout } = useApp();
   const location = useLocation();
 
   const navItems = [
@@ -20,6 +20,14 @@ export function Layout({ children }: LayoutProps) {
 
   const isActive = (path: string) => location.pathname === path;
 
+  // Derive display names from group members if available
+  // This is a rough approximation of the old "Partner 1 & Partner 2" logic
+  // accessible via group.members if loaded, but Layout receives 'group' object.
+  // We might not have members immediately populated in the group object unless eager loaded,
+  // but AppContext usually loads them. 
+  // actually AppContext returns { group, members, ... }
+  // Let's grab members from AppContext too to show names.
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -29,13 +37,8 @@ export function Layout({ children }: LayoutProps) {
             <span className="text-3xl">💕</span>
             <div>
               <h1 className="font-mono text-xl font-bold tracking-tight">
-                {couple?.name || 'Rick & Share-ah'}
+                {group?.name || 'Rick & Share-ah'}
               </h1>
-              {couple && (
-                <p className="text-xs opacity-80 font-mono">
-                  {couple.partner1Name} {couple.partner2Name ? `& ${couple.partner2Name}` : ''}
-                </p>
-              )}
             </div>
           </Link>
 
@@ -56,7 +59,7 @@ export function Layout({ children }: LayoutProps) {
       </main>
 
       {/* Bottom navigation - mobile style */}
-      {user && couple && (
+      {user && group && (
         <nav className="bg-white border-t-4 border-[var(--color-plum)] sticky bottom-0">
           <div className="max-w-4xl mx-auto flex">
             {navItems.map((item) => (

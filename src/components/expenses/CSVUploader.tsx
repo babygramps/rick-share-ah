@@ -58,7 +58,7 @@ function categoryFromText(raw: string | undefined | null): string | null {
 }
 
 export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
-  const { couple, addExpenseBatch } = useApp();
+  const { members, addExpenseBatch } = useApp();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [step, setStep] = useState<Step>('upload');
@@ -184,8 +184,9 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
     if (!t) return 'partner1';
 
     const n = normalizeToken(t);
-    const p1n = normalizeToken(couple?.partner1Name || '');
-    const p2n = normalizeToken(couple?.partner2Name || '');
+    // Use first two members as p1/p2 for heuristic mapping
+    const p1n = normalizeToken(members[0]?.name || 'Partner 1');
+    const p2n = normalizeToken(members[1]?.name || 'Partner 2');
 
     if (n === 'partner2' || n === 'p2' || n === '2') return 'partner2';
     if (n === 'partner1' || n === 'p1' || n === '1') return 'partner1';
@@ -237,13 +238,13 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
         errors.length > 0
           ? null
           : {
-              description,
-              amount: amountCents,
-              date: iso!,
-              category,
-              paidBy,
-              note: note || undefined,
-            },
+            description,
+            amount: amountCents,
+            date: iso!,
+            category,
+            paidBy,
+            note: note || undefined,
+          },
     };
   };
 
@@ -260,7 +261,7 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
 
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [records, mapping, couple?.partner1Name, couple?.partner2Name, rowOverrides]);
+  }, [records, mapping, members, rowOverrides]);
 
   const counts = useMemo(() => {
     if (records.length === 0) return { total: 0, valid: 0, invalid: 0 };
@@ -274,7 +275,7 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
     const valid = records.length - invalid;
     return { total: records.length, valid, invalid };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [records, mapping, couple?.partner1Name, couple?.partner2Name, rowOverrides]);
+  }, [records, mapping, members, rowOverrides]);
 
   const importNow = async () => {
     if (!validateMapping(mapping)) return;
@@ -535,7 +536,7 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
                   setRowOverrides(all);
                 }}
               >
-                All → {couple?.partner1Name || 'Partner 1'}
+                All → {members[0]?.name || 'Partner 1'}
               </button>
               <button
                 type="button"
@@ -548,7 +549,7 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
                   setRowOverrides(all);
                 }}
               >
-                All → {couple?.partner2Name || 'Partner 2'}
+                All → {members[1]?.name || 'Partner 2'}
               </button>
             </div>
           </div>
@@ -601,8 +602,8 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
                         }));
                       }}
                     >
-                      <option value="partner1">{couple?.partner1Name || 'Partner 1'}</option>
-                      <option value="partner2">{couple?.partner2Name || 'Partner 2'}</option>
+                      <option value="partner1">{members[0]?.name || 'Partner 1'}</option>
+                      <option value="partner2">{members[1]?.name || 'Partner 2'}</option>
                     </select>
                   </td>
                   <td className="p-2">
@@ -720,7 +721,7 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
 
       {/* Hidden debug field to keep state visible during development if needed */}
       {false && (
-        <Input label="debug" value={csvText || ''} onChange={() => {}} />
+        <Input label="debug" value={csvText || ''} onChange={() => { }} />
       )}
     </Modal>
   );

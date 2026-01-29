@@ -1,6 +1,87 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getGroup = /* GraphQL */ `
+  query GetGroup($id: ID!) {
+    getGroup(id: $id) {
+      id
+      type
+      name
+      inviteCode
+      members {
+        nextToken
+        __typename
+      }
+      expenses {
+        nextToken
+        __typename
+      }
+      settlements {
+        nextToken
+        __typename
+      }
+      ownerId
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listGroups = /* GraphQL */ `
+  query ListGroups(
+    $filter: ModelGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGroups(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const groupsByInviteCode = /* GraphQL */ `
+  query GroupsByInviteCode(
+    $inviteCode: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    groupsByInviteCode(
+      inviteCode: $inviteCode
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getCouple = /* GraphQL */ `
   query GetCouple($id: ID!) {
     getCouple(id: $id) {
@@ -93,10 +174,137 @@ export const couplesByInviteCode = /* GraphQL */ `
     }
   }
 `;
+export const getGroupMember = /* GraphQL */ `
+  query GetGroupMember($id: ID!) {
+    getGroupMember(id: $id) {
+      id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      userId
+      name
+      email
+      role
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listGroupMembers = /* GraphQL */ `
+  query ListGroupMembers(
+    $filter: ModelGroupMemberFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listGroupMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        groupId
+        userId
+        name
+        email
+        role
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const groupMembersByGroupId = /* GraphQL */ `
+  query GroupMembersByGroupId(
+    $groupId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGroupMemberFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    groupMembersByGroupId(
+      groupId: $groupId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        groupId
+        userId
+        name
+        email
+        role
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const groupMembersByUserId = /* GraphQL */ `
+  query GroupMembersByUserId(
+    $userId: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGroupMemberFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    groupMembersByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        groupId
+        userId
+        name
+        email
+        role
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getExpense = /* GraphQL */ `
   query GetExpense($id: ID!) {
     getExpense(id: $id) {
       id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       coupleId
       couple {
         id
@@ -120,12 +328,12 @@ export const getExpense = /* GraphQL */ `
       splitType
       partner1Share
       partner2Share
+      shares
       category
       date
       note
       createdAt
       updatedAt
-      coupleExpensesId
       owner
       __typename
     }
@@ -140,6 +348,7 @@ export const listExpenses = /* GraphQL */ `
     listExpenses(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        groupId
         coupleId
         description
         amount
@@ -147,12 +356,51 @@ export const listExpenses = /* GraphQL */ `
         splitType
         partner1Share
         partner2Share
+        shares
         category
         date
         note
         createdAt
         updatedAt
-        coupleExpensesId
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const expensesByGroupId = /* GraphQL */ `
+  query ExpensesByGroupId(
+    $groupId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelExpenseFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    expensesByGroupId(
+      groupId: $groupId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        groupId
+        coupleId
+        description
+        amount
+        paidBy
+        splitType
+        partner1Share
+        partner2Share
+        shares
+        category
+        date
+        note
+        createdAt
+        updatedAt
         owner
         __typename
       }
@@ -178,6 +426,7 @@ export const expensesByCoupleId = /* GraphQL */ `
     ) {
       items {
         id
+        groupId
         coupleId
         description
         amount
@@ -185,12 +434,12 @@ export const expensesByCoupleId = /* GraphQL */ `
         splitType
         partner1Share
         partner2Share
+        shares
         category
         date
         note
         createdAt
         updatedAt
-        coupleExpensesId
         owner
         __typename
       }
@@ -203,6 +452,18 @@ export const getSettlement = /* GraphQL */ `
   query GetSettlement($id: ID!) {
     getSettlement(id: $id) {
       id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       coupleId
       couple {
         id
@@ -227,7 +488,6 @@ export const getSettlement = /* GraphQL */ `
       note
       createdAt
       updatedAt
-      coupleSettlementsId
       owner
       __typename
     }
@@ -242,6 +502,7 @@ export const listSettlements = /* GraphQL */ `
     listSettlements(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        groupId
         coupleId
         amount
         paidBy
@@ -250,7 +511,40 @@ export const listSettlements = /* GraphQL */ `
         note
         createdAt
         updatedAt
-        coupleSettlementsId
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const settlementsByGroupId = /* GraphQL */ `
+  query SettlementsByGroupId(
+    $groupId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelSettlementFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    settlementsByGroupId(
+      groupId: $groupId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        groupId
+        coupleId
+        amount
+        paidBy
+        paidTo
+        date
+        note
+        createdAt
+        updatedAt
         owner
         __typename
       }
@@ -276,6 +570,7 @@ export const settlementsByCoupleId = /* GraphQL */ `
     ) {
       items {
         id
+        groupId
         coupleId
         amount
         paidBy
@@ -284,7 +579,69 @@ export const settlementsByCoupleId = /* GraphQL */ `
         note
         createdAt
         updatedAt
-        coupleSettlementsId
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getUserPreferences = /* GraphQL */ `
+  query GetUserPreferences($id: ID!) {
+    getUserPreferences(id: $id) {
+      id
+      userId
+      theme
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listUserPreferences = /* GraphQL */ `
+  query ListUserPreferences(
+    $filter: ModelUserPreferencesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserPreferences(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        theme
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const userPreferencesByUserId = /* GraphQL */ `
+  query UserPreferencesByUserId(
+    $userId: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserPreferencesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userPreferencesByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        theme
+        createdAt
+        updatedAt
         owner
         __typename
       }

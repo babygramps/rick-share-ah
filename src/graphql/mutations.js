@@ -1,6 +1,96 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createGroup = /* GraphQL */ `
+  mutation CreateGroup(
+    $input: CreateGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    createGroup(input: $input, condition: $condition) {
+      id
+      type
+      name
+      inviteCode
+      members {
+        nextToken
+        __typename
+      }
+      expenses {
+        nextToken
+        __typename
+      }
+      settlements {
+        nextToken
+        __typename
+      }
+      ownerId
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateGroup = /* GraphQL */ `
+  mutation UpdateGroup(
+    $input: UpdateGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    updateGroup(input: $input, condition: $condition) {
+      id
+      type
+      name
+      inviteCode
+      members {
+        nextToken
+        __typename
+      }
+      expenses {
+        nextToken
+        __typename
+      }
+      settlements {
+        nextToken
+        __typename
+      }
+      ownerId
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteGroup = /* GraphQL */ `
+  mutation DeleteGroup(
+    $input: DeleteGroupInput!
+    $condition: ModelGroupConditionInput
+  ) {
+    deleteGroup(input: $input, condition: $condition) {
+      id
+      type
+      name
+      inviteCode
+      members {
+        nextToken
+        __typename
+      }
+      expenses {
+        nextToken
+        __typename
+      }
+      settlements {
+        nextToken
+        __typename
+      }
+      ownerId
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
 export const createCouple = /* GraphQL */ `
   mutation CreateCouple(
     $input: CreateCoupleInput!
@@ -94,6 +184,96 @@ export const deleteCouple = /* GraphQL */ `
     }
   }
 `;
+export const createGroupMember = /* GraphQL */ `
+  mutation CreateGroupMember(
+    $input: CreateGroupMemberInput!
+    $condition: ModelGroupMemberConditionInput
+  ) {
+    createGroupMember(input: $input, condition: $condition) {
+      id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      userId
+      name
+      email
+      role
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateGroupMember = /* GraphQL */ `
+  mutation UpdateGroupMember(
+    $input: UpdateGroupMemberInput!
+    $condition: ModelGroupMemberConditionInput
+  ) {
+    updateGroupMember(input: $input, condition: $condition) {
+      id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      userId
+      name
+      email
+      role
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteGroupMember = /* GraphQL */ `
+  mutation DeleteGroupMember(
+    $input: DeleteGroupMemberInput!
+    $condition: ModelGroupMemberConditionInput
+  ) {
+    deleteGroupMember(input: $input, condition: $condition) {
+      id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      userId
+      name
+      email
+      role
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
 export const createExpense = /* GraphQL */ `
   mutation CreateExpense(
     $input: CreateExpenseInput!
@@ -101,6 +281,18 @@ export const createExpense = /* GraphQL */ `
   ) {
     createExpense(input: $input, condition: $condition) {
       id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       coupleId
       couple {
         id
@@ -124,12 +316,12 @@ export const createExpense = /* GraphQL */ `
       splitType
       partner1Share
       partner2Share
+      shares
       category
       date
       note
       createdAt
       updatedAt
-      coupleExpensesId
       owner
       __typename
     }
@@ -142,6 +334,18 @@ export const updateExpense = /* GraphQL */ `
   ) {
     updateExpense(input: $input, condition: $condition) {
       id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       coupleId
       couple {
         id
@@ -165,12 +369,12 @@ export const updateExpense = /* GraphQL */ `
       splitType
       partner1Share
       partner2Share
+      shares
       category
       date
       note
       createdAt
       updatedAt
-      coupleExpensesId
       owner
       __typename
     }
@@ -183,6 +387,18 @@ export const deleteExpense = /* GraphQL */ `
   ) {
     deleteExpense(input: $input, condition: $condition) {
       id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       coupleId
       couple {
         id
@@ -206,12 +422,12 @@ export const deleteExpense = /* GraphQL */ `
       splitType
       partner1Share
       partner2Share
+      shares
       category
       date
       note
       createdAt
       updatedAt
-      coupleExpensesId
       owner
       __typename
     }
@@ -224,6 +440,18 @@ export const createSettlement = /* GraphQL */ `
   ) {
     createSettlement(input: $input, condition: $condition) {
       id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       coupleId
       couple {
         id
@@ -248,7 +476,6 @@ export const createSettlement = /* GraphQL */ `
       note
       createdAt
       updatedAt
-      coupleSettlementsId
       owner
       __typename
     }
@@ -261,6 +488,18 @@ export const updateSettlement = /* GraphQL */ `
   ) {
     updateSettlement(input: $input, condition: $condition) {
       id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       coupleId
       couple {
         id
@@ -285,7 +524,6 @@ export const updateSettlement = /* GraphQL */ `
       note
       createdAt
       updatedAt
-      coupleSettlementsId
       owner
       __typename
     }
@@ -298,6 +536,18 @@ export const deleteSettlement = /* GraphQL */ `
   ) {
     deleteSettlement(input: $input, condition: $condition) {
       id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
       coupleId
       couple {
         id
@@ -322,7 +572,54 @@ export const deleteSettlement = /* GraphQL */ `
       note
       createdAt
       updatedAt
-      coupleSettlementsId
+      owner
+      __typename
+    }
+  }
+`;
+export const createUserPreferences = /* GraphQL */ `
+  mutation CreateUserPreferences(
+    $input: CreateUserPreferencesInput!
+    $condition: ModelUserPreferencesConditionInput
+  ) {
+    createUserPreferences(input: $input, condition: $condition) {
+      id
+      userId
+      theme
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateUserPreferences = /* GraphQL */ `
+  mutation UpdateUserPreferences(
+    $input: UpdateUserPreferencesInput!
+    $condition: ModelUserPreferencesConditionInput
+  ) {
+    updateUserPreferences(input: $input, condition: $condition) {
+      id
+      userId
+      theme
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteUserPreferences = /* GraphQL */ `
+  mutation DeleteUserPreferences(
+    $input: DeleteUserPreferencesInput!
+    $condition: ModelUserPreferencesConditionInput
+  ) {
+    deleteUserPreferences(input: $input, condition: $condition) {
+      id
+      userId
+      theme
+      createdAt
+      updatedAt
       owner
       __typename
     }
@@ -340,13 +637,11 @@ export const processReceipt = /* GraphQL */ `
       confidence
       lineItems {
         description
-        price
-        quantity
-        __typename
+        amount
+        qty
       }
       rawText
       imageUrl
-      __typename
     }
   }
 `;

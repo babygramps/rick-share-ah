@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { formatCurrency, parseCurrencyInput, getTodayISO } from '../../utils/helpers';
+import { parseCurrencyInput, getTodayISO } from '../../utils/helpers';
 import { Modal } from '../ui/Modal';
 import { Input, TextArea } from '../ui/Input';
 import { Select } from '../ui/Select';

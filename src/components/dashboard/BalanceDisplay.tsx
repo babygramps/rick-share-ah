@@ -3,7 +3,7 @@ import { formatCurrency } from '../../utils/helpers';
 import { Card } from '../ui/Card';
 
 export function BalanceDisplay() {
-  const { group, members, balance, user } = useApp();
+  const { members, balance, user } = useApp();
 
   const isSettled = Math.abs(balance.amount) < 100 && (!balance.suggestedPayments || balance.suggestedPayments.length === 0);
 
@@ -45,9 +45,9 @@ export function BalanceDisplay() {
               </p>
               <h2
                 className="text-5xl font-mono font-bold"
-                style={{ color: isOwning ? 'var(--color-coral)' : (isOwed ? 'var(--color-sage)' : 'var(--color-plum)') }}
+                style={{ color: isOwing ? 'var(--color-coral)' : (isOwed ? 'var(--color-sage)' : 'var(--color-plum)') }}
               >
-                {userNet === 0 ? 'All Square' : (isOwning ? `You owe ${formatCurrency(Math.abs(userNet))}` : `You get ${formatCurrency(userNet)}`)}
+                {userNet === 0 ? 'All Square' : (isOwing ? `You owe ${formatCurrency(Math.abs(userNet))}` : `You get ${formatCurrency(userNet)}`)}
               </h2>
             </div>
 

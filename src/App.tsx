@@ -9,7 +9,7 @@ import { AddExpense } from './pages/AddExpense';
 import { History } from './pages/History';
 import { Statistics } from './pages/Statistics';
 import { Settings } from './pages/Settings';
-import { Migration } from './pages/Migration';
+
 
 // Protected route wrapper
 function ProtectedRoute({ children }: { children: React.ReactNode }) {

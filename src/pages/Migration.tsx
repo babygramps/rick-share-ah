@@ -62,7 +62,6 @@ const listSettlementsQuery = `
 export function Migration() {
     const { createGroup, addExpense, addSettlement, user } = useApp();
     const [logs, setLogs] = useState<string[]>([]);
-    const [backupData, setBackupData] = useState<any>(null);
 
     const log = (msg: string) => setLogs(prev => [...prev, `${new Date().toLocaleTimeString()}: ${msg}`]);
 
@@ -105,7 +104,7 @@ export function Migration() {
             }
 
             const data = { couples, expenses, settlements };
-            setBackupData(data);
+            // setBackupData(data); // State removed for cleanup
 
             // Download
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -225,7 +224,7 @@ export function Migration() {
 
             // Map fields
             // Logic for shares:
-            let shares = {};
+            let shares: Record<string, number> = {};
             if (legExp.splitType === 'equal') {
                 // We calculate the exact amounts? 
                 // Or simpler: Just set "shares" = null (if backend handles it) 

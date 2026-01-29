@@ -166,20 +166,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       // Load expenses
       const expenseResult = await getClient().graphql({
-        query: queries.expensesByGroup,
+        query: queries.expensesByGroupId,
         variables: { groupId }
       });
-      const loadedExpenses = (expenseResult as any).data?.expensesByGroup?.items || [];
+      const loadedExpenses = (expenseResult as any).data?.expensesByGroupId?.items || [];
       // Sort client-side by date descending
       loadedExpenses.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
       setExpenses(loadedExpenses);
 
       // Load settlements
       const settlementResult = await getClient().graphql({
-        query: queries.settlementsByGroup,
+        query: queries.settlementsByGroupId,
         variables: { groupId }
       });
-      const loadedSettlements = (settlementResult as any).data?.settlementsByGroup?.items || [];
+      const loadedSettlements = (settlementResult as any).data?.settlementsByGroupId?.items || [];
       // Sort client-side by date descending
       loadedSettlements.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
       setSettlements(loadedSettlements);

@@ -9,7 +9,7 @@ import { CATEGORIES } from '../types';
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export function Statistics() {
-  const { expenses, couple } = useApp();
+  const { expenses, members } = useApp();
   const [dateRange, setDateRange] = useState<DateRangeValue>({ preset: 'all' });
   const dateRangeMs = useMemo(() => getDateRangeMs(dateRange), [dateRange]);
 
@@ -62,7 +62,7 @@ export function Statistics() {
     const partner2Spending = filteredExpenses
       .filter(exp => exp.paidBy === 'partner2')
       .reduce((sum, exp) => sum + exp.amount, 0);
-    
+
     // Category breakdown
     const byCategory = CATEGORIES.map(cat => {
       const catExpenses = filteredExpenses.filter(exp => exp.category === cat.id);
@@ -88,8 +88,8 @@ export function Statistics() {
       .slice(-6); // Last 6 months
 
     // Average per expense
-    const avgExpense = filteredExpenses.length > 0 
-      ? totalSpending / filteredExpenses.length 
+    const avgExpense = filteredExpenses.length > 0
+      ? totalSpending / filteredExpenses.length
       : 0;
 
     // Top expenses
@@ -132,7 +132,7 @@ export function Statistics() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className="text-2xl font-bold">📊 Statistics</h1>
-        
+
         <DateRangeFilter value={dateRange} onChange={setDateRange} />
       </div>
 
@@ -146,7 +146,7 @@ export function Statistics() {
             {formatCurrency(stats.totalSpending)}
           </p>
         </Card>
-        
+
         <Card padding="sm" className="text-center">
           <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)]/60 mb-1">
             Expenses
@@ -155,7 +155,7 @@ export function Statistics() {
             {stats.expenseCount}
           </p>
         </Card>
-        
+
         <Card padding="sm" className="text-center">
           <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)]/60 mb-1">
             Average
@@ -164,7 +164,7 @@ export function Statistics() {
             {formatCurrency(stats.avgExpense)}
           </p>
         </Card>
-        
+
         <Card padding="sm" className="text-center">
           <p className="font-mono text-xs uppercase tracking-wider text-[var(--color-plum)]/60 mb-1">
             Categories
@@ -180,30 +180,30 @@ export function Statistics() {
         <CardHeader>
           <CardTitle>👥 Who's Paying?</CardTitle>
         </CardHeader>
-        
+
         <div className="space-y-4">
           {/* Partner 1 */}
           <div>
             <div className="flex justify-between items-center mb-2">
               <span className="font-mono text-sm font-bold">
-                {couple?.partner1Name || 'Partner 1'}
+                {members[0]?.name || 'Partner 1'}
               </span>
               <span className="font-mono text-sm">
                 {formatCurrency(stats.partner1Spending)}
                 <span className="text-[var(--color-plum)]/50 ml-2">
-                  ({stats.totalSpending > 0 
-                    ? Math.round((stats.partner1Spending / stats.totalSpending) * 100) 
+                  ({stats.totalSpending > 0
+                    ? Math.round((stats.partner1Spending / stats.totalSpending) * 100)
                     : 0}%)
                 </span>
               </span>
             </div>
             <div className="h-6 bg-[var(--color-cream)] border-2 border-[var(--color-plum)] overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-[var(--color-coral)] transition-all duration-500"
-                style={{ 
-                  width: `${stats.totalSpending > 0 
-                    ? (stats.partner1Spending / stats.totalSpending) * 100 
-                    : 0}%` 
+                style={{
+                  width: `${stats.totalSpending > 0
+                    ? (stats.partner1Spending / stats.totalSpending) * 100
+                    : 0}%`
                 }}
               />
             </div>
@@ -213,24 +213,24 @@ export function Statistics() {
           <div>
             <div className="flex justify-between items-center mb-2">
               <span className="font-mono text-sm font-bold">
-                {couple?.partner2Name || 'Partner 2'}
+                {members[1]?.name || 'Partner 2'}
               </span>
               <span className="font-mono text-sm">
                 {formatCurrency(stats.partner2Spending)}
                 <span className="text-[var(--color-plum)]/50 ml-2">
-                  ({stats.totalSpending > 0 
-                    ? Math.round((stats.partner2Spending / stats.totalSpending) * 100) 
+                  ({stats.totalSpending > 0
+                    ? Math.round((stats.partner2Spending / stats.totalSpending) * 100)
                     : 0}%)
                 </span>
               </span>
             </div>
             <div className="h-6 bg-[var(--color-cream)] border-2 border-[var(--color-plum)] overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-[var(--color-sky)] transition-all duration-500"
-                style={{ 
-                  width: `${stats.totalSpending > 0 
-                    ? (stats.partner2Spending / stats.totalSpending) * 100 
-                    : 0}%` 
+                style={{
+                  width: `${stats.totalSpending > 0
+                    ? (stats.partner2Spending / stats.totalSpending) * 100
+                    : 0}%`
                 }}
               />
             </div>
@@ -243,11 +243,11 @@ export function Statistics() {
         <CardHeader>
           <CardTitle>📂 By Category</CardTitle>
         </CardHeader>
-        
+
         <div className="space-y-3">
           {stats.byCategory.map((cat, index) => (
-            <div 
-              key={cat.id} 
+            <div
+              key={cat.id}
               className="animate-slide-up"
               style={{ animationDelay: `${index * 0.05}s`, opacity: 0, animationFillMode: 'forwards' }}
             >
@@ -261,9 +261,9 @@ export function Statistics() {
                 </span>
               </div>
               <div className="h-4 bg-[var(--color-cream)] border-2 border-[var(--color-plum)] overflow-hidden">
-                <div 
+                <div
                   className="h-full transition-all duration-500"
-                  style={{ 
+                  style={{
                     width: `${(cat.total / maxCategoryTotal) * 100}%`,
                     backgroundColor: cat.color,
                   }}
@@ -283,16 +283,16 @@ export function Statistics() {
           <CardHeader>
             <CardTitle>📅 Monthly Trend</CardTitle>
           </CardHeader>
-          
+
           <div className="flex items-end gap-2 h-40">
             {stats.monthlyData.map((month) => (
-              <div 
-                key={month.key} 
+              <div
+                key={month.key}
                 className="flex-1 flex flex-col items-center justify-end h-full"
               >
-                <div 
+                <div
                   className="w-full bg-[var(--color-sage)] border-2 border-[var(--color-plum)] transition-all duration-500 min-h-[8px]"
-                  style={{ 
+                  style={{
                     height: `${(month.total / maxMonthlyTotal) * 100}%`,
                   }}
                   title={`${month.label}: ${formatCurrency(month.total)}`}
@@ -314,12 +314,12 @@ export function Statistics() {
         <CardHeader>
           <CardTitle>💸 Biggest Expenses</CardTitle>
         </CardHeader>
-        
+
         <div className="space-y-2">
           {stats.topExpenses.map((expense, index) => {
             const catInfo = getCategoryInfo(expense.category);
             return (
-              <div 
+              <div
                 key={expense.id}
                 className="flex items-center gap-3 p-2 bg-[var(--color-cream)] border-2 border-[var(--color-plum)]"
               >
@@ -330,14 +330,14 @@ export function Statistics() {
                 <div className="flex-1 min-w-0">
                   <p className="font-bold truncate">{expense.description}</p>
                   <p className="font-mono text-xs text-[var(--color-plum)]/60">
-                    {new Date(expense.date).toLocaleDateString('en-US', { 
-                      month: 'short', 
-                      day: 'numeric' 
+                    {new Date(expense.date).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric'
                     })}
                     {' · '}
-                    {expense.paidBy === 'partner1' 
-                      ? couple?.partner1Name 
-                      : couple?.partner2Name}
+                    {expense.paidBy === 'partner1'
+                      ? (members[0]?.name || 'Partner 1')
+                      : (members[1]?.name || 'Partner 2')}
                   </p>
                 </div>
                 <span className="font-mono font-bold text-[var(--color-coral)]">
@@ -354,7 +354,7 @@ export function Statistics() {
         <CardHeader>
           <CardTitle>✨ Fun Facts</CardTitle>
         </CardHeader>
-        
+
         <div className="grid grid-cols-2 gap-4 font-mono text-sm">
           <div className="text-center p-3 bg-white border-2 border-[var(--color-plum)]">
             <p className="text-2xl mb-1">
@@ -363,7 +363,7 @@ export function Statistics() {
             <p className="text-xs text-[var(--color-plum)]/60">Top Category</p>
             <p className="font-bold">{stats.byCategory[0]?.label || 'N/A'}</p>
           </div>
-          
+
           <div className="text-center p-3 bg-white border-2 border-[var(--color-plum)]">
             <p className="text-2xl mb-1">📊</p>
             <p className="text-xs text-[var(--color-plum)]/60">Avg per Day</p>

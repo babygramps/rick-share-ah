@@ -50,21 +50,21 @@ interface LineItemAssignerProps {
 }
 
 export function LineItemAssigner({ assignments, onAssignmentsChange, totalAmountCents }: LineItemAssignerProps) {
-  const { couple } = useApp();
-  const p1Label = couple?.partner1Name || 'Partner 1';
-  const p2Label = couple?.partner2Name || 'Partner 2';
+  const { members } = useApp();
+  const p1Label = members[0]?.name || 'Partner 1';
+  const p2Label = members[1]?.name || 'Partner 2';
 
   const totals = useMemo(() => computeTotals(assignments), [assignments]);
-  
+
   // If we have an actual total (including tax), calculate the real split amounts
   const hasActualTotal = typeof totalAmountCents === 'number' && totalAmountCents > 0;
-  const actualPartner1Cents = hasActualTotal 
+  const actualPartner1Cents = hasActualTotal
     ? Math.round((totalAmountCents * totals.partner1Pct) / 100)
     : totals.partner1Cents;
-  const actualPartner2Cents = hasActualTotal 
-    ? totalAmountCents - actualPartner1Cents 
+  const actualPartner2Cents = hasActualTotal
+    ? totalAmountCents - actualPartner1Cents
     : totals.partner2Cents;
-  
+
   // Calculate the difference (tax/fees not in line items)
   const unaccountedCents = hasActualTotal ? totalAmountCents - totals.basisCents : 0;
 
