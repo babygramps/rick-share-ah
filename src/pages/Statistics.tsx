@@ -56,12 +56,14 @@ export function Statistics() {
   // Calculate totals
   const stats = useMemo(() => {
     const totalSpending = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
-    const partner1Spending = filteredExpenses
-      .filter(exp => exp.paidBy === 'partner1')
-      .reduce((sum, exp) => sum + exp.amount, 0);
-    const partner2Spending = filteredExpenses
-      .filter(exp => exp.paidBy === 'partner2')
-      .reduce((sum, exp) => sum + exp.amount, 0);
+
+    // Calculate spending per member by userId
+    const spendingByMember: Record<string, number> = {};
+    for (const member of members) {
+      spendingByMember[member.userId] = filteredExpenses
+        .filter(exp => exp.paidBy === member.userId)
+        .reduce((sum, exp) => sum + exp.amount, 0);
+    }
 
     // Category breakdown
     const byCategory = CATEGORIES.map(cat => {
@@ -99,15 +101,14 @@ export function Statistics() {
 
     return {
       totalSpending,
-      partner1Spending,
-      partner2Spending,
+      spendingByMember,
       expenseCount: filteredExpenses.length,
       avgExpense,
       byCategory,
       monthlyData,
       topExpenses,
     };
-  }, [filteredExpenses]);
+  }, [filteredExpenses, members]);
 
   const maxCategoryTotal = Math.max(...stats.byCategory.map(c => c.total), 1);
   const maxMonthlyTotal = Math.max(...stats.monthlyData.map(m => m.total), 1);
@@ -182,59 +183,39 @@ export function Statistics() {
         </CardHeader>
 
         <div className="space-y-4">
-          {/* Partner 1 */}
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-mono text-sm font-bold">
-                {members[0]?.name || 'Partner 1'}
-              </span>
-              <span className="font-mono text-sm">
-                {formatCurrency(stats.partner1Spending)}
-                <span className="text-[var(--color-plum)]/50 ml-2">
-                  ({stats.totalSpending > 0
-                    ? Math.round((stats.partner1Spending / stats.totalSpending) * 100)
-                    : 0}%)
-                </span>
-              </span>
-            </div>
-            <div className="h-6 bg-[var(--color-cream)] border-2 border-[var(--color-plum)] overflow-hidden">
-              <div
-                className="h-full bg-[var(--color-coral)] transition-all duration-500"
-                style={{
-                  width: `${stats.totalSpending > 0
-                    ? (stats.partner1Spending / stats.totalSpending) * 100
-                    : 0}%`
-                }}
-              />
-            </div>
-          </div>
+          {members.map((member, index) => {
+            const memberSpending = stats.spendingByMember[member.userId] || 0;
+            const percentage = stats.totalSpending > 0
+              ? Math.round((memberSpending / stats.totalSpending) * 100)
+              : 0;
+            // Alternate colors for visual distinction
+            const barColor = index % 2 === 0 ? 'var(--color-coral)' : 'var(--color-sky)';
 
-          {/* Partner 2 */}
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-mono text-sm font-bold">
-                {members[1]?.name || 'Partner 2'}
-              </span>
-              <span className="font-mono text-sm">
-                {formatCurrency(stats.partner2Spending)}
-                <span className="text-[var(--color-plum)]/50 ml-2">
-                  ({stats.totalSpending > 0
-                    ? Math.round((stats.partner2Spending / stats.totalSpending) * 100)
-                    : 0}%)
-                </span>
-              </span>
-            </div>
-            <div className="h-6 bg-[var(--color-cream)] border-2 border-[var(--color-plum)] overflow-hidden">
-              <div
-                className="h-full bg-[var(--color-sky)] transition-all duration-500"
-                style={{
-                  width: `${stats.totalSpending > 0
-                    ? (stats.partner2Spending / stats.totalSpending) * 100
-                    : 0}%`
-                }}
-              />
-            </div>
-          </div>
+            return (
+              <div key={member.userId}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-mono text-sm font-bold">
+                    {member.name}
+                  </span>
+                  <span className="font-mono text-sm">
+                    {formatCurrency(memberSpending)}
+                    <span className="text-[var(--color-plum)]/50 ml-2">
+                      ({percentage}%)
+                    </span>
+                  </span>
+                </div>
+                <div className="h-6 bg-[var(--color-cream)] border-2 border-[var(--color-plum)] overflow-hidden">
+                  <div
+                    className="h-full transition-all duration-500"
+                    style={{
+                      width: `${percentage}%`,
+                      backgroundColor: barColor,
+                    }}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </Card>
 
@@ -335,9 +316,7 @@ export function Statistics() {
                       day: 'numeric'
                     })}
                     {' · '}
-                    {expense.paidBy === 'partner1'
-                      ? (members[0]?.name || 'Partner 1')
-                      : (members[1]?.name || 'Partner 2')}
+                    {members.find(m => m.userId === expense.paidBy)?.name || 'Unknown'}
                   </p>
                 </div>
                 <span className="font-mono font-bold text-[var(--color-coral)]">
