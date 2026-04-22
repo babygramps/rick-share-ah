@@ -164,23 +164,33 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const loadedMembers = (membersResult as any).data?.listGroupMembers?.items || [];
       setMembers(loadedMembers);
 
-      // Load expenses
-      const expenseResult = await getClient().graphql({
-        query: queries.expensesByGroupId,
-        variables: { groupId }
-      });
-      const loadedExpenses = (expenseResult as any).data?.expensesByGroupId?.items || [];
-      // Sort client-side by date descending
+      // Load expenses (paginated — AppSync returns 100 per page by default).
+      const loadedExpenses: any[] = [];
+      let expNext: string | null = null;
+      do {
+        const page: any = await getClient().graphql({
+          query: queries.expensesByGroupId,
+          variables: { groupId, limit: 500, nextToken: expNext },
+        });
+        const items = page.data?.expensesByGroupId?.items || [];
+        loadedExpenses.push(...items);
+        expNext = page.data?.expensesByGroupId?.nextToken ?? null;
+      } while (expNext);
       loadedExpenses.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
       setExpenses(loadedExpenses);
 
-      // Load settlements
-      const settlementResult = await getClient().graphql({
-        query: queries.settlementsByGroupId,
-        variables: { groupId }
-      });
-      const loadedSettlements = (settlementResult as any).data?.settlementsByGroupId?.items || [];
-      // Sort client-side by date descending
+      // Load settlements (paginated).
+      const loadedSettlements: any[] = [];
+      let setNext: string | null = null;
+      do {
+        const page: any = await getClient().graphql({
+          query: queries.settlementsByGroupId,
+          variables: { groupId, limit: 500, nextToken: setNext },
+        });
+        const items = page.data?.settlementsByGroupId?.items || [];
+        loadedSettlements.push(...items);
+        setNext = page.data?.settlementsByGroupId?.nextToken ?? null;
+      } while (setNext);
       loadedSettlements.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
       setSettlements(loadedSettlements);
     } catch (error) {
