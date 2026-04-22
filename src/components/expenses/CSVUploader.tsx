@@ -294,23 +294,40 @@ export function CSVUploader({ isOpen, onClose }: CSVUploaderProps) {
       return;
     }
 
+    const p1Id = members[0]?.userId;
+    const p2Id = members[1]?.userId;
+    if (!p1Id || !p2Id) {
+      setFatalError('Import requires two members in this group.');
+      return;
+    }
+
     setFatalError(null);
     setIsImporting(true);
     console.log('[csv-import] import.start', { total: records.length, valid: validDrafts.length, invalid: invalidCount, skipInvalid });
 
     try {
       const resp = await addExpenseBatch(
-        validDrafts.map((d) => ({
-          description: d.description,
-          amount: d.amount,
-          paidBy: d.paidBy,
-          splitType: 'equal',
-          partner1Share: 50,
-          partner2Share: 50,
-          category: d.category,
-          date: d.date,
-          note: d.note,
-        }))
+        validDrafts.map((d) => {
+          const payerId = d.paidBy === 'partner1' ? p1Id : p2Id;
+          const otherId = d.paidBy === 'partner1' ? p2Id : p1Id;
+          // Equal split, payer absorbs the odd cent so shares sum exactly to amount.
+          const half = Math.floor(d.amount / 2);
+          const remainder = d.amount - half * 2;
+          const shares = {
+            [payerId]: half + remainder,
+            [otherId]: half,
+          };
+          return {
+            description: d.description,
+            amount: d.amount,
+            paidBy: payerId,
+            splitType: 'equal',
+            shares: JSON.stringify(shares),
+            category: d.category,
+            date: d.date,
+            note: d.note,
+          };
+        })
       );
 
       const created = Number(resp?.created ?? validDrafts.length);
