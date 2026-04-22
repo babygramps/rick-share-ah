@@ -7,6 +7,13 @@ import { Modal } from '../components/ui/Modal';
 import { CSVUploader } from '../components/expenses/CSVUploader';
 import { ThemeSelector } from '../components/settings/ThemeSelector';
 import { formatCurrency } from '../utils/helpers';
+import {
+  downloadCsv,
+  expensesToCsv,
+  fetchAllExpenses,
+  fetchAllSettlements,
+  settlementsToCsv,
+} from '../utils/csvExport';
 
 export function Settings() {
   const { user, group, members, updateGroup, settlements, expenses, logout } = useApp();
@@ -15,6 +22,29 @@ export function Settings() {
   const [groupName, setGroupName] = useState(group?.name || '');
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showCsvImport, setShowCsvImport] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
+
+  const handleExport = async () => {
+    if (!group) return;
+    setIsExporting(true);
+    setExportError(null);
+    try {
+      const [allExpenses, allSettlements] = await Promise.all([
+        fetchAllExpenses(group.id),
+        fetchAllSettlements(group.id),
+      ]);
+      const stamp = new Date().toISOString().slice(0, 10);
+      const slug = (group.name || 'group').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      downloadCsv(`${slug}-expenses-${stamp}.csv`, expensesToCsv(allExpenses, members));
+      downloadCsv(`${slug}-settlements-${stamp}.csv`, settlementsToCsv(allSettlements, members));
+    } catch (e: any) {
+      console.error('[export] error', e);
+      setExportError(e?.message || 'Export failed.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const handleSaveGroup = async () => {
     if (groupName.trim()) {
@@ -158,10 +188,10 @@ export function Settings() {
         </div>
       </Card>
 
-      {/* Import Data */}
+      {/* Import / Export Data */}
       <Card>
         <CardHeader className="flex items-center justify-between">
-          <CardTitle>📦 Import Data</CardTitle>
+          <CardTitle>📦 Import / Export Data</CardTitle>
         </CardHeader>
         <div className="space-y-4">
           <div>
@@ -173,6 +203,25 @@ export function Settings() {
           <Button variant="secondary" className="w-full" onClick={() => setShowCsvImport(true)}>
             Import CSV
           </Button>
+
+          <div className="pt-4 border-t-2 border-dashed border-[var(--color-plum)]/20">
+            <p className="font-bold">Export all data as CSV</p>
+            <p className="font-mono text-xs text-[var(--color-plum)]/60">
+              Downloads two files: all expenses and all settlements for this group.
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            className="w-full"
+            onClick={handleExport}
+            isLoading={isExporting}
+            disabled={!group || isExporting}
+          >
+            Export CSV
+          </Button>
+          {exportError && (
+            <p className="font-mono text-sm text-[var(--color-coral)]">{exportError}</p>
+          )}
         </div>
       </Card>
 

@@ -82,3 +82,9 @@ amplify/backend/api/*/build/
 
 # Migration (Local only)
 migration/
+# Local data exports / one-off dumps
+/expenses-*.json
+/members-*.json
+/settlements-*.json
+/export-to-csv.py
+/rickandshareah-*.csv
