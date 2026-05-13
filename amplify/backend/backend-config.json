@@ -61,6 +61,22 @@
     }
   },
   "function": {
+    "aiChat": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "rickshareah"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "processReceipt": {
       "build": true,
       "dependsOn": [
@@ -84,6 +100,14 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_aiChat_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "aiChat"
+        }
+      ]
+    },
     "AMPLIFY_function_processReceipt_deploymentBucketName": {
       "usedBy": [
         {

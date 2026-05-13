@@ -268,7 +268,7 @@ export const handler = async (event, context) => {
       usage = { inputTokens: result.inputTokens, outputTokens: result.outputTokens, latencyMs: result.latencyMs };
       if (!assistantText) {
         geminiStatus = 'empty_response';
-        assistantText = "I didn't get a usable response from the AI. Please try again.";
+        assistantText = "⚠️ I didn't get a usable response from the AI. Please try again.";
       }
     } catch (geminiErr) {
       geminiStatus = 'gemini_error';
@@ -277,7 +277,7 @@ export const handler = async (event, context) => {
         errorName: geminiErr?.name,
         errorMessage: geminiErr?.message,
       });
-      assistantText = "Couldn't reach the AI right now. Tap to retry.";
+      assistantText = "⚠️ Couldn't reach the AI right now. Tap to retry.";
     }
 
     const assistantMessage = await persistMessage({
