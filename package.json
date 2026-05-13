@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test:chat-rendering": "node scripts/runChatRenderingTests.cjs",
     "test:chat-worker": "node --test amplify/backend/function/aiChat/src/index.test.js"
   },
   "dependencies": {

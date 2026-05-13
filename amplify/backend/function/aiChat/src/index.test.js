@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { getResolverFieldName, invokeChatWorker, runChatJob } from './index.js';
+import { buildGeminiGenerationConfig, extractGeminiResult, getResolverFieldName, invokeChatWorker, runChatJob } from './index.js';
 
 test('runChatJob completes a queued job and persists the assistant reply', async () => {
   const statusUpdates = [];
@@ -35,6 +35,7 @@ test('runChatJob completes a queued job and persists the assistant reply', async
     },
     generate: async ({ systemInstruction, contents }) => {
       assert.match(systemInstruction, /Rick & Share-ah/);
+      assert.match(systemInstruction, /chart-json/);
       assert.equal(contents.at(-1).parts[0].text, 'How much did we spend?');
       return { text: 'No spending data is available yet.', inputTokens: 42, outputTokens: 9, latencyMs: 25 };
     },
@@ -45,6 +46,82 @@ test('runChatJob completes a queued job and persists the assistant reply', async
   assert.deepEqual(statusUpdates.map((update) => update.patch.status), ['running', 'complete']);
   assert.equal(persistedMessages[0].role, 'assistant');
   assert.equal(persistedMessages[0].content, 'No spending data is available yet.');
+});
+
+test('buildGeminiGenerationConfig leaves enough room for full markdown responses', () => {
+  const config = buildGeminiGenerationConfig();
+
+  assert.equal(config.temperature, 0.3);
+  assert.ok(config.maxOutputTokens >= 1024);
+});
+
+test('extractGeminiResult returns text length and finish reason for truncation diagnostics', () => {
+  const text = 'Your biggest expense was **$526.16** for **rent**.';
+  const result = extractGeminiResult({
+    candidates: [{
+      finishReason: 'MAX_TOKENS',
+      content: {
+        parts: [
+          { text: 'Your biggest expense was **$526.16** for **' },
+          { text: 'rent**.' },
+        ],
+      },
+    }],
+    usageMetadata: {
+      promptTokenCount: 120,
+      candidatesTokenCount: 384,
+    },
+  }, 250);
+
+  assert.equal(result.text, text);
+  assert.equal(result.finishReason, 'MAX_TOKENS');
+  assert.equal(result.textLength, text.length);
+  assert.equal(result.inputTokens, 120);
+  assert.equal(result.outputTokens, 384);
+  assert.equal(result.latencyMs, 250);
+});
+
+test('runChatJob exposes completion diagnostics from Gemini result', async () => {
+  const persistedMessages = [];
+  const text = 'Your biggest expense was **$526.16** for **rent**.';
+
+  const result = await runChatJob({
+    job: {
+      id: 'job_diagnostics',
+      userId: 'user_1',
+      groupId: 'group_1',
+      threadId: 'thread_1',
+      userMessageId: 'msg_user_diagnostics',
+      status: 'queued',
+    },
+    requestId: 'test-diagnostics',
+    loadContext: async () => ({
+      group: { id: 'group_1', name: 'Test Group', type: 'GROUP' },
+      members: [{ userId: 'user_1', name: 'Ada' }],
+      expenses: [],
+      settlements: [],
+      history: [],
+      userMessage: { content: 'What was the biggest expense?' },
+    }),
+    updateJob: async (jobId, patch) => ({ id: jobId, ...patch }),
+    persistAssistantMessage: async (message) => {
+      persistedMessages.push(message);
+      return { id: 'msg_assistant_diagnostics', ...message };
+    },
+    generate: async () => ({
+      text,
+      finishReason: 'STOP',
+      textLength: text.length,
+      inputTokens: 120,
+      outputTokens: 20,
+      latencyMs: 30,
+    }),
+  });
+
+  assert.equal(result.status, 'complete');
+  assert.equal(result.finishReason, 'STOP');
+  assert.equal(result.textLength, text.length);
+  assert.equal(persistedMessages[0].content, text);
 });
 
 test('runChatJob marks timed_out when Gemini aborts', async () => {

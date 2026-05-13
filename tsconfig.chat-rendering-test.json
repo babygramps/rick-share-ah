@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "node_modules/.tmp/chat-rendering-tests",
+    "rootDir": ".",
+    "types": ["node"]
+  },
+  "include": [
+    "src/utils/chatMarkdown.ts",
+    "src/utils/chatMarkdown.test.ts"
+  ]
+}

@@ -11,6 +11,7 @@ const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-pro-preview';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const GEMINI_TIMEOUT_MS = Number(process.env.GEMINI_TIMEOUT_MS || 24_000);
 const GEMINI_MAX_ATTEMPTS = Number(process.env.GEMINI_MAX_ATTEMPTS || 2);
+const GEMINI_MAX_OUTPUT_TOKENS = Number(process.env.GEMINI_MAX_OUTPUT_TOKENS || 1536);
 
 let cachedGeminiKey = null;
 async function getGeminiKey() {
@@ -359,6 +360,13 @@ export function buildSystemPrompt({ user, group, members, expenses, settlements,
     ``,
     `When asked for totals or breakdowns, compute them from the data. Show your work briefly`,
     `(e.g. "March food = ${formatCents(12450)} across 12 expenses"). Keep replies concise — the user is on mobile.`,
+    ``,
+    `FORMATTING:`,
+    `- You may use Markdown for short paragraphs, bold/italic emphasis, bullet or numbered lists, links, and fenced code blocks.`,
+    `- When a chart would make a spending breakdown clearer, emit a fenced chart-json block after a brief explanation.`,
+    `- chart-json schema: {"type":"bar"|"line"|"pie","title":"...","xLabel":"...","yLabel":"...","data":[{"label":"Groceries","value":123.45}]}.`,
+    `- Chart values should be display units such as dollars, not cents. Keep charts to 12 points or fewer.`,
+    `- Do not emit raw HTML.`,
   ].join('\n');
 }
 
@@ -370,6 +378,29 @@ export function buildGeminiContents(history, newUserContent) {
   }));
   contents.push({ role: 'user', parts: [{ text: newUserContent }] });
   return contents;
+}
+
+export function buildGeminiGenerationConfig() {
+  return {
+    temperature: 0.3,
+    maxOutputTokens: GEMINI_MAX_OUTPUT_TOKENS,
+    thinkingConfig: { thinkingLevel: 'low' },
+  };
+}
+
+export function extractGeminiResult(json, latencyMs) {
+  const candidate = json?.candidates?.[0];
+  const text = candidate?.content?.parts?.map((p) => p.text).filter(Boolean).join('') || '';
+  const inputTokens = json?.usageMetadata?.promptTokenCount ?? null;
+  const outputTokens = json?.usageMetadata?.candidatesTokenCount ?? null;
+  return {
+    text,
+    inputTokens,
+    outputTokens,
+    latencyMs,
+    finishReason: candidate?.finishReason ?? null,
+    textLength: text.length,
+  };
 }
 
 export async function callGemini({ systemInstruction, contents }) {
@@ -390,11 +421,7 @@ export async function callGemini({ systemInstruction, contents }) {
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: systemInstruction }] },
           contents,
-          generationConfig: {
-            temperature: 0.3,
-            maxOutputTokens: 384,
-            thinkingConfig: { thinkingLevel: 'low' },
-          },
+          generationConfig: buildGeminiGenerationConfig(),
         }),
         signal: controller.signal,
       });
@@ -409,10 +436,7 @@ export async function callGemini({ systemInstruction, contents }) {
         throw lastError;
       }
       const json = await resp.json();
-      const text = json?.candidates?.[0]?.content?.parts?.map((p) => p.text).filter(Boolean).join('') || '';
-      const inputTokens = json?.usageMetadata?.promptTokenCount ?? null;
-      const outputTokens = json?.usageMetadata?.candidatesTokenCount ?? null;
-      return { text, inputTokens, outputTokens, latencyMs };
+      return extractGeminiResult(json, latencyMs);
     }
     throw lastError || new Error('Gemini request failed');
   } finally {
@@ -500,6 +524,7 @@ export async function runChatJob({
 
     const result = await generate({ systemInstruction, contents });
     const assistantText = result.text?.trim() || "⚠️ I didn't get a usable response from the AI. Please try again.";
+    const assistantTextLength = assistantText.length;
     const assistantMessage = await persistAssistantMessage({
       userId: job.userId,
       groupId: job.groupId,
@@ -525,10 +550,19 @@ export async function runChatJob({
       inputTokens: result.inputTokens ?? null,
       outputTokens: result.outputTokens ?? null,
       latencyMs: result.latencyMs ?? null,
+      finishReason: result.finishReason ?? null,
+      textLength: result.textLength ?? assistantTextLength,
+      maxOutputTokens: GEMINI_MAX_OUTPUT_TOKENS,
       model: GEMINI_MODEL,
     });
 
-    return { status: 'complete', job: updatedJob, assistantMessage };
+    return {
+      status: 'complete',
+      job: updatedJob,
+      assistantMessage,
+      finishReason: result.finishReason ?? null,
+      textLength: result.textLength ?? assistantTextLength,
+    };
   } catch (err) {
     const status = isTimeoutError(err) ? 'timed_out' : 'failed';
     const message = errorSummary(err);

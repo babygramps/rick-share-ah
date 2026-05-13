@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../../types/chat';
+import { ChatMessageContent } from './ChatMessageContent';
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -19,10 +20,10 @@ export function ChatBubble({ message, onRetry }: ChatBubbleProps) {
   return (
     <div className={`flex ${containerAlign} animate-slide-up`}>
       <div
-        className={`max-w-[85%] border-2 border-[var(--color-plum)] p-3 font-mono text-sm whitespace-pre-wrap ${bubbleBg}`}
+        className={`max-w-[85%] border-2 border-[var(--color-plum)] p-3 text-sm ${isUser || isErrorBubble ? 'font-mono whitespace-pre-wrap' : ''} ${bubbleBg}`}
         style={{ boxShadow: '3px 3px 0 var(--color-plum)' }}
       >
-        {message.content}
+        {isUser || isErrorBubble ? message.content : <ChatMessageContent content={message.content} />}
         {isErrorBubble && onRetry && (
           <button
             type="button"
