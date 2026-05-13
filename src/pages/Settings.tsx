@@ -225,6 +225,19 @@ export function Settings() {
         </div>
       </Card>
 
+      {/* AI Chat */}
+        <Card>
+          <CardHeader>
+            <CardTitle>🤖 AI Chat</CardTitle>
+          </CardHeader>
+          <p className="font-mono text-sm text-[var(--color-plum)]/80">
+            The Chat page sends your messages and your group's expense data to
+            Google's Gemini API to generate answers. Per Google's API terms, the
+            data is not used to train their models. You can stop using the feature
+            at any time — no data is sent unless you open a chat and send a message.
+          </p>
+        </Card>
+
       {/* Danger Zone */}
       <Card className="border-[var(--color-coral)]">
         <CardHeader>
