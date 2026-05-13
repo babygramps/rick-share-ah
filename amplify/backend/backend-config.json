@@ -67,8 +67,7 @@
         {
           "attributes": [
             "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
+            "GraphQLAPIEndpointOutput"
           ],
           "category": "api",
           "resourceName": "rickshareah"
@@ -97,48 +96,6 @@
       "lastPushTimeStamp": "2025-12-11T17:42:09.900Z",
       "service": "amplifyhosting",
       "type": "cicd"
-    }
-  },
-  "parameters": {
-    "AMPLIFY_function_aiChat_secretsPathAmplifyAppId": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "aiChat"
-        }
-      ]
-    },
-    "AMPLIFY_function_processReceipt_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processReceipt"
-        }
-      ]
-    },
-    "AMPLIFY_function_processReceipt_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "processReceipt"
-        }
-      ]
-    },
-    "AMPLIFY_hosting_amplifyhosting_appId": {
-      "usedBy": [
-        {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
-        }
-      ]
-    },
-    "AMPLIFY_hosting_amplifyhosting_type": {
-      "usedBy": [
-        {
-          "category": "hosting",
-          "resourceName": "amplifyhosting"
-        }
-      ]
     }
   },
   "storage": {
