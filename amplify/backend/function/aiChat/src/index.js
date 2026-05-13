@@ -5,7 +5,8 @@ import { SSMClient, GetParametersCommand } from '@aws-sdk/client-ssm';
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 const ssm = new SSMClient({});
 
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro:generateContent';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-pro-preview';
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const GEMINI_TIMEOUT_MS = 25_000;
 
 let cachedGeminiKey = null;
@@ -274,6 +275,7 @@ export const handler = async (event, context) => {
       geminiStatus = 'gemini_error';
       log('error', 'aiChat.geminiFailed', {
         requestId,
+        model: GEMINI_MODEL,
         errorName: geminiErr?.name,
         errorMessage: geminiErr?.message,
       });
@@ -295,7 +297,7 @@ export const handler = async (event, context) => {
       inputTokens: usage.inputTokens,
       outputTokens: usage.outputTokens,
       latencyMs: usage.latencyMs,
-      model: 'gemini-3.1-pro',
+      model: GEMINI_MODEL,
     });
 
     void userMessage;
