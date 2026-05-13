@@ -355,7 +355,9 @@
                 "arn:aws:dynamodb:*:*:table/Settlement-*",
                 "arn:aws:dynamodb:*:*:table/Settlement-*/index/*",
                 "arn:aws:dynamodb:*:*:table/ChatMessage-*",
-                "arn:aws:dynamodb:*:*:table/ChatMessage-*/index/*"
+                "arn:aws:dynamodb:*:*:table/ChatMessage-*/index/*",
+                "arn:aws:dynamodb:*:*:table/ChatThread-*",
+                "arn:aws:dynamodb:*:*:table/ChatThread-*/index/*"
               ]
             }
           ]
