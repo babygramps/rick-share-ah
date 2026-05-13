@@ -745,7 +745,7 @@
                 "GraphQLAPITransformerSchema3CB2AE18"
             ]
         },
-        "ChatMessage": {
+        "ChatThread": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
                 "Parameters": {
@@ -807,6 +807,118 @@
                         "Fn::GetAtt": [
                             "Group",
                             "Outputs.transformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
+                        ]
+                    }
+                },
+                "TemplateURL": {
+                    "Fn::Join": [
+                        "",
+                        [
+                            "https://s3.",
+                            {
+                                "Ref": "AWS::Region"
+                            },
+                            ".",
+                            {
+                                "Ref": "AWS::URLSuffix"
+                            },
+                            "/",
+                            {
+                                "Ref": "S3DeploymentBucket"
+                            },
+                            "/",
+                            {
+                                "Ref": "S3DeploymentRootKey"
+                            },
+                            "/stacks/ChatThread.json"
+                        ]
+                    ]
+                }
+            },
+            "DependsOn": [
+                "GraphQLAPITransformerSchema3CB2AE18"
+            ]
+        },
+        "ChatMessage": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "Parameters": {
+                    "DynamoDBModelTableReadIOPS": {
+                        "Ref": "DynamoDBModelTableReadIOPS"
+                    },
+                    "DynamoDBModelTableWriteIOPS": {
+                        "Ref": "DynamoDBModelTableWriteIOPS"
+                    },
+                    "DynamoDBBillingMode": {
+                        "Ref": "DynamoDBBillingMode"
+                    },
+                    "DynamoDBEnablePointInTimeRecovery": {
+                        "Ref": "DynamoDBEnablePointInTimeRecovery"
+                    },
+                    "DynamoDBEnableServerSideEncryption": {
+                        "Ref": "DynamoDBEnableServerSideEncryption"
+                    },
+                    "referencetotransformerrootstackenv10C5A902Ref": {
+                        "Ref": "env"
+                    },
+                    "referencetotransformerrootstackGraphQLAPI20497F53ApiId": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPI",
+                            "ApiId"
+                        ]
+                    },
+                    "referencetotransformerrootstackS3DeploymentBucket7592718ARef": {
+                        "Ref": "S3DeploymentBucket"
+                    },
+                    "referencetotransformerrootstackS3DeploymentRootKeyA71EA735Ref": {
+                        "Ref": "S3DeploymentRootKey"
+                    },
+                    "referencetotransformerrootstackChatThreadNestedStackChatThreadNestedStackResource0B213095OutputstransformerrootstackChatThreadQuerygetChatThreadauth0FunctionQuerygetChatThreadauth0FunctionAppSyncFunction3BB90413FunctionId": {
+                        "Fn::GetAtt": [
+                            "ChatThread",
+                            "Outputs.transformerrootstackChatThreadQuerygetChatThreadauth0FunctionQuerygetChatThreadauth0FunctionAppSyncFunction3BB90413FunctionId"
+                        ]
+                    },
+                    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId": {
+                        "Fn::GetAtt": [
+                            "Group",
+                            "Outputs.transformerrootstackGroupQuerygetGrouppostAuth0FunctionQuerygetGrouppostAuth0FunctionAppSyncFunction9DB48E6AFunctionId"
+                        ]
+                    },
+                    "referencetotransformerrootstackGraphQLAPINONEDS2BA9D1C8Name": {
+                        "Fn::GetAtt": [
+                            "GraphQLAPINONEDS95A13CF0",
+                            "Name"
+                        ]
+                    },
+                    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId": {
+                        "Fn::GetAtt": [
+                            "Group",
+                            "Outputs.transformerrootstackGroupMutationcreateGroupinit0FunctionMutationcreateGroupinit0FunctionAppSyncFunctionFE75E80DFunctionId"
+                        ]
+                    },
+                    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId": {
+                        "Fn::GetAtt": [
+                            "Group",
+                            "Outputs.transformerrootstackGroupMutationupdateGroupinit0FunctionMutationupdateGroupinit0FunctionAppSyncFunction22979C02FunctionId"
+                        ]
+                    },
+                    "referencetotransformerrootstackChatThreadNestedStackChatThreadNestedStackResource0B213095OutputstransformerrootstackChatThreadSubscriptiononCreateChatThreadauth0FunctionSubscriptiononCreateChatThreadauth0FunctionAppSyncFunction201E54A6FunctionId": {
+                        "Fn::GetAtt": [
+                            "ChatThread",
+                            "Outputs.transformerrootstackChatThreadSubscriptiononCreateChatThreadauth0FunctionSubscriptiononCreateChatThreadauth0FunctionAppSyncFunction201E54A6FunctionId"
+                        ]
+                    },
+                    "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId": {
+                        "Fn::GetAtt": [
+                            "Group",
+                            "Outputs.transformerrootstackGroupSubscriptionOnCreateGroupDataResolverFnSubscriptionOnCreateGroupDataResolverFnAppSyncFunction6B71D774FunctionId"
+                        ]
+                    },
+                    "referencetotransformerrootstackChatThreadNestedStackChatThreadNestedStackResource0B213095OutputstransformerrootstackChatThreadChatThreadUserIdDataResolverFnChatThreadUserIdDataResolverFnAppSyncFunction15FE7746FunctionId": {
+                        "Fn::GetAtt": [
+                            "ChatThread",
+                            "Outputs.transformerrootstackChatThreadChatThreadUserIdDataResolverFnChatThreadUserIdDataResolverFnAppSyncFunction15FE7746FunctionId"
                         ]
                     }
                 },
@@ -1060,6 +1172,7 @@
                 "Expense",
                 "Settlement",
                 "UserPreferences",
+                "ChatThread",
                 "ChatMessage",
                 "FunctionDirectiveStack",
                 "ConnectionStack"

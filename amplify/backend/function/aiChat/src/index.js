@@ -1,5 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, QueryCommand, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, QueryCommand, GetCommand, PutCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { SSMClient, GetParametersCommand } from '@aws-sdk/client-ssm';
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}));
@@ -104,6 +104,14 @@ async function loadGroupMembers(groupId) {
   return resp.Items || [];
 }
 
+async function loadThread(threadId) {
+  const resp = await dynamo.send(new GetCommand({
+    TableName: tableName('ChatThread'),
+    Key: { id: threadId },
+  }));
+  return resp.Item || null;
+}
+
 async function loadAllByGroup(modelName, groupId) {
   const out = [];
   let lastKey;
@@ -121,29 +129,27 @@ async function loadAllByGroup(modelName, groupId) {
   return out;
 }
 
-async function loadRecentThread(userId, groupId, limit = 20) {
-  // Query by userId (PK of byUserAndGroup index), filter by groupId, take latest by createdAt.
-  // The composite sort key in Amplify v2 takes the form `groupId#createdAt`. We scan and filter
-  // defensively to survive any naming variation the transformer might produce.
+async function loadRecentThreadMessages(userId, threadId, limit = 20) {
   const resp = await dynamo.send(new QueryCommand({
     TableName: tableName('ChatMessage'),
-    IndexName: 'byUserAndGroup',
-    KeyConditionExpression: 'userId = :u',
-    ExpressionAttributeValues: { ':u': userId },
-    ScanIndexForward: false, // newest first by sort key
+    IndexName: 'byThread',
+    KeyConditionExpression: 'threadId = :t',
+    ExpressionAttributeValues: { ':t': threadId },
+    ScanIndexForward: false,
     Limit: limit * 4,
   }));
-  const items = (resp.Items || []).filter((m) => m.groupId === groupId).slice(0, limit);
+  const items = (resp.Items || []).filter((m) => m.userId === userId).slice(0, limit);
   return items.reverse(); // oldest-first for prompt construction
 }
 
-async function persistMessage({ userId, groupId, role, content }) {
+async function persistMessage({ userId, groupId, threadId, role, content }) {
   const now = new Date().toISOString();
   const id = `cm_${now}_${Math.random().toString(16).slice(2, 10)}`;
   const item = {
     id,
     userId,
     groupId,
+    threadId,
     role,
     content,
     createdAt: now,
@@ -156,6 +162,25 @@ async function persistMessage({ userId, groupId, role, content }) {
     Item: item,
   }));
   return item;
+}
+
+async function touchThread({ thread, content }) {
+  const now = new Date().toISOString();
+  const shouldRetitle = !thread.title || thread.title === 'New chat';
+  const nextTitle = shouldRetitle ? truncateText(content, 48) || 'New chat' : thread.title;
+  await dynamo.send(new UpdateCommand({
+    TableName: tableName('ChatThread'),
+    Key: { id: thread.id },
+    UpdateExpression: 'SET updatedAt = :updatedAt, title = :title',
+    ConditionExpression: 'userId = :userId AND groupId = :groupId',
+    ExpressionAttributeValues: {
+      ':updatedAt': now,
+      ':title': nextTitle,
+      ':userId': thread.userId,
+      ':groupId': thread.groupId,
+    },
+  }));
+  return { ...thread, title: nextTitle, updatedAt: now };
 }
 
 function buildSystemPrompt({ user, group, members, expenses, settlements }) {
@@ -241,12 +266,19 @@ export const handler = async (event, context) => {
   const requestId = context?.awsRequestId;
   const userId = event?.identity?.sub;
   const groupId = event?.arguments?.groupId;
+  const threadId = event?.arguments?.threadId;
   const content = event?.arguments?.content;
 
-  log('info', 'aiChat.start', { requestId, userId, groupId, contentLen: content?.length });
+  log('info', 'aiChat.start', { requestId, userId, groupId, threadId, contentLen: content?.length });
 
-  if (!userId || !groupId || !content) {
-    log('warn', 'aiChat.missingArgs', { requestId, hasUserId: !!userId, hasGroupId: !!groupId, hasContent: !!content });
+  if (!userId || !groupId || !threadId || !content) {
+    log('warn', 'aiChat.missingArgs', {
+      requestId,
+      hasUserId: !!userId,
+      hasGroupId: !!groupId,
+      hasThreadId: !!threadId,
+      hasContent: !!content,
+    });
     throw new Error('Unauthorized or missing arguments');
   }
 
@@ -257,23 +289,38 @@ export const handler = async (event, context) => {
       throw new Error('Unauthorized');
     }
 
+    const thread = await loadThread(threadId);
+    if (!thread || thread.userId !== userId || thread.groupId !== groupId) {
+      log('warn', 'aiChat.invalidThread', {
+        requestId,
+        userId,
+        groupId,
+        threadId,
+        foundUserId: thread?.userId,
+        foundGroupId: thread?.groupId,
+      });
+      throw new Error('Unauthorized');
+    }
+
     const [group, members, expenses, settlements, history] = await Promise.all([
       loadGroup(groupId),
       loadGroupMembers(groupId),
       loadAllByGroup('Expense', groupId),
       loadAllByGroup('Settlement', groupId),
-      loadRecentThread(userId, groupId, 20),
+      loadRecentThreadMessages(userId, threadId, 20),
     ]);
 
     log('info', 'aiChat.dataLoaded', {
       requestId,
+      threadId,
       members: members.length,
       expenses: expenses.length,
       settlements: settlements.length,
       historyMessages: history.length,
     });
 
-    const userMessage = await persistMessage({ userId, groupId, role: 'user', content });
+    const userMessage = await persistMessage({ userId, groupId, threadId, role: 'user', content });
+    await touchThread({ thread, content });
 
     const systemInstruction = buildSystemPrompt({
       user: { userId },
@@ -286,6 +333,7 @@ export const handler = async (event, context) => {
 
     log('info', 'aiChat.promptBuilt', {
       requestId,
+      threadId,
       model: GEMINI_MODEL,
       promptChars: systemInstruction.length,
       expenses: expenses.length,
@@ -318,6 +366,7 @@ export const handler = async (event, context) => {
     const assistantMessage = await persistMessage({
       userId,
       groupId,
+      threadId,
       role: 'assistant',
       content: assistantText,
     });
@@ -326,6 +375,7 @@ export const handler = async (event, context) => {
       requestId,
       userId,
       groupId,
+      threadId,
       status: geminiStatus,
       inputTokens: usage.inputTokens,
       outputTokens: usage.outputTokens,

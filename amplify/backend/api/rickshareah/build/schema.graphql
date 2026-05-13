@@ -94,10 +94,20 @@ type UserPreferences {
   owner: String
 }
 
+type ChatThread {
+  id: ID!
+  userId: String!
+  groupId: ID!
+  title: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
 type ChatMessage {
   id: ID!
   userId: String!
   groupId: ID!
+  threadId: ID!
   role: String!
   content: String!
   createdAt: AWSDateTime!
@@ -105,7 +115,7 @@ type ChatMessage {
 }
 
 type Mutation {
-  sendChatMessage(groupId: ID!, content: String!): ChatMessage
+  sendChatMessage(groupId: ID!, threadId: ID!, content: String!): ChatMessage
   createGroup(input: CreateGroupInput!, condition: ModelGroupConditionInput): Group
   updateGroup(input: UpdateGroupInput!, condition: ModelGroupConditionInput): Group
   deleteGroup(input: DeleteGroupInput!, condition: ModelGroupConditionInput): Group
@@ -124,6 +134,9 @@ type Mutation {
   createUserPreferences(input: CreateUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences
   updateUserPreferences(input: UpdateUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences
   deleteUserPreferences(input: DeleteUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences
+  createChatThread(input: CreateChatThreadInput!, condition: ModelChatThreadConditionInput): ChatThread
+  updateChatThread(input: UpdateChatThreadInput!, condition: ModelChatThreadConditionInput): ChatThread
+  deleteChatThread(input: DeleteChatThreadInput!, condition: ModelChatThreadConditionInput): ChatThread
   createChatMessage(input: CreateChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
   updateChatMessage(input: UpdateChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
   deleteChatMessage(input: DeleteChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
@@ -316,6 +329,8 @@ type Query {
   listSettlements(filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection
   getUserPreferences(id: ID!): UserPreferences
   listUserPreferences(filter: ModelUserPreferencesFilterInput, limit: Int, nextToken: String): ModelUserPreferencesConnection
+  getChatThread(id: ID!): ChatThread
+  listChatThreads(filter: ModelChatThreadFilterInput, limit: Int, nextToken: String): ModelChatThreadConnection
   getChatMessage(id: ID!): ChatMessage
   listChatMessages(filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection
   groupsByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection
@@ -327,7 +342,9 @@ type Query {
   settlementsByGroupId(groupId: ID!, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection
   settlementsByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection
   userPreferencesByUserId(userId: String!, sortDirection: ModelSortDirection, filter: ModelUserPreferencesFilterInput, limit: Int, nextToken: String): ModelUserPreferencesConnection
+  chatThreadsByUserAndGroup(userId: String!, groupIdUpdatedAt: ModelChatThreadByUserAndGroupCompositeKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatThreadFilterInput, limit: Int, nextToken: String): ModelChatThreadConnection
   chatMessagesByUserAndGroup(userId: String!, groupIdCreatedAt: ModelChatMessageByUserAndGroupCompositeKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection
+  chatMessagesByThread(threadId: ID!, createdAt: ModelStringKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection
 }
 
 input ModelGroupConditionInput {
@@ -395,6 +412,9 @@ type Subscription {
   onCreateUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["createUserPreferences"])
   onUpdateUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["updateUserPreferences"])
   onDeleteUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["deleteUserPreferences"])
+  onCreateChatThread(filter: ModelSubscriptionChatThreadFilterInput, userId: String): ChatThread @aws_subscribe(mutations: ["createChatThread"])
+  onUpdateChatThread(filter: ModelSubscriptionChatThreadFilterInput, userId: String): ChatThread @aws_subscribe(mutations: ["updateChatThread"])
+  onDeleteChatThread(filter: ModelSubscriptionChatThreadFilterInput, userId: String): ChatThread @aws_subscribe(mutations: ["deleteChatThread"])
   onCreateChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["createChatMessage"])
   onUpdateChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["updateChatMessage"])
   onDeleteChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["deleteChatMessage"])
@@ -800,6 +820,67 @@ input ModelSubscriptionUserPreferencesFilterInput {
   owner: ModelStringInput
 }
 
+type ModelChatThreadConnection {
+  items: [ChatThread]!
+  nextToken: String
+}
+
+input ModelChatThreadFilterInput {
+  id: ModelIDInput
+  userId: ModelStringInput
+  groupId: ModelIDInput
+  title: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelChatThreadFilterInput]
+  or: [ModelChatThreadFilterInput]
+  not: ModelChatThreadFilterInput
+}
+
+input ModelChatThreadConditionInput {
+  userId: ModelStringInput
+  groupId: ModelIDInput
+  title: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelChatThreadConditionInput]
+  or: [ModelChatThreadConditionInput]
+  not: ModelChatThreadConditionInput
+}
+
+input CreateChatThreadInput {
+  id: ID
+  userId: String!
+  groupId: ID!
+  title: String!
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+input UpdateChatThreadInput {
+  id: ID!
+  userId: String
+  groupId: ID
+  title: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
+input DeleteChatThreadInput {
+  id: ID!
+}
+
+input ModelSubscriptionChatThreadFilterInput {
+  id: ModelSubscriptionIDInput
+  groupId: ModelSubscriptionIDInput
+  title: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionChatThreadFilterInput]
+  or: [ModelSubscriptionChatThreadFilterInput]
+  userId: ModelStringInput
+}
+
 type ModelChatMessageConnection {
   items: [ChatMessage]!
   nextToken: String
@@ -809,6 +890,7 @@ input ModelChatMessageFilterInput {
   id: ModelIDInput
   userId: ModelStringInput
   groupId: ModelIDInput
+  threadId: ModelIDInput
   role: ModelStringInput
   content: ModelStringInput
   createdAt: ModelStringInput
@@ -821,6 +903,7 @@ input ModelChatMessageFilterInput {
 input ModelChatMessageConditionInput {
   userId: ModelStringInput
   groupId: ModelIDInput
+  threadId: ModelIDInput
   role: ModelStringInput
   content: ModelStringInput
   createdAt: ModelStringInput
@@ -834,6 +917,7 @@ input CreateChatMessageInput {
   id: ID
   userId: String!
   groupId: ID!
+  threadId: ID!
   role: String!
   content: String!
   createdAt: AWSDateTime
@@ -843,6 +927,7 @@ input UpdateChatMessageInput {
   id: ID!
   userId: String
   groupId: ID
+  threadId: ID
   role: String
   content: String
   createdAt: AWSDateTime
@@ -855,6 +940,7 @@ input DeleteChatMessageInput {
 input ModelSubscriptionChatMessageFilterInput {
   id: ModelSubscriptionIDInput
   groupId: ModelSubscriptionIDInput
+  threadId: ModelSubscriptionIDInput
   role: ModelSubscriptionStringInput
   content: ModelSubscriptionStringInput
   createdAt: ModelSubscriptionStringInput
@@ -862,6 +948,21 @@ input ModelSubscriptionChatMessageFilterInput {
   and: [ModelSubscriptionChatMessageFilterInput]
   or: [ModelSubscriptionChatMessageFilterInput]
   userId: ModelStringInput
+}
+
+input ModelChatThreadByUserAndGroupCompositeKeyConditionInput {
+  eq: ModelChatThreadByUserAndGroupCompositeKeyInput
+  le: ModelChatThreadByUserAndGroupCompositeKeyInput
+  lt: ModelChatThreadByUserAndGroupCompositeKeyInput
+  ge: ModelChatThreadByUserAndGroupCompositeKeyInput
+  gt: ModelChatThreadByUserAndGroupCompositeKeyInput
+  between: [ModelChatThreadByUserAndGroupCompositeKeyInput]
+  beginsWith: ModelChatThreadByUserAndGroupCompositeKeyInput
+}
+
+input ModelChatThreadByUserAndGroupCompositeKeyInput {
+  groupId: ID
+  updatedAt: String
 }
 
 input ModelChatMessageByUserAndGroupCompositeKeyConditionInput {
@@ -877,4 +978,14 @@ input ModelChatMessageByUserAndGroupCompositeKeyConditionInput {
 input ModelChatMessageByUserAndGroupCompositeKeyInput {
   groupId: ID
   createdAt: String
+}
+
+input ModelStringKeyConditionInput {
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  between: [String]
+  beginsWith: String
 }
