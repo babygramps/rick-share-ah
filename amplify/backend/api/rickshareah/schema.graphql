@@ -107,8 +107,9 @@ type UserPreferences @model @auth(rules: [{ allow: owner }]) {
   theme: String
 }
 
-type ChatMessage @model
-  @auth(rules: [{ allow: owner, ownerField: "userId" }]) {
+type ChatMessage @model @auth(rules: [
+  { allow: owner, ownerField: "userId" }
+]) {
   id: ID!
   userId: String! @index(
     name: "byUserAndGroup",
@@ -118,7 +119,6 @@ type ChatMessage @model
   groupId: ID!
   role: String!         # "user" | "assistant"
   content: String!
-  createdAt: AWSDateTime!
 }
 
 type Mutation {
