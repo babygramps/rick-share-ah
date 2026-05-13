@@ -18,9 +18,11 @@ export function Chat() {
     isLoading,
     isLoadingThreads,
     isThinking,
+    activeJob,
     startNewChat,
     selectThread,
     sendMessage,
+    refreshActiveThread,
   } = useChat({
     userId: user?.id ?? null,
     groupId: group?.id ?? null,
@@ -29,7 +31,7 @@ export function Chat() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, [messages, isThinking]);
+  }, [messages, isThinking, activeJob]);
 
   return (
     <div className="flex flex-col min-h-[70vh] space-y-4">
@@ -54,6 +56,15 @@ export function Chat() {
             type="button"
             variant="ghost"
             size="sm"
+            onClick={() => void refreshActiveThread()}
+            disabled={!activeThread || isLoading}
+          >
+            Refresh
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => setIsHistoryOpen(true)}
             disabled={isThinking}
           >
@@ -62,6 +73,19 @@ export function Chat() {
         </div>
       </div>
       <AiDisclosureBanner />
+      {activeJob && (
+        <div className="card-brutal bg-[var(--color-sunshine)]/30 p-3 font-mono text-xs text-[var(--color-plum)]">
+          <div className="flex items-center justify-between gap-3">
+            <span className="uppercase tracking-wider">
+              AI job {activeJob.status === 'queued' ? 'queued' : 'running'}
+            </span>
+            <span>{activeJob.statusText || 'Waiting for worker'}</span>
+          </div>
+          <p className="mt-2 text-[var(--color-plum)]/70">
+            This thread refreshes every few seconds while Gemini works. You can also tap Refresh.
+          </p>
+        </div>
+      )}
       <div className="flex-1 space-y-3">
         {(isLoading || isLoadingThreads) && (
           <p className="font-mono text-sm text-[var(--color-plum)]/60">Loading thread…</p>

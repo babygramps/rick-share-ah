@@ -142,7 +142,37 @@ type ChatMessage @model @auth(rules: [
   createdAt: AWSDateTime!
 }
 
+type ChatJob @model @auth(rules: [
+  { allow: owner, ownerField: "userId" }
+]) {
+  id: ID!
+  userId: String! @index(
+    name: "byUserAndGroup"
+    queryField: "chatJobsByUserAndGroup"
+    sortKeyFields: ["groupId", "createdAt"]
+  )
+  groupId: ID!
+  threadId: ID! @index(
+    name: "byThread"
+    queryField: "chatJobsByThread"
+    sortKeyFields: ["createdAt"]
+  )
+  userMessageId: ID!
+  assistantMessageId: ID
+  status: String!      # "queued" | "running" | "complete" | "failed" | "timed_out"
+  statusText: String
+  error: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  startedAt: AWSDateTime
+  completedAt: AWSDateTime
+}
+
 type Mutation {
+  queueChatMessage(groupId: ID!, threadId: ID!, content: String!): ChatJob
+    @function(name: "aiChat-${env}")
+    @auth(rules: [{ allow: private }])
+
   sendChatMessage(groupId: ID!, threadId: ID!, content: String!): ChatMessage
     @function(name: "aiChat-${env}")
     @auth(rules: [{ allow: private }])

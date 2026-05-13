@@ -19,8 +19,19 @@
       "arn:aws:dynamodb:*:*:table/Settlement-*/index/*",
       "arn:aws:dynamodb:*:*:table/ChatMessage-*",
       "arn:aws:dynamodb:*:*:table/ChatMessage-*/index/*",
+      "arn:aws:dynamodb:*:*:table/ChatJob-*",
+      "arn:aws:dynamodb:*:*:table/ChatJob-*/index/*",
       "arn:aws:dynamodb:*:*:table/ChatThread-*",
       "arn:aws:dynamodb:*:*:table/ChatThread-*/index/*"
+    ]
+  },
+  {
+    "Effect": "Allow",
+    "Action": [
+      "lambda:InvokeFunction"
+    ],
+    "Resource": [
+      "arn:aws:lambda:*:*:function:aiChat-*"
     ]
   }
 ]

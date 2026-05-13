@@ -114,7 +114,24 @@ type ChatMessage {
   updatedAt: AWSDateTime!
 }
 
+type ChatJob {
+  id: ID!
+  userId: String!
+  groupId: ID!
+  threadId: ID!
+  userMessageId: ID!
+  assistantMessageId: ID
+  status: String!
+  statusText: String
+  error: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  startedAt: AWSDateTime
+  completedAt: AWSDateTime
+}
+
 type Mutation {
+  queueChatMessage(groupId: ID!, threadId: ID!, content: String!): ChatJob
   sendChatMessage(groupId: ID!, threadId: ID!, content: String!): ChatMessage
   createGroup(input: CreateGroupInput!, condition: ModelGroupConditionInput): Group
   updateGroup(input: UpdateGroupInput!, condition: ModelGroupConditionInput): Group
@@ -140,6 +157,9 @@ type Mutation {
   createChatMessage(input: CreateChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
   updateChatMessage(input: UpdateChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
   deleteChatMessage(input: DeleteChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
+  createChatJob(input: CreateChatJobInput!, condition: ModelChatJobConditionInput): ChatJob
+  updateChatJob(input: UpdateChatJobInput!, condition: ModelChatJobConditionInput): ChatJob
+  deleteChatJob(input: DeleteChatJobInput!, condition: ModelChatJobConditionInput): ChatJob
 }
 
 input ModelStringInput {
@@ -333,6 +353,8 @@ type Query {
   listChatThreads(filter: ModelChatThreadFilterInput, limit: Int, nextToken: String): ModelChatThreadConnection
   getChatMessage(id: ID!): ChatMessage
   listChatMessages(filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection
+  getChatJob(id: ID!): ChatJob
+  listChatJobs(filter: ModelChatJobFilterInput, limit: Int, nextToken: String): ModelChatJobConnection
   groupsByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection
   couplesByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection
   groupMembersByGroupId(groupId: ID!, sortDirection: ModelSortDirection, filter: ModelGroupMemberFilterInput, limit: Int, nextToken: String): ModelGroupMemberConnection
@@ -345,6 +367,8 @@ type Query {
   chatThreadsByUserAndGroup(userId: String!, groupIdUpdatedAt: ModelChatThreadByUserAndGroupCompositeKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatThreadFilterInput, limit: Int, nextToken: String): ModelChatThreadConnection
   chatMessagesByUserAndGroup(userId: String!, groupIdCreatedAt: ModelChatMessageByUserAndGroupCompositeKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection
   chatMessagesByThread(threadId: ID!, createdAt: ModelStringKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection
+  chatJobsByUserAndGroup(userId: String!, groupIdCreatedAt: ModelChatJobByUserAndGroupCompositeKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatJobFilterInput, limit: Int, nextToken: String): ModelChatJobConnection
+  chatJobsByThread(threadId: ID!, createdAt: ModelStringKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatJobFilterInput, limit: Int, nextToken: String): ModelChatJobConnection
 }
 
 input ModelGroupConditionInput {
@@ -418,6 +442,9 @@ type Subscription {
   onCreateChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["createChatMessage"])
   onUpdateChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["updateChatMessage"])
   onDeleteChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["deleteChatMessage"])
+  onCreateChatJob(filter: ModelSubscriptionChatJobFilterInput, userId: String): ChatJob @aws_subscribe(mutations: ["createChatJob"])
+  onUpdateChatJob(filter: ModelSubscriptionChatJobFilterInput, userId: String): ChatJob @aws_subscribe(mutations: ["updateChatJob"])
+  onDeleteChatJob(filter: ModelSubscriptionChatJobFilterInput, userId: String): ChatJob @aws_subscribe(mutations: ["deleteChatJob"])
 }
 
 type ModelCoupleConnection {
@@ -950,6 +977,102 @@ input ModelSubscriptionChatMessageFilterInput {
   userId: ModelStringInput
 }
 
+type ModelChatJobConnection {
+  items: [ChatJob]!
+  nextToken: String
+}
+
+input ModelChatJobFilterInput {
+  id: ModelIDInput
+  userId: ModelStringInput
+  groupId: ModelIDInput
+  threadId: ModelIDInput
+  userMessageId: ModelIDInput
+  assistantMessageId: ModelIDInput
+  status: ModelStringInput
+  statusText: ModelStringInput
+  error: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  startedAt: ModelStringInput
+  completedAt: ModelStringInput
+  and: [ModelChatJobFilterInput]
+  or: [ModelChatJobFilterInput]
+  not: ModelChatJobFilterInput
+}
+
+input ModelChatJobConditionInput {
+  userId: ModelStringInput
+  groupId: ModelIDInput
+  threadId: ModelIDInput
+  userMessageId: ModelIDInput
+  assistantMessageId: ModelIDInput
+  status: ModelStringInput
+  statusText: ModelStringInput
+  error: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  startedAt: ModelStringInput
+  completedAt: ModelStringInput
+  and: [ModelChatJobConditionInput]
+  or: [ModelChatJobConditionInput]
+  not: ModelChatJobConditionInput
+}
+
+input CreateChatJobInput {
+  id: ID
+  userId: String!
+  groupId: ID!
+  threadId: ID!
+  userMessageId: ID!
+  assistantMessageId: ID
+  status: String!
+  statusText: String
+  error: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  startedAt: AWSDateTime
+  completedAt: AWSDateTime
+}
+
+input UpdateChatJobInput {
+  id: ID!
+  userId: String
+  groupId: ID
+  threadId: ID
+  userMessageId: ID
+  assistantMessageId: ID
+  status: String
+  statusText: String
+  error: String
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+  startedAt: AWSDateTime
+  completedAt: AWSDateTime
+}
+
+input DeleteChatJobInput {
+  id: ID!
+}
+
+input ModelSubscriptionChatJobFilterInput {
+  id: ModelSubscriptionIDInput
+  groupId: ModelSubscriptionIDInput
+  threadId: ModelSubscriptionIDInput
+  userMessageId: ModelSubscriptionIDInput
+  assistantMessageId: ModelSubscriptionIDInput
+  status: ModelSubscriptionStringInput
+  statusText: ModelSubscriptionStringInput
+  error: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  startedAt: ModelSubscriptionStringInput
+  completedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionChatJobFilterInput]
+  or: [ModelSubscriptionChatJobFilterInput]
+  userId: ModelStringInput
+}
+
 input ModelChatThreadByUserAndGroupCompositeKeyConditionInput {
   eq: ModelChatThreadByUserAndGroupCompositeKeyInput
   le: ModelChatThreadByUserAndGroupCompositeKeyInput
@@ -988,4 +1111,19 @@ input ModelStringKeyConditionInput {
   gt: String
   between: [String]
   beginsWith: String
+}
+
+input ModelChatJobByUserAndGroupCompositeKeyConditionInput {
+  eq: ModelChatJobByUserAndGroupCompositeKeyInput
+  le: ModelChatJobByUserAndGroupCompositeKeyInput
+  lt: ModelChatJobByUserAndGroupCompositeKeyInput
+  ge: ModelChatJobByUserAndGroupCompositeKeyInput
+  gt: ModelChatJobByUserAndGroupCompositeKeyInput
+  between: [ModelChatJobByUserAndGroupCompositeKeyInput]
+  beginsWith: ModelChatJobByUserAndGroupCompositeKeyInput
+}
+
+input ModelChatJobByUserAndGroupCompositeKeyInput {
+  groupId: ID
+  createdAt: String
 }

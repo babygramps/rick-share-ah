@@ -1,12 +1,37 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const sendChatMessage = /* GraphQL */ `
-  mutation SendChatMessage($groupId: ID!, $content: String!) {
-    sendChatMessage(groupId: $groupId, content: $content) {
+export const queueChatMessage = /* GraphQL */ `
+  mutation QueueChatMessage($groupId: ID!, $threadId: ID!, $content: String!) {
+    queueChatMessage(
+      groupId: $groupId
+      threadId: $threadId
+      content: $content
+    ) {
       id
       userId
       groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
+      __typename
+    }
+  }
+`;
+export const sendChatMessage = /* GraphQL */ `
+  mutation SendChatMessage($groupId: ID!, $threadId: ID!, $content: String!) {
+    sendChatMessage(groupId: $groupId, threadId: $threadId, content: $content) {
+      id
+      userId
+      groupId
+      threadId
       role
       content
       createdAt
@@ -639,6 +664,54 @@ export const deleteUserPreferences = /* GraphQL */ `
     }
   }
 `;
+export const createChatThread = /* GraphQL */ `
+  mutation CreateChatThread(
+    $input: CreateChatThreadInput!
+    $condition: ModelChatThreadConditionInput
+  ) {
+    createChatThread(input: $input, condition: $condition) {
+      id
+      userId
+      groupId
+      title
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateChatThread = /* GraphQL */ `
+  mutation UpdateChatThread(
+    $input: UpdateChatThreadInput!
+    $condition: ModelChatThreadConditionInput
+  ) {
+    updateChatThread(input: $input, condition: $condition) {
+      id
+      userId
+      groupId
+      title
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteChatThread = /* GraphQL */ `
+  mutation DeleteChatThread(
+    $input: DeleteChatThreadInput!
+    $condition: ModelChatThreadConditionInput
+  ) {
+    deleteChatThread(input: $input, condition: $condition) {
+      id
+      userId
+      groupId
+      title
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createChatMessage = /* GraphQL */ `
   mutation CreateChatMessage(
     $input: CreateChatMessageInput!
@@ -648,6 +721,7 @@ export const createChatMessage = /* GraphQL */ `
       id
       userId
       groupId
+      threadId
       role
       content
       createdAt
@@ -665,6 +739,7 @@ export const updateChatMessage = /* GraphQL */ `
       id
       userId
       groupId
+      threadId
       role
       content
       createdAt
@@ -682,10 +757,80 @@ export const deleteChatMessage = /* GraphQL */ `
       id
       userId
       groupId
+      threadId
       role
       content
       createdAt
       updatedAt
+      __typename
+    }
+  }
+`;
+export const createChatJob = /* GraphQL */ `
+  mutation CreateChatJob(
+    $input: CreateChatJobInput!
+    $condition: ModelChatJobConditionInput
+  ) {
+    createChatJob(input: $input, condition: $condition) {
+      id
+      userId
+      groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
+      __typename
+    }
+  }
+`;
+export const updateChatJob = /* GraphQL */ `
+  mutation UpdateChatJob(
+    $input: UpdateChatJobInput!
+    $condition: ModelChatJobConditionInput
+  ) {
+    updateChatJob(input: $input, condition: $condition) {
+      id
+      userId
+      groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
+      __typename
+    }
+  }
+`;
+export const deleteChatJob = /* GraphQL */ `
+  mutation DeleteChatJob(
+    $input: DeleteChatJobInput!
+    $condition: ModelChatJobConditionInput
+  ) {
+    deleteChatJob(input: $input, condition: $condition) {
+      id
+      userId
+      groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
       __typename
     }
   }

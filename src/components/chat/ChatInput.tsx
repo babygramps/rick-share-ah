@@ -21,7 +21,7 @@ export function ChatInput({ onSend, disabled, isThinking }: ChatInputProps) {
     <div className="sticky bottom-0 bg-[var(--color-cream)] pt-3 pb-3 border-t-2 border-[var(--color-plum)]">
       {isThinking && (
         <p className="font-mono text-xs text-[var(--color-plum)]/60 mb-2 animate-pulse">
-          🤖 Thinking…
+          🤖 AI job queued/running…
         </p>
       )}
       <form onSubmit={submit} className="flex gap-2">

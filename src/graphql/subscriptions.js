@@ -625,6 +625,54 @@ export const onDeleteUserPreferences = /* GraphQL */ `
     }
   }
 `;
+export const onCreateChatThread = /* GraphQL */ `
+  subscription OnCreateChatThread(
+    $filter: ModelSubscriptionChatThreadFilterInput
+    $userId: String
+  ) {
+    onCreateChatThread(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      title
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateChatThread = /* GraphQL */ `
+  subscription OnUpdateChatThread(
+    $filter: ModelSubscriptionChatThreadFilterInput
+    $userId: String
+  ) {
+    onUpdateChatThread(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      title
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteChatThread = /* GraphQL */ `
+  subscription OnDeleteChatThread(
+    $filter: ModelSubscriptionChatThreadFilterInput
+    $userId: String
+  ) {
+    onDeleteChatThread(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      title
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateChatMessage = /* GraphQL */ `
   subscription OnCreateChatMessage(
     $filter: ModelSubscriptionChatMessageFilterInput
@@ -634,6 +682,7 @@ export const onCreateChatMessage = /* GraphQL */ `
       id
       userId
       groupId
+      threadId
       role
       content
       createdAt
@@ -651,6 +700,7 @@ export const onUpdateChatMessage = /* GraphQL */ `
       id
       userId
       groupId
+      threadId
       role
       content
       createdAt
@@ -668,10 +718,80 @@ export const onDeleteChatMessage = /* GraphQL */ `
       id
       userId
       groupId
+      threadId
       role
       content
       createdAt
       updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateChatJob = /* GraphQL */ `
+  subscription OnCreateChatJob(
+    $filter: ModelSubscriptionChatJobFilterInput
+    $userId: String
+  ) {
+    onCreateChatJob(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateChatJob = /* GraphQL */ `
+  subscription OnUpdateChatJob(
+    $filter: ModelSubscriptionChatJobFilterInput
+    $userId: String
+  ) {
+    onUpdateChatJob(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteChatJob = /* GraphQL */ `
+  subscription OnDeleteChatJob(
+    $filter: ModelSubscriptionChatJobFilterInput
+    $userId: String
+  ) {
+    onDeleteChatJob(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
       __typename
     }
   }

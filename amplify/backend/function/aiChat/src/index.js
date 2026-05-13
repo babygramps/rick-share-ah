@@ -1,14 +1,16 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, QueryCommand, GetCommand, PutCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { SSMClient, GetParametersCommand } from '@aws-sdk/client-ssm';
 
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({}));
+const lambda = new LambdaClient({});
 const ssm = new SSMClient({});
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-pro-preview';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-const GEMINI_TIMEOUT_MS = 24_000;
-const GEMINI_MAX_ATTEMPTS = 2;
+const GEMINI_TIMEOUT_MS = Number(process.env.GEMINI_TIMEOUT_MS || 24_000);
+const GEMINI_MAX_ATTEMPTS = Number(process.env.GEMINI_MAX_ATTEMPTS || 2);
 
 let cachedGeminiKey = null;
 async function getGeminiKey() {
@@ -168,6 +170,22 @@ async function loadThread(threadId) {
   return resp.Item || null;
 }
 
+async function loadMessage(messageId) {
+  const resp = await dynamo.send(new GetCommand({
+    TableName: tableName('ChatMessage'),
+    Key: { id: messageId },
+  }));
+  return resp.Item || null;
+}
+
+async function loadChatJob(jobId) {
+  const resp = await dynamo.send(new GetCommand({
+    TableName: tableName('ChatJob'),
+    Key: { id: jobId },
+  }));
+  return resp.Item || null;
+}
+
 async function loadAllByGroup(modelName, groupId) {
   const out = [];
   let lastKey;
@@ -220,6 +238,81 @@ async function persistMessage({ userId, groupId, threadId, role, content }) {
   return item;
 }
 
+async function persistChatJob({ userId, groupId, threadId, userMessageId }) {
+  const now = new Date().toISOString();
+  const item = {
+    id: `cj_${now}_${Math.random().toString(16).slice(2, 10)}`,
+    userId,
+    groupId,
+    threadId,
+    userMessageId,
+    status: 'queued',
+    statusText: 'Queued for AI processing',
+    createdAt: now,
+    updatedAt: now,
+    __typename: 'ChatJob',
+    owner: userId,
+  };
+  await dynamo.send(new PutCommand({
+    TableName: tableName('ChatJob'),
+    Item: item,
+  }));
+  return item;
+}
+
+async function updateChatJob(jobId, patch) {
+  const now = new Date().toISOString();
+  const nextPatch = { ...patch, updatedAt: patch.updatedAt || now };
+  const names = {};
+  const values = {};
+  const sets = [];
+  for (const [key, value] of Object.entries(nextPatch)) {
+    names[`#${key}`] = key;
+    values[`:${key}`] = value;
+    sets.push(`#${key} = :${key}`);
+  }
+  const resp = await dynamo.send(new UpdateCommand({
+    TableName: tableName('ChatJob'),
+    Key: { id: jobId },
+    UpdateExpression: `SET ${sets.join(', ')}`,
+    ExpressionAttributeNames: names,
+    ExpressionAttributeValues: values,
+    ReturnValues: 'ALL_NEW',
+  }));
+  return resp.Attributes;
+}
+
+export async function invokeChatWorker({
+  jobId,
+  requestId,
+  invokedFunctionArn,
+  send = (command) => lambda.send(command),
+}) {
+  const functionName = invokedFunctionArn || process.env.AWS_LAMBDA_FUNCTION_NAME;
+  if (!functionName) throw new Error('Cannot invoke chat worker without a Lambda function name');
+
+  const payload = {
+    mode: 'processJob',
+    jobId,
+    queuedByRequestId: requestId,
+  };
+
+  const result = await send(new InvokeCommand({
+    FunctionName: functionName,
+    InvocationType: 'Event',
+    Payload: Buffer.from(JSON.stringify(payload)),
+  }));
+
+  log('info', 'aiChat.worker.invoked', {
+    requestId,
+    jobId,
+    functionName,
+    statusCode: result?.StatusCode,
+  });
+
+  return result;
+}
+
 async function touchThread({ thread, content }) {
   const now = new Date().toISOString();
   const shouldRetitle = !thread.title || thread.title === 'New chat';
@@ -239,7 +332,7 @@ async function touchThread({ thread, content }) {
   return { ...thread, title: nextTitle, updatedAt: now };
 }
 
-function buildSystemPrompt({ user, group, members, expenses, settlements, question }) {
+export function buildSystemPrompt({ user, group, members, expenses, settlements, question }) {
   const today = new Date().toISOString().slice(0, 10);
   const userName = members.find((m) => m.userId === user.userId)?.name || 'the user';
   const aggregates = buildExpenseAggregates(expenses);
@@ -269,7 +362,7 @@ function buildSystemPrompt({ user, group, members, expenses, settlements, questi
   ].join('\n');
 }
 
-function buildGeminiContents(history, newUserContent) {
+export function buildGeminiContents(history, newUserContent) {
   // Gemini uses roles "user" and "model"; map "assistant" -> "model".
   const contents = history.map((m) => ({
     role: m.role === 'assistant' ? 'model' : 'user',
@@ -279,7 +372,7 @@ function buildGeminiContents(history, newUserContent) {
   return contents;
 }
 
-async function callGemini({ systemInstruction, contents }) {
+export async function callGemini({ systemInstruction, contents }) {
   const apiKey = await getGeminiKey();
 
   const controller = new AbortController();
@@ -327,7 +420,210 @@ async function callGemini({ systemInstruction, contents }) {
   }
 }
 
-export const handler = async (event, context) => {
+function isTimeoutError(err) {
+  const name = String(err?.name || '');
+  const message = String(err?.message || '').toLowerCase();
+  return name === 'AbortError' || message.includes('abort') || message.includes('timeout') || message.includes('timed out');
+}
+
+function errorSummary(err) {
+  return String(err?.message || err || 'Unknown error').slice(0, 500);
+}
+
+async function loadJobContext(job) {
+  const [group, members, expenses, settlements, history, userMessage] = await Promise.all([
+    loadGroup(job.groupId),
+    loadGroupMembers(job.groupId),
+    loadAllByGroup('Expense', job.groupId),
+    loadAllByGroup('Settlement', job.groupId),
+    loadRecentThreadMessages(job.userId, job.threadId, 24),
+    loadMessage(job.userMessageId),
+  ]);
+
+  return {
+    group,
+    members,
+    expenses,
+    settlements,
+    history: history.filter((message) => message.id !== job.userMessageId),
+    userMessage,
+  };
+}
+
+export async function runChatJob({
+  job,
+  requestId,
+  loadContext = loadJobContext,
+  updateJob = updateChatJob,
+  persistAssistantMessage = persistMessage,
+  generate = callGemini,
+}) {
+  const startedAt = new Date().toISOString();
+  await updateJob(job.id, {
+    status: 'running',
+    statusText: 'AI is thinking',
+    startedAt,
+  });
+
+  try {
+    const {
+      group,
+      members,
+      expenses,
+      settlements,
+      history,
+      userMessage,
+    } = await loadContext(job);
+    const content = userMessage?.content;
+    if (!content) throw new Error(`Chat job ${job.id} is missing user message ${job.userMessageId}`);
+
+    const systemInstruction = buildSystemPrompt({
+      user: { userId: job.userId },
+      group,
+      members,
+      expenses,
+      settlements,
+      question: content,
+    });
+    const contents = buildGeminiContents(history, content);
+
+    log('info', 'aiChat.job.promptBuilt', {
+      requestId,
+      jobId: job.id,
+      threadId: job.threadId,
+      model: GEMINI_MODEL,
+      promptChars: systemInstruction.length,
+      expenses: expenses.length,
+      settlements: settlements.length,
+      historyMessages: history.length,
+    });
+
+    const result = await generate({ systemInstruction, contents });
+    const assistantText = result.text?.trim() || "⚠️ I didn't get a usable response from the AI. Please try again.";
+    const assistantMessage = await persistAssistantMessage({
+      userId: job.userId,
+      groupId: job.groupId,
+      threadId: job.threadId,
+      role: 'assistant',
+      content: assistantText,
+    });
+    const completedAt = new Date().toISOString();
+    const updatedJob = await updateJob(job.id, {
+      status: 'complete',
+      statusText: 'Complete',
+      assistantMessageId: assistantMessage.id,
+      completedAt,
+      error: null,
+    });
+
+    log('info', 'aiChat.job.done', {
+      requestId,
+      jobId: job.id,
+      userId: job.userId,
+      groupId: job.groupId,
+      threadId: job.threadId,
+      inputTokens: result.inputTokens ?? null,
+      outputTokens: result.outputTokens ?? null,
+      latencyMs: result.latencyMs ?? null,
+      model: GEMINI_MODEL,
+    });
+
+    return { status: 'complete', job: updatedJob, assistantMessage };
+  } catch (err) {
+    const status = isTimeoutError(err) ? 'timed_out' : 'failed';
+    const message = errorSummary(err);
+    const completedAt = new Date().toISOString();
+    const updatedJob = await updateJob(job.id, {
+      status,
+      statusText: status === 'timed_out' ? 'AI request timed out' : 'AI request failed',
+      error: message,
+      completedAt,
+    });
+
+    log('error', 'aiChat.job.failed', {
+      requestId,
+      jobId: job.id,
+      status,
+      errorName: err?.name,
+      errorMessage: message,
+    });
+
+    return { status, job: updatedJob, error: message };
+  }
+}
+
+async function processChatJob({ jobId, requestId }) {
+  if (!jobId) throw new Error('Missing jobId');
+  const job = await loadChatJob(jobId);
+  if (!job) throw new Error(`Chat job ${jobId} not found`);
+  if (['complete', 'failed', 'timed_out'].includes(job.status)) {
+    log('info', 'aiChat.job.skipTerminal', { requestId, jobId, status: job.status });
+    return { status: job.status, job };
+  }
+  return runChatJob({ job, requestId });
+}
+
+async function handleQueueChatMessage(event, context) {
+  const requestId = context?.awsRequestId;
+  const userId = event?.identity?.sub;
+  const groupId = event?.arguments?.groupId;
+  const threadId = event?.arguments?.threadId;
+  const content = event?.arguments?.content;
+
+  log('info', 'aiChat.queue.start', { requestId, userId, groupId, threadId, contentLen: content?.length });
+
+  if (!userId || !groupId || !threadId || !content) {
+    log('warn', 'aiChat.queue.missingArgs', {
+      requestId,
+      hasUserId: !!userId,
+      hasGroupId: !!groupId,
+      hasThreadId: !!threadId,
+      hasContent: !!content,
+    });
+    throw new Error('Unauthorized or missing arguments');
+  }
+
+  const allowed = await isUserInGroup(userId, groupId);
+  if (!allowed) {
+    log('warn', 'aiChat.queue.unauthorized', { requestId, userId, groupId });
+    throw new Error('Unauthorized');
+  }
+
+  const thread = await loadThread(threadId);
+  if (!thread || thread.userId !== userId || thread.groupId !== groupId) {
+    log('warn', 'aiChat.queue.invalidThread', {
+      requestId,
+      userId,
+      groupId,
+      threadId,
+      foundUserId: thread?.userId,
+      foundGroupId: thread?.groupId,
+    });
+    throw new Error('Unauthorized');
+  }
+
+  const userMessage = await persistMessage({ userId, groupId, threadId, role: 'user', content });
+  await touchThread({ thread, content });
+  const job = await persistChatJob({ userId, groupId, threadId, userMessageId: userMessage.id });
+  await invokeChatWorker({
+    jobId: job.id,
+    requestId,
+    invokedFunctionArn: context?.invokedFunctionArn,
+  });
+
+  log('info', 'aiChat.queue.done', {
+    requestId,
+    userId,
+    groupId,
+    threadId,
+    jobId: job.id,
+    userMessageId: userMessage.id,
+  });
+
+  return job;
+}
+
+async function handleSendChatMessage(event, context) {
   const requestId = context?.awsRequestId;
   const userId = event?.identity?.sub;
   const groupId = event?.arguments?.groupId;
@@ -460,4 +756,23 @@ export const handler = async (event, context) => {
     });
     throw err;
   }
+}
+
+export const handler = async (event, context) => {
+  const requestId = context?.awsRequestId;
+  const fieldName = event?.info?.fieldName;
+  const mode = event?.mode || event?.arguments?.mode;
+
+  if (mode === 'processJob' || event?.jobId || event?.arguments?.jobId) {
+    return processChatJob({
+      jobId: event?.jobId || event?.arguments?.jobId,
+      requestId,
+    });
+  }
+
+  if (fieldName === 'queueChatMessage') {
+    return handleQueueChatMessage(event, context);
+  }
+
+  return handleSendChatMessage(event, context);
 };

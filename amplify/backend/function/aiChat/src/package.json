@@ -6,7 +6,8 @@
   "type": "module",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.978.0",
-    "@aws-sdk/lib-dynamodb": "^3.978.0",
-    "@aws-sdk/client-ssm": "^3.978.0"
+    "@aws-sdk/client-lambda": "^3.1045.0",
+    "@aws-sdk/client-ssm": "^3.978.0",
+    "@aws-sdk/lib-dynamodb": "^3.978.0"
   }
 }

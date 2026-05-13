@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:chat-worker": "node --test amplify/backend/function/aiChat/src/index.test.js"
   },
   "dependencies": {
     "@aws-amplify/storage": "^6.9.3",

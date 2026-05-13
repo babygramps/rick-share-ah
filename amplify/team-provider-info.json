@@ -35,7 +35,7 @@
         "aiChat": {
           "secretsPathAmplifyAppId": "d5hdolte4cjfx",
           "deploymentBucketName": "amplify-rickshareah-dev-326e7-deployment",
-          "s3Key": "amplify-builds/aiChat-67747469584b7a623543-build.zip"
+          "s3Key": "amplify-builds/aiChat-52304264335858696362-build.zip"
         }
       }
     }

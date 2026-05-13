@@ -344,12 +344,47 @@ export const listUserPreferences = /* GraphQL */ `
     }
   }
 `;
+export const getChatThread = /* GraphQL */ `
+  query GetChatThread($id: ID!) {
+    getChatThread(id: $id) {
+      id
+      userId
+      groupId
+      title
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listChatThreads = /* GraphQL */ `
+  query ListChatThreads(
+    $filter: ModelChatThreadFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatThreads(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        groupId
+        title
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getChatMessage = /* GraphQL */ `
   query GetChatMessage($id: ID!) {
     getChatMessage(id: $id) {
       id
       userId
       groupId
+      threadId
       role
       content
       createdAt
@@ -369,10 +404,59 @@ export const listChatMessages = /* GraphQL */ `
         id
         userId
         groupId
+        threadId
         role
         content
         createdAt
         updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getChatJob = /* GraphQL */ `
+  query GetChatJob($id: ID!) {
+    getChatJob(id: $id) {
+      id
+      userId
+      groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
+      __typename
+    }
+  }
+`;
+export const listChatJobs = /* GraphQL */ `
+  query ListChatJobs(
+    $filter: ModelChatJobFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatJobs(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        groupId
+        threadId
+        userMessageId
+        assistantMessageId
+        status
+        statusText
+        error
+        createdAt
+        updatedAt
+        startedAt
+        completedAt
         __typename
       }
       nextToken
@@ -686,6 +770,37 @@ export const userPreferencesByUserId = /* GraphQL */ `
     }
   }
 `;
+export const chatThreadsByUserAndGroup = /* GraphQL */ `
+  query ChatThreadsByUserAndGroup(
+    $userId: String!
+    $groupIdUpdatedAt: ModelChatThreadByUserAndGroupCompositeKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelChatThreadFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    chatThreadsByUserAndGroup(
+      userId: $userId
+      groupIdUpdatedAt: $groupIdUpdatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        groupId
+        title
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const chatMessagesByUserAndGroup = /* GraphQL */ `
   query ChatMessagesByUserAndGroup(
     $userId: String!
@@ -707,10 +822,120 @@ export const chatMessagesByUserAndGroup = /* GraphQL */ `
         id
         userId
         groupId
+        threadId
         role
         content
         createdAt
         updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const chatMessagesByThread = /* GraphQL */ `
+  query ChatMessagesByThread(
+    $threadId: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelChatMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    chatMessagesByThread(
+      threadId: $threadId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        groupId
+        threadId
+        role
+        content
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const chatJobsByUserAndGroup = /* GraphQL */ `
+  query ChatJobsByUserAndGroup(
+    $userId: String!
+    $groupIdCreatedAt: ModelChatJobByUserAndGroupCompositeKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelChatJobFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    chatJobsByUserAndGroup(
+      userId: $userId
+      groupIdCreatedAt: $groupIdCreatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        groupId
+        threadId
+        userMessageId
+        assistantMessageId
+        status
+        statusText
+        error
+        createdAt
+        updatedAt
+        startedAt
+        completedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const chatJobsByThread = /* GraphQL */ `
+  query ChatJobsByThread(
+    $threadId: ID!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelChatJobFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    chatJobsByThread(
+      threadId: $threadId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        groupId
+        threadId
+        userMessageId
+        assistantMessageId
+        status
+        statusText
+        error
+        createdAt
+        updatedAt
+        startedAt
+        completedAt
         __typename
       }
       nextToken

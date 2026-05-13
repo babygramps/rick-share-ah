@@ -32,6 +32,40 @@ export const listChatMessages = /* GraphQL */ `
   }
 `;
 
+export const listChatJobs = /* GraphQL */ `
+  query ChatJobsByThread(
+    $threadId: ID!
+    $limit: Int
+    $nextToken: String
+  ) {
+    chatJobsByThread(
+      threadId: $threadId
+      sortDirection: DESC
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        groupId
+        threadId
+        userMessageId
+        assistantMessageId
+        status
+        statusText
+        error
+        createdAt
+        updatedAt
+        startedAt
+        completedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+
 export const listChatThreads = /* GraphQL */ `
   query ListChatThreads(
     $filter: ModelChatThreadFilterInput
@@ -63,6 +97,27 @@ export const createChatThread = /* GraphQL */ `
       title
       createdAt
       updatedAt
+      __typename
+    }
+  }
+`;
+
+export const queueChatMessage = /* GraphQL */ `
+  mutation QueueChatMessage($groupId: ID!, $threadId: ID!, $content: String!) {
+    queueChatMessage(groupId: $groupId, threadId: $threadId, content: $content) {
+      id
+      userId
+      groupId
+      threadId
+      userMessageId
+      assistantMessageId
+      status
+      statusText
+      error
+      createdAt
+      updatedAt
+      startedAt
+      completedAt
       __typename
     }
   }

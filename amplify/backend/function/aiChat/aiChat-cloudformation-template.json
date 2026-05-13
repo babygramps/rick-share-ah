@@ -109,7 +109,9 @@
                 ]
               ]
             },
-            "GEMINI_MODEL": "gemini-3.1-pro-preview"
+            "GEMINI_MODEL": "gemini-3.1-pro-preview",
+            "GEMINI_TIMEOUT_MS": "24000",
+            "GEMINI_MAX_ATTEMPTS": "2"
           }
         },
         "Role": {
@@ -356,9 +358,49 @@
                 "arn:aws:dynamodb:*:*:table/Settlement-*/index/*",
                 "arn:aws:dynamodb:*:*:table/ChatMessage-*",
                 "arn:aws:dynamodb:*:*:table/ChatMessage-*/index/*",
+                "arn:aws:dynamodb:*:*:table/ChatJob-*",
+                "arn:aws:dynamodb:*:*:table/ChatJob-*/index/*",
                 "arn:aws:dynamodb:*:*:table/ChatThread-*",
                 "arn:aws:dynamodb:*:*:table/ChatThread-*/index/*"
               ]
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "lambda:InvokeFunction"
+              ],
+              "Resource": [
+                "arn:aws:lambda:*:*:function:aiChat-*"
+              ]
+            }
+          ]
+        },
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ]
+      },
+      "DependsOn": "LambdaExecutionRole"
+    },
+    "CustomLambdaInvokeSelfPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "custom-lambda-invoke-self-policy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "lambda:InvokeFunction"
+              ],
+              "Resource": {
+                "Fn::GetAtt": [
+                  "LambdaFunction",
+                  "Arn"
+                ]
+              }
             }
           ]
         },
