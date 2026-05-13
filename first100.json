@@ -1,0 +1,5113 @@
+{
+    "Items": [
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:53.875Z"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2026-04-01"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "FareHarbor"
+            },
+            "id": {
+                "S": "e804aa50-c0df-4d87-99e1-9d341665f3e9"
+            },
+            "amount": {
+                "N": "17506"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:33.515Z"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "8753"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "8753"
+                    }
+                }
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "a73350b8-f761-4d42-aca5-17a0111df46c"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-01-12T03:09:18.104Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2026-01-12"
+            },
+            "description": {
+                "S": "headboard pillow"
+            },
+            "amount": {
+                "N": "10000"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":5000,\"f9b909be-f051-700d-28bf-677853a31c5f\":5000}"
+            },
+            "updatedAt": {
+                "S": "2026-01-12T03:09:18.104Z"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            }
+        },
+        {
+            "createdAt": {
+                "S": "2025-12-12T20:52:13.518Z"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "1cfff53f-2170-4ca7-bdff-05ce27f2add8"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Ace"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "amount": {
+                "N": "5793"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "date": {
+                "S": "2025-11-30"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2897,\"f9b909be-f051-700d-28bf-677853a31c5f\":2896}"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:13.518Z"
+            }
+        },
+        {
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2026-02-23"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-02-23T03:30:44.144Z"
+            },
+            "description": {
+                "S": "grocery outlet"
+            },
+            "updatedAt": {
+                "S": "2026-02-23T03:30:44.144Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "id": {
+                "S": "a1cab070-35f6-43ad-8d30-6e1d6d096d2e"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "4750"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "4750"
+                    }
+                }
+            },
+            "amount": {
+                "N": "9500"
+            }
+        },
+        {
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-03-03T05:04:02.394Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "amount": {
+                "N": "6700"
+            },
+            "description": {
+                "S": "banya"
+            },
+            "date": {
+                "S": "2026-03-03"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "updatedAt": {
+                "S": "2026-03-03T05:04:02.394Z"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "3350"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "3350"
+                    }
+                }
+            },
+            "id": {
+                "S": "31828766-c142-41bf-b0f5-67cd6720c3a2"
+            },
+            "category": {
+                "S": "health"
+            }
+        },
+        {
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "updatedAt": {
+                "S": "2026-03-13T00:05:59.357Z"
+            },
+            "createdAt": {
+                "S": "2026-03-13T00:05:59.357Z"
+            },
+            "description": {
+                "S": "sheer curtains"
+            },
+            "date": {
+                "S": "2026-03-13"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "home"
+            },
+            "amount": {
+                "N": "13300"
+            },
+            "id": {
+                "S": "2fb629fe-4533-49ba-bd3e-0accf7872340"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "6650"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "6650"
+                    }
+                }
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "note": {
+                "S": "Jan, Feb, March 2026"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "9424"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "9425"
+                    }
+                }
+            },
+            "id": {
+                "S": "d7ad4133-a5bd-4612-b6d3-1c478eb13444"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2026-02-05T06:02:50.326Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "createdAt": {
+                "S": "2026-01-10T00:34:33.495Z"
+            },
+            "amount": {
+                "N": "18849"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "date": {
+                "S": "2026-01-10"
+            },
+            "description": {
+                "S": "Waste management"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "note": {
+                "S": "1 x Amazon Basics 2-Ply Soft Toilet Paper, 30 Rolls (5 Packs of 6), Equivalent to 185 Regular Rolls, Packaging May Vary - $20.17\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-3314442-4907404"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "66d21c21-bd33-4c53-9c09-515c86cde8bc"
+            },
+            "date": {
+                "S": "2025-11-26"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:17.922Z"
+            },
+            "description": {
+                "S": "1 x Amazon Basics 2-Ply Soft Toilet Paper, 30 Rolls (5 Packs of 6), Equivalent to 185 Regular Rolls, Packaging May Vary - $20.17\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-3314442-4907404"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:17.922Z"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1106,\"f9b909be-f051-700d-28bf-677853a31c5f\":1106}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "amount": {
+                "N": "2212"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "note": {
+                "S": "1 x iDesign Gia Stainless Steel Dish Sponge Holder Basket with Suction Cups, Ideal for Kitchen Sinks and Bathroom Organization, 2.25\"D x 2.5\"W x 5.75\"H, Set of 1, Polished - $7.59\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-3217363-8170660"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:17.558Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "1 x iDesign Gia Stainless Steel Dish Sponge Holder Basket with Suction Cups, Ideal for Kitchen Sinks and Bathroom Organization, 2.25\"D x 2.5\"W x 5.75\"H, Set of 1, Polished - $7.59\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-3217363-8170660"
+            },
+            "id": {
+                "S": "f9f596ae-6eb3-47f5-a942-5b832851ff80"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":421,\"f9b909be-f051-700d-28bf-677853a31c5f\":420}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "date": {
+                "S": "2025-11-29"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:17.558Z"
+            },
+            "amount": {
+                "N": "841"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "category": {
+                "S": "other"
+            }
+        },
+        {
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2146,\"f9b909be-f051-700d-28bf-677853a31c5f\":2146}"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:18.187Z"
+            },
+            "note": {
+                "S": "1 x ropelux Solar Indoor Outdoor Shed Light with 3000LM 3 Color Temperatures 5 Modes (2 Daytime Available) Waterproof, Dual Motion Sensors Solar Powered Hanging Barn Light with Remote for Shed, 1 Pack - $29.99\r\n\r\n1 x ZOOKOTO ABS UV Resistance Dual Cable Entry Housing Photovoltaic Connector Waterproof Box for Solar Project on Rv, Boat,Camper,Van, Weatherproof (Black Entry Gland) - $8.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-2894782-4641051"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2025-11-24"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "1 x ropelux Solar Indoor Outdoor Shed Light with 3000LM 3 Color Temperatures 5 Modes (2 Daytime Available) Waterproof, Dual Motion Sensors Solar Powered Hanging Barn Light with Remote for Shed, 1 Pack - $29.99\r\n\r\n1 x ZOOKOTO ABS UV Resistance Dual Cable Entry Housing Photovoltaic Connector Waterproof Box for Solar Project on Rv, Boat,Camper,Van, Weatherproof (Black Entry Gland) - $8.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-2894782-4641051"
+            },
+            "id": {
+                "S": "49ea7db3-3200-434c-8194-ca28a7216572"
+            },
+            "amount": {
+                "N": "4292"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:18.187Z"
+            },
+            "category": {
+                "S": "other"
+            }
+        },
+        {
+            "description": {
+                "S": "Internet"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "2684e192-a78d-41a8-ac67-61e05612ac7e"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "2331"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "2331"
+                    }
+                }
+            },
+            "date": {
+                "S": "2026-02-20"
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "createdAt": {
+                "S": "2026-02-20T19:56:54.350Z"
+            },
+            "updatedAt": {
+                "S": "2026-02-20T19:56:54.350Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "amount": {
+                "N": "4662"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "updatedAt": {
+                "S": "2026-04-09T23:45:35.016Z"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "amount": {
+                "N": "19437"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "9718"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "9719"
+                    }
+                }
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "date": {
+                "S": "2026-04-09"
+            },
+            "description": {
+                "S": "pge"
+            },
+            "id": {
+                "S": "4744b5ed-8928-4a44-986e-73ffffb1307d"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-04-09T23:45:35.016Z"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "d15dbe6b-6018-4730-aa9f-b41d5179cf32"
+            },
+            "date": {
+                "S": "2026-03-30"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1112"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1112"
+                    }
+                }
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Wailua Drive in"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:55.083Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:33.810Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "2224"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "note": {
+                "S": "Screen door, pillow inserts"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "ead1800e-014a-46ef-a0a2-b4208f24ce50"
+            },
+            "createdAt": {
+                "S": "2026-02-05T05:56:35.686Z"
+            },
+            "updatedAt": {
+                "S": "2026-02-05T05:56:35.686Z"
+            },
+            "category": {
+                "S": "food"
+            },
+            "description": {
+                "S": "Amazon"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1650"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1650"
+                    }
+                }
+            },
+            "date": {
+                "S": "2026-02-05"
+            },
+            "amount": {
+                "N": "3300"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "date": {
+                "S": "2026-04-03"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Tech 808 Inc."
+            },
+            "id": {
+                "S": "c80174c7-c3c4-478a-ae38-23c530d86931"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "115"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "115"
+                    }
+                }
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:52.459Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:33.940Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "230"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "note": {
+                "S": "1 x Hooshing 3/8\" Barb x 3/4\" GHT Female Garden Hose Swivel Adapter Heavy Duty Brass Hose Connectors with Stainless Clamps for Watering System Outdoor Faucet, 2 Pack - $9.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-3217363-8170660"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "1106"
+            },
+            "description": {
+                "S": "1 x Hooshing 3/8\" Barb x 3/4\" GHT Female Garden Hose Swivel Adapter Heavy Duty Brass Hose Connectors with Stainless Clamps for Watering System Outdoor Faucet, 2 Pack - $9.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-3217363-8170660"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:17.426Z"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:17.426Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "date": {
+                "S": "2025-11-29"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "754af5ac-d3c2-43d6-baac-6daf96a076e4"
+            },
+            "category": {
+                "S": "other"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":553,\"f9b909be-f051-700d-28bf-677853a31c5f\":553}"
+            }
+        },
+        {
+            "splitType": {
+                "S": "percentage"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1961,\"f9b909be-f051-700d-28bf-677853a31c5f\":1960}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2025-12-14"
+            },
+            "updatedAt": {
+                "S": "2025-12-14T23:44:20.977Z"
+            },
+            "amount": {
+                "N": "3921"
+            },
+            "createdAt": {
+                "S": "2025-12-14T23:44:20.977Z"
+            },
+            "id": {
+                "S": "f81a033a-aeb0-4f3d-becb-20d19b0bc189"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "description": {
+                "S": "PIEDMONT GROCERY CO"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:12.868Z"
+            },
+            "amount": {
+                "N": "6000"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "date": {
+                "S": "2025-11-22"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":3000,\"f9b909be-f051-700d-28bf-677853a31c5f\":3000}"
+            },
+            "id": {
+                "S": "fffc217b-1602-4e5f-b965-5850b8577c59"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "home"
+            },
+            "description": {
+                "S": "Book shelf"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:12.868Z"
+            }
+        },
+        {
+            "createdAt": {
+                "S": "2025-12-12T20:25:18.232Z"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "94bf30a1-fde9-4e14-9861-2e49b4a04ba8"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2025-11-24"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "1 x monTEK Swivel Bike Wall Mount, Bike Hangers for Garage, Space-Saving Vertical Bike Rack, Sturdy Bike Storage Rack Holds Up to 66lbs, Easy to Install, 2 Pack - $38.94\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-2894782-4641051"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "amount": {
+                "N": "4288"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2144,\"f9b909be-f051-700d-28bf-677853a31c5f\":2144}"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "note": {
+                "S": "1 x monTEK Swivel Bike Wall Mount, Bike Hangers for Garage, Space-Saving Vertical Bike Rack, Sturdy Bike Storage Rack Holds Up to 66lbs, Easy to Install, 2 Pack - $38.94\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-2894782-4641051"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:18.232Z"
+            },
+            "category": {
+                "S": "other"
+            }
+        },
+        {
+            "date": {
+                "S": "2026-04-07"
+            },
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:51.137Z"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:14:13.590Z"
+            },
+            "id": {
+                "S": "067546bb-b354-4bba-88d4-c694bee39b05"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "6092"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "3046"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "3046"
+                    }
+                }
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "description": {
+                "S": "Wailua Country Store"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "partner1"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-19T04:47:53.885Z"
+            },
+            "date": {
+                "S": "2025-12-19"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2049,\"f9b909be-f051-700d-28bf-677853a31c5f\":2049}"
+            },
+            "id": {
+                "S": "a351a595-17c0-4d41-9107-5c5462aedf7b"
+            },
+            "amount": {
+                "N": "4098"
+            },
+            "description": {
+                "S": "Montanegro"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2025-12-19T04:47:53.885Z"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2025-12-09"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:13.919Z"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:13.919Z"
+            },
+            "id": {
+                "S": "8dc3fdaf-bb48-468c-bc69-056ec2414629"
+            },
+            "amount": {
+                "N": "5000"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "description": {
+                "S": "Dining chairs"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2500,\"f9b909be-f051-700d-28bf-677853a31c5f\":2500}"
+            }
+        },
+        {
+            "updatedAt": {
+                "S": "2026-01-12T03:11:15.465Z"
+            },
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "09fe5153-3fff-45f1-9b5d-78c95367116b"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":4789,\"f9b909be-f051-700d-28bf-677853a31c5f\":4788}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "description": {
+                "S": "border permit"
+            },
+            "amount": {
+                "N": "9577"
+            },
+            "date": {
+                "S": "2026-01-12"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "createdAt": {
+                "S": "2026-01-12T03:11:15.465Z"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "3561"
+            },
+            "description": {
+                "S": "Kauai Shores Hotel"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1780"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1781"
+                    }
+                }
+            },
+            "date": {
+                "S": "2026-03-30"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "cba3b0f5-b525-4878-8bd9-8463415661ae"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:34.219Z"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:55.015Z"
+            }
+        },
+        {
+            "id": {
+                "S": "73991f77-6022-4acc-9dac-841ff6453340"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "3821"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "3821"
+                    }
+                }
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "blackout curtains"
+            },
+            "date": {
+                "S": "2026-03-12"
+            },
+            "updatedAt": {
+                "S": "2026-03-12T23:33:37.953Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-03-12T23:33:37.953Z"
+            },
+            "category": {
+                "S": "home"
+            },
+            "amount": {
+                "N": "7642"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "date": {
+                "S": "2026-04-03"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "description": {
+                "S": "Trilogy Coffee"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "1121"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "429a1f77-7e8e-4e81-b38d-471b778c74db"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:52.311Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "560"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "561"
+                    }
+                }
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:34.333Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Terra Firma CSA"
+            },
+            "updatedAt": {
+                "S": "2026-02-13T19:50:31.885Z"
+            },
+            "date": {
+                "S": "2026-02-13"
+            },
+            "amount": {
+                "N": "5000"
+            },
+            "createdAt": {
+                "S": "2026-02-13T19:50:31.885Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "2500"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "2500"
+                    }
+                }
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "71e8d882-81c8-4181-9e30-8bf9f18298af"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":624,\"f9b909be-f051-700d-28bf-677853a31c5f\":624}"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "474e707f-ec9f-4b01-81b0-e6a2e801ce36"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2026-01-27T00:40:11.291Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Piedmont grocery"
+            },
+            "amount": {
+                "N": "1248"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "createdAt": {
+                "S": "2026-01-27T00:40:11.291Z"
+            },
+            "date": {
+                "S": "2026-01-27"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":941,\"f9b909be-f051-700d-28bf-677853a31c5f\":941}"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "1882"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:17.015Z"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:17.015Z"
+            },
+            "note": {
+                "S": "1 x DEWENWILS 3 Outlet Extension Cord with Flat Plug, 25 FT 16/3 Awg Grounded Power Cable for Indoor Use, SPT-3 Cord, White, ETL Listed, 1 Pack - $16.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-7063163-3620214"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "id": {
+                "S": "5961f776-bc0f-410c-9d56-0eb8449c04cf"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "date": {
+                "S": "2025-11-30"
+            },
+            "description": {
+                "S": "1 x DEWENWILS 3 Outlet Extension Cord with Flat Plug, 25 FT 16/3 Awg Grounded Power Cable for Indoor Use, SPT-3 Cord, White, ETL Listed, 1 Pack - $16.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-7063163-3620214"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "category": {
+                "S": "other"
+            }
+        },
+        {
+            "description": {
+                "S": "Ottoman"
+            },
+            "date": {
+                "S": "2026-04-21"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "createdAt": {
+                "S": "2026-04-22T04:48:13.173Z"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T04:48:13.173Z"
+            },
+            "amount": {
+                "N": "10000"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "category": {
+                "S": "home"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "5000"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "5000"
+                    }
+                }
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "4bcdf467-a896-4f87-89d1-e163e33e6ae0"
+            }
+        },
+        {
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "description": {
+                "S": "Burger"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-02-05T05:59:13.402Z"
+            },
+            "amount": {
+                "N": "2150"
+            },
+            "category": {
+                "S": "food"
+            },
+            "createdAt": {
+                "S": "2026-02-05T05:59:13.402Z"
+            },
+            "id": {
+                "S": "e2a9fab1-573d-4368-bd12-f949db8fdb15"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "date": {
+                "S": "2026-02-05"
+            },
+            "note": {
+                "S": "At Berkeley bowl"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1075"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1075"
+                    }
+                }
+            }
+        },
+        {
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Terra Firma CSA"
+            },
+            "updatedAt": {
+                "S": "2026-03-14T20:47:08.861Z"
+            },
+            "amount": {
+                "N": "5000"
+            },
+            "createdAt": {
+                "S": "2026-03-14T20:47:08.861Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "id": {
+                "S": "5442848c-35d9-460b-9f27-e05119a714ca"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "2500"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "2500"
+                    }
+                }
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "date": {
+                "S": "2026-02-26"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "note": {
+                "S": "1 x ClearSpace Clear Plastic Storage Bins – Pantry Organizers & Storage Containers, Cabinet Organizer - Home Organization Must Haves for Kitchen, Laundry Room, Office, Closet, Garage & Freezer - $33.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-3314442-4907404"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:17.736Z"
+            },
+            "date": {
+                "S": "2025-11-26"
+            },
+            "amount": {
+                "N": "3727"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "beec6cd0-19d0-4e6e-aff0-4256aba1e933"
+            },
+            "description": {
+                "S": "1 x ClearSpace Clear Plastic Storage Bins – Pantry Organizers & Storage Containers, Cabinet Organizer - Home Organization Must Haves for Kitchen, Laundry Room, Office, Closet, Garage & Freezer - $33.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-3314442-4907404"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1864,\"f9b909be-f051-700d-28bf-677853a31c5f\":1863}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:17.736Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "category": {
+                "S": "other"
+            }
+        },
+        {
+            "updatedAt": {
+                "S": "2025-12-12T20:52:12.484Z"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "Renters insurance"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2326,\"f9b909be-f051-700d-28bf-677853a31c5f\":2325}"
+            },
+            "date": {
+                "S": "2025-11-05"
+            },
+            "amount": {
+                "N": "4651"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:12.484Z"
+            },
+            "category": {
+                "S": "other"
+            },
+            "id": {
+                "S": "4c5318c7-f4ab-48c4-8a74-e98f6f2317e8"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":960,\"f9b909be-f051-700d-28bf-677853a31c5f\":959}"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "71ef7db0-e213-41c8-be4d-2a9a8f1e1279"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-01-27T00:41:21.721Z"
+            },
+            "amount": {
+                "N": "1919"
+            },
+            "createdAt": {
+                "S": "2026-01-27T00:41:21.721Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "description": {
+                "S": "Grocery outlet"
+            },
+            "date": {
+                "S": "2026-01-27"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-01-12T03:12:16.348Z"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "date": {
+                "S": "2026-01-12"
+            },
+            "description": {
+                "S": "pge"
+            },
+            "id": {
+                "S": "181524aa-e3eb-42c5-a114-88d9a1f22c18"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "createdAt": {
+                "S": "2026-01-12T03:12:16.348Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "36200"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":18100,\"f9b909be-f051-700d-28bf-677853a31c5f\":18100}"
+            }
+        },
+        {
+            "date": {
+                "S": "2025-12-07"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "note": {
+                "S": "Alameda Flea"
+            },
+            "id": {
+                "S": "ebeb121c-ca32-4dbd-b178-d89472d6c90b"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "3000"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2025-12-13T04:30:09.398Z"
+            },
+            "category": {
+                "S": "gifts"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "description": {
+                "S": "Cute pig"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1500,\"f9b909be-f051-700d-28bf-677853a31c5f\":1500}"
+            },
+            "createdAt": {
+                "S": "2025-12-13T04:29:33.037Z"
+            }
+        },
+        {
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-03-12T23:31:34.558Z"
+            },
+            "date": {
+                "S": "2026-03-12"
+            },
+            "id": {
+                "S": "519f2eac-5c54-48f4-aee1-5cc54384c29c"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "amount": {
+                "N": "4761"
+            },
+            "description": {
+                "S": "curtain rod"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "2380"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "2381"
+                    }
+                }
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "updatedAt": {
+                "S": "2026-03-12T23:31:34.558Z"
+            },
+            "category": {
+                "S": "home"
+            }
+        },
+        {
+            "date": {
+                "S": "2026-04-07"
+            },
+            "category": {
+                "S": "travel"
+            },
+            "description": {
+                "S": "Brezees Kauai"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "312"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "312"
+                    }
+                }
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "d0fd530d-c51a-4139-962a-1971b0fab244"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:51.773Z"
+            },
+            "amount": {
+                "N": "624"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:34.475Z"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:12.745Z"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":3500,\"f9b909be-f051-700d-28bf-677853a31c5f\":3500}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "5e9a432a-3ae6-4eb5-8cc3-1fb850f84db1"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "description": {
+                "S": "Dining table"
+            },
+            "category": {
+                "S": "home"
+            },
+            "amount": {
+                "N": "7000"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "date": {
+                "S": "2025-11-21"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:12.745Z"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2026-03-30"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:54.857Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "2483"
+            },
+            "description": {
+                "S": "The Fish Express"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1241"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1242"
+                    }
+                }
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "id": {
+                "S": "daac4b16-9a5b-4b44-999b-4a2c918d9a45"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:34.588Z"
+            }
+        },
+        {
+            "id": {
+                "S": "8f02722d-b45a-4bb2-9db5-ec4512719e24"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Piedmont grocery"
+            },
+            "amount": {
+                "N": "2597"
+            },
+            "date": {
+                "S": "2026-02-13"
+            },
+            "createdAt": {
+                "S": "2026-02-13T19:50:58.938Z"
+            },
+            "updatedAt": {
+                "S": "2026-02-13T19:50:58.938Z"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1298"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1299"
+                    }
+                }
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "date": {
+                "S": "2025-12-07"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:13.777Z"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":3614,\"f9b909be-f051-700d-28bf-677853a31c5f\":3614}"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Whole foods"
+            },
+            "amount": {
+                "N": "7228"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "e7bbe1b2-b5ff-418e-8791-cd4ff7302f0f"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:13.777Z"
+            }
+        },
+        {
+            "splitType": {
+                "S": "percentage"
+            },
+            "partner1Share": {
+                "N": "61"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "37a267ae-1671-4dd9-99d4-2617e7eddd5c"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2025-12-14T21:46:43.232Z"
+            },
+            "description": {
+                "S": "Home Depot"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "partner2Share": {
+                "N": "39"
+            },
+            "amount": {
+                "N": "9195"
+            },
+            "note": {
+                "S": "Plywood, bins, tape"
+            },
+            "date": {
+                "S": "2025-12-14"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "createdAt": {
+                "S": "2025-12-14T21:46:43.232Z"
+            },
+            "category": {
+                "S": "home"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":5609,\"f9b909be-f051-700d-28bf-677853a31c5f\":3586}"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "a3eb09cf-5c14-4e42-9d83-93740baafc1f"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:34.854Z"
+            },
+            "description": {
+                "S": "Costco"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:53.483Z"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1690"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1690"
+                    }
+                }
+            },
+            "date": {
+                "S": "2026-04-02"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "amount": {
+                "N": "3380"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "date": {
+                "S": "2026-04-03"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "description": {
+                "S": "Trilogy Coffee"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "1937"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:35.048Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:52.078Z"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "968"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "969"
+                    }
+                }
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "1f06b38c-3d7e-475a-ba07-db1abc0b8ac6"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "04d49f1d-f43c-4514-923a-4bddbf71c86b"
+            },
+            "amount": {
+                "N": "1105"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "createdAt": {
+                "S": "2025-12-13T04:30:56.623Z"
+            },
+            "updatedAt": {
+                "S": "2025-12-13T04:30:56.623Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "description": {
+                "S": "Grocery outlet"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "date": {
+                "S": "2025-12-13"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":553,\"f9b909be-f051-700d-28bf-677853a31c5f\":552}"
+            }
+        },
+        {
+            "createdAt": {
+                "S": "2026-04-22T05:10:51.353Z"
+            },
+            "date": {
+                "S": "2026-04-07"
+            },
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "596"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:35.313Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "id": {
+                "S": "4b72901b-b27a-4971-82f5-f1a028ec56d7"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "description": {
+                "S": "aloha roastery"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "298"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "298"
+                    }
+                }
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "37500"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "4d2cfd8c-0cc6-4d1e-a20b-5adc2becf25b"
+            },
+            "description": {
+                "S": "Persian rug"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2026-01-18"
+            },
+            "createdAt": {
+                "S": "2026-01-18T19:08:35.125Z"
+            },
+            "updatedAt": {
+                "S": "2026-01-18T19:08:35.125Z"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":18750,\"f9b909be-f051-700d-28bf-677853a31c5f\":18750}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":17500,\"f9b909be-f051-700d-28bf-677853a31c5f\":17500}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:12.967Z"
+            },
+            "id": {
+                "S": "5f240b54-7a25-4221-8d98-a958183b4921"
+            },
+            "date": {
+                "S": "2025-11-22"
+            },
+            "description": {
+                "S": "4 Stools"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:12.967Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "35000"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "4000"
+            },
+            "id": {
+                "S": "c96e74d2-e202-4c44-89f3-c0ae56763510"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-01-18T03:05:38.304Z"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2026-01-18"
+            },
+            "description": {
+                "S": "Tacos Oscar"
+            },
+            "category": {
+                "S": "food"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2000,\"f9b909be-f051-700d-28bf-677853a31c5f\":2000}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-01-18T03:05:38.304Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "Renters insurance"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1413,\"f9b909be-f051-700d-28bf-677853a31c5f\":1412}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "createdAt": {
+                "S": "2026-01-27T00:40:35.538Z"
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "amount": {
+                "N": "2825"
+            },
+            "id": {
+                "S": "c6f508ac-ac50-435d-b167-d54127404b4a"
+            },
+            "updatedAt": {
+                "S": "2026-01-27T00:40:35.538Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "date": {
+                "S": "2026-01-27"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "2250"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "2250"
+                    }
+                }
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-02-05T05:56:00.663Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Flight differences"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2026-02-05"
+            },
+            "updatedAt": {
+                "S": "2026-02-05T05:56:00.663Z"
+            },
+            "category": {
+                "S": "other"
+            },
+            "amount": {
+                "N": "4500"
+            },
+            "id": {
+                "S": "9c0d745e-15f1-4a00-9a49-ac74a32ad9e7"
+            }
+        },
+        {
+            "id": {
+                "S": "969795cf-9785-40e0-8cf9-ba568a6eeab0"
+            },
+            "date": {
+                "S": "2026-04-13"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-04-22T04:57:11.366Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "11904"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "11905"
+                    }
+                }
+            },
+            "description": {
+                "S": "EBmud"
+            },
+            "category": {
+                "S": "food"
+            },
+            "amount": {
+                "N": "23809"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T04:57:11.366Z"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":941,\"f9b909be-f051-700d-28bf-677853a31c5f\":941}"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:16.173Z"
+            },
+            "amount": {
+                "N": "1882"
+            },
+            "id": {
+                "S": "fde44605-81eb-4234-8132-35e6c680c7e0"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "category": {
+                "S": "shopping"
+            },
+            "description": {
+                "S": "Lamp wire"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "date": {
+                "S": "2025-12-10"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:16.173Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "note": {
+                "S": "Lamp wire"
+            }
+        },
+        {
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2026-02-20T19:53:12.460Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "date": {
+                "S": "2026-02-20"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "12500"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "12500"
+                    }
+                }
+            },
+            "amount": {
+                "N": "25000"
+            },
+            "id": {
+                "S": "c8f86770-6064-4e78-8691-843e5ea4b2d1"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-02-20T19:53:12.460Z"
+            },
+            "description": {
+                "S": "Banjo vet"
+            },
+            "category": {
+                "S": "health"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "description": {
+                "S": "Berkeley bowl"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-01-05T16:39:31.325Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "b58ecdc9-47d3-4be7-b41a-825c6932ba01"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1427,\"f9b909be-f051-700d-28bf-677853a31c5f\":1426}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2026-01-05T16:39:31.325Z"
+            },
+            "amount": {
+                "N": "2853"
+            },
+            "date": {
+                "S": "2026-01-05"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "note": {
+                "S": "1 x Sealproof 3/8-Inch ID x 1/2-Inch OD Unreinforced PVC - Food Grade Clear Vinyl Tubing, 50 FT - $14.69\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-0556258-9204204"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "c8f1f20d-bd4c-447f-b809-0dd282f0ab65"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:16.604Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "1627"
+            },
+            "description": {
+                "S": "1 x Sealproof 3/8-Inch ID x 1/2-Inch OD Unreinforced PVC - Food Grade Clear Vinyl Tubing, 50 FT - $14.69\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-0556258-9204204"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":814,\"f9b909be-f051-700d-28bf-677853a31c5f\":813}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "date": {
+                "S": "2025-12-04"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:16.604Z"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "category": {
+                "S": "other"
+            }
+        },
+        {
+            "date": {
+                "S": "2025-12-07"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":300,\"f9b909be-f051-700d-28bf-677853a31c5f\":300}"
+            },
+            "note": {
+                "S": "Alameda Flea"
+            },
+            "id": {
+                "S": "e8f92781-85f4-45e8-b238-70957aa51b95"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "category": {
+                "S": "gifts"
+            },
+            "amount": {
+                "N": "600"
+            },
+            "createdAt": {
+                "S": "2025-12-13T04:28:17.469Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2025-12-13T04:30:23.635Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "description": {
+                "S": "Cute mushroom"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "1a6bce2d-c15d-46d1-8018-bad03d05df74"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":3400,\"f9b909be-f051-700d-28bf-677853a31c5f\":3400}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Sushi"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:13.195Z"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:13.195Z"
+            },
+            "category": {
+                "S": "food"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2025-11-29"
+            },
+            "amount": {
+                "N": "6800"
+            },
+            "partner2Share": {
+                "N": "50"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "createdAt": {
+                "S": "2026-01-14T15:26:54.102Z"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "Wicker boxes"
+            },
+            "amount": {
+                "N": "4000"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "date": {
+                "S": "2026-01-14"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2000,\"f9b909be-f051-700d-28bf-677853a31c5f\":2000}"
+            },
+            "id": {
+                "S": "43e2e385-df10-4a3b-99b7-9765036dd500"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2026-01-14T15:26:54.102Z"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "1f159805-9e37-4206-b43c-95ab270c93b7"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "4000"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-01-24T02:23:59.597Z"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "food"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2000,\"f9b909be-f051-700d-28bf-677853a31c5f\":2000}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-01-24T02:23:59.597Z"
+            },
+            "description": {
+                "S": "Thai"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "date": {
+                "S": "2026-01-24"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2026-04-01"
+            },
+            "amount": {
+                "N": "2000"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:35.482Z"
+            },
+            "id": {
+                "S": "ab8b94af-3fb0-4b66-bf67-b5394048a386"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:53.768Z"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1000"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1000"
+                    }
+                }
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "description": {
+                "S": "Republic Parking"
+            }
+        },
+        {
+            "description": {
+                "S": "Internet"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "createdAt": {
+                "S": "2025-12-14T17:47:57.023Z"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "62b3d014-cca5-45f5-a5b2-c5e3157dd47a"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2607,\"f9b909be-f051-700d-28bf-677853a31c5f\":2607}"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "amount": {
+                "N": "5214"
+            },
+            "date": {
+                "S": "2025-12-14"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "updatedAt": {
+                "S": "2025-12-14T17:47:57.023Z"
+            }
+        },
+        {
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-02-04T02:41:44.374Z"
+            },
+            "description": {
+                "S": "Love child seat"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "amount": {
+                "N": "17500"
+            },
+            "date": {
+                "S": "2026-02-04"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "home"
+            },
+            "id": {
+                "S": "551d13ba-7dde-402d-b2fb-157324aa5909"
+            },
+            "updatedAt": {
+                "S": "2026-02-04T02:41:44.374Z"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "8750"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "8750"
+                    }
+                }
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2026-01-05T16:39:08.699Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "63a92ba2-1a2b-4293-89b3-682c40f3f539"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":588,\"f9b909be-f051-700d-28bf-677853a31c5f\":587}"
+            },
+            "createdAt": {
+                "S": "2026-01-05T16:39:08.699Z"
+            },
+            "date": {
+                "S": "2026-01-05"
+            },
+            "description": {
+                "S": "Kp market"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "1175"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-01-09T05:04:05.356Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "ca34c915-ddab-475c-b1a5-2f8305c86157"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2867,\"f9b909be-f051-700d-28bf-677853a31c5f\":2866}"
+            },
+            "date": {
+                "S": "2026-01-09"
+            },
+            "category": {
+                "S": "food"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "description": {
+                "S": "pho"
+            },
+            "updatedAt": {
+                "S": "2026-01-09T05:04:05.356Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "amount": {
+                "N": "5733"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "c4fcf612-7288-4120-aad8-86cfaa8faf97"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "Kountry Style Kitchen"
+            },
+            "date": {
+                "S": "2026-03-30"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "3775"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1887"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1888"
+                    }
+                }
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:35.611Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:54.755Z"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "7710a23b-08ae-4f38-881b-333bf990230d"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-19T19:58:41.111Z"
+            },
+            "date": {
+                "S": "2025-12-19"
+            },
+            "description": {
+                "S": "Montanegro 2"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2049,\"f9b909be-f051-700d-28bf-677853a31c5f\":2049}"
+            },
+            "amount": {
+                "N": "4098"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2025-12-19T19:58:41.111Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "date": {
+                "S": "2025-12-07"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "note": {
+                "S": "Alameda Flea"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":7500,\"f9b909be-f051-700d-28bf-677853a31c5f\":7500}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-13T04:26:32.393Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Entry cabinet"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2025-12-13T04:26:32.393Z"
+            },
+            "category": {
+                "S": "home"
+            },
+            "id": {
+                "S": "1fc0f5d2-c0eb-43e7-b650-5021638d48e5"
+            },
+            "amount": {
+                "N": "15000"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:35.719Z"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1245"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1246"
+                    }
+                }
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Lyft"
+            },
+            "amount": {
+                "N": "2491"
+            },
+            "date": {
+                "S": "2026-03-29"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:55.205Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "id": {
+                "S": "73de834a-4326-426e-9142-e9b772f9e3ba"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "14700"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "Curtains"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "id": {
+                "S": "bbdfd9d1-40e6-4d69-a3c0-4f5f368280fa"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "updatedAt": {
+                "S": "2026-01-13T21:45:29.058Z"
+            },
+            "date": {
+                "S": "2026-01-13"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":7350,\"f9b909be-f051-700d-28bf-677853a31c5f\":7350}"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "createdAt": {
+                "S": "2026-01-13T21:41:43.306Z"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "df6ab178-426b-4b86-9963-30a1622bacbd"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2026-01-18"
+            },
+            "updatedAt": {
+                "S": "2026-01-18T19:41:56.112Z"
+            },
+            "description": {
+                "S": "Caste iron+mineral oil"
+            },
+            "createdAt": {
+                "S": "2026-01-18T19:41:56.112Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "7600"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":3800,\"f9b909be-f051-700d-28bf-677853a31c5f\":3800}"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:13.258Z"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "7b8221fd-e9b5-497f-93b6-67d11fa807b8"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2200,\"f9b909be-f051-700d-28bf-677853a31c5f\":2200}"
+            },
+            "description": {
+                "S": "Groceries"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "4400"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2025-11-29"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:13.258Z"
+            }
+        },
+        {
+            "createdAt": {
+                "S": "2026-04-22T05:10:51.982Z"
+            },
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:35.787Z"
+            },
+            "amount": {
+                "N": "3483"
+            },
+            "description": {
+                "S": "hanalei pizza shop"
+            },
+            "date": {
+                "S": "2026-04-06"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1741"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1742"
+                    }
+                }
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "id": {
+                "S": "8fe14a75-0038-4766-a1df-8a339cbbe415"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "17397"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "17398"
+                    }
+                }
+            },
+            "description": {
+                "S": "Costco"
+            },
+            "category": {
+                "S": "shopping"
+            },
+            "createdAt": {
+                "S": "2026-01-12T04:01:02.194Z"
+            },
+            "amount": {
+                "N": "34795"
+            },
+            "id": {
+                "S": "742652d2-4e51-4d8d-82ef-9b28fd8a1ecc"
+            },
+            "date": {
+                "S": "2026-01-12"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2026-02-05T06:02:37.467Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "amount": {
+                "N": "2378"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:52.650Z"
+            },
+            "date": {
+                "S": "2026-04-03"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:35.880Z"
+            },
+            "description": {
+                "S": "Restaurants"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1189"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1189"
+                    }
+                }
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "32e209cc-261c-4825-ba82-76fb19eed10f"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:13.665Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":7600,\"f9b909be-f051-700d-28bf-677853a31c5f\":7600}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "description": {
+                "S": "BB groceries"
+            },
+            "id": {
+                "S": "48fb2700-fdba-4459-b9f2-c249b1f211a2"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:13.665Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "amount": {
+                "N": "15200"
+            },
+            "date": {
+                "S": "2025-12-01"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:17.690Z"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2025-11-28"
+            },
+            "note": {
+                "S": "1 x ClearSpace Clear Plastic Storage Bins – Pantry Organizers & Storage Containers, Cabinet Organizer - Home Organization Must Haves for Kitchen, Laundry Room, Office, Closet, Garage & Freezer - $59.49\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-2620484-6079468"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "1 x ClearSpace Clear Plastic Storage Bins – Pantry Organizers & Storage Containers, Cabinet Organizer - Home Organization Must Haves for Kitchen, Laundry Room, Office, Closet, Garage & Freezer - $59.49\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-2620484-6079468"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "4fc9ffdb-06dd-4acc-b971-6614f2bae1ba"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "amount": {
+                "N": "6589"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":3295,\"f9b909be-f051-700d-28bf-677853a31c5f\":3294}"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:17.690Z"
+            },
+            "category": {
+                "S": "other"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "6220"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:54.386Z"
+            },
+            "id": {
+                "S": "4b0d8246-c8ed-45f0-b39b-b6a11603e187"
+            },
+            "description": {
+                "S": "Kokee Lodge"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "3110"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "3110"
+                    }
+                }
+            },
+            "date": {
+                "S": "2026-03-31"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:36.061Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":17500,\"f9b909be-f051-700d-28bf-677853a31c5f\":17500}"
+            },
+            "id": {
+                "S": "dbc3d8cc-6fe5-4f1b-81ad-d17a6e996870"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:13.089Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Couch"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2025-11-29"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:13.089Z"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "35000"
+            }
+        },
+        {
+            "partner2Share": {
+                "N": "0"
+            },
+            "splitType": {
+                "S": "percentage"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "partner1Share": {
+                "N": "100"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2026-01-12T03:11:56.333Z"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "amount": {
+                "N": "7500"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":7500,\"f9b909be-f051-700d-28bf-677853a31c5f\":0}"
+            },
+            "category": {
+                "S": "food"
+            },
+            "date": {
+                "S": "2026-01-12"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-01-12T03:11:56.333Z"
+            },
+            "id": {
+                "S": "d88a8bea-9ad5-48bd-83f6-631004b0fd9d"
+            },
+            "description": {
+                "S": "experian bs"
+            }
+        },
+        {
+            "date": {
+                "S": "2025-12-07"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "description": {
+                "S": "Record"
+            },
+            "id": {
+                "S": "ea222b1d-27d2-4ab5-8d2f-7e0d1882f2d6"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "note": {
+                "S": "Alameda Flea"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "3000"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "createdAt": {
+                "S": "2025-12-13T04:29:59.334Z"
+            },
+            "category": {
+                "S": "gifts"
+            },
+            "updatedAt": {
+                "S": "2025-12-13T04:29:59.334Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1500,\"f9b909be-f051-700d-28bf-677853a31c5f\":1500}"
+            }
+        },
+        {
+            "description": {
+                "S": "Berkeley bowl"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-04-09T17:05:53.907Z"
+            },
+            "date": {
+                "S": "2026-04-09"
+            },
+            "amount": {
+                "N": "16300"
+            },
+            "updatedAt": {
+                "S": "2026-04-09T17:05:53.907Z"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "8150"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "8150"
+                    }
+                }
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "id": {
+                "S": "d99aa2d5-5f2e-4cbe-85f7-f40531ad4be5"
+            },
+            "category": {
+                "S": "groceries"
+            }
+        },
+        {
+            "date": {
+                "S": "2026-04-07"
+            },
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "95dab525-ef4e-4953-8cfb-144f6b4a8754"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Costco"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:55:36.220Z"
+            },
+            "amount": {
+                "N": "3116"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1558"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1558"
+                    }
+                }
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:50.877Z"
+            }
+        },
+        {
+            "createdAt": {
+                "S": "2026-01-12T04:02:04.700Z"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "4900"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "id": {
+                "S": "12a90a99-4fba-42c6-b60f-72dfdfb7247b"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2450,\"f9b909be-f051-700d-28bf-677853a31c5f\":2450}"
+            },
+            "date": {
+                "S": "2026-01-12"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "updatedAt": {
+                "S": "2026-01-12T04:02:04.700Z"
+            },
+            "description": {
+                "S": "Farmers market"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "updatedAt": {
+                "S": "2026-01-24T00:25:47.087Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "description": {
+                "S": "PGE feb"
+            },
+            "date": {
+                "S": "2026-02-11"
+            },
+            "id": {
+                "S": "93bdd327-5784-42e3-acf9-25c2b1fa6c74"
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":24123,\"f9b909be-f051-700d-28bf-677853a31c5f\":24122}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "createdAt": {
+                "S": "2026-01-24T00:25:47.087Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "amount": {
+                "N": "48245"
+            }
+        },
+        {
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "2374"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "2374"
+                    }
+                }
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Piedmont grocery"
+            },
+            "createdAt": {
+                "S": "2026-03-14T20:52:06.402Z"
+            },
+            "amount": {
+                "N": "4748"
+            },
+            "date": {
+                "S": "2026-02-22"
+            },
+            "updatedAt": {
+                "S": "2026-03-14T20:52:06.402Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "id": {
+                "S": "120064e9-7d55-480f-abf3-526b859d5a6a"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "splitType": {
+                "S": "percentage"
+            },
+            "date": {
+                "S": "2025-12-17"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2025-12-17T21:57:18.106Z"
+            },
+            "id": {
+                "S": "5525fc5e-e8a9-43f1-8884-7b185c43d11a"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "description": {
+                "S": "Dish soap"
+            },
+            "amount": {
+                "N": "662"
+            },
+            "category": {
+                "S": "home"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":331,\"f9b909be-f051-700d-28bf-677853a31c5f\":331}"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "createdAt": {
+                "S": "2025-12-17T21:57:18.106Z"
+            }
+        },
+        {
+            "date": {
+                "S": "2025-12-07"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2025-12-13T04:27:37.352Z"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "amount": {
+                "N": "2000"
+            },
+            "note": {
+                "S": "Alameda Flea"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "description": {
+                "S": "Hanging succulent"
+            },
+            "id": {
+                "S": "edada1f1-eaee-4c32-9f17-e320fd1b2c90"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1000,\"f9b909be-f051-700d-28bf-677853a31c5f\":1000}"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "createdAt": {
+                "S": "2025-12-13T04:27:37.352Z"
+            }
+        },
+        {
+            "description": {
+                "S": "Internet"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2026-04-15"
+            },
+            "createdAt": {
+                "S": "2026-04-22T04:52:27.108Z"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "2331"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "2331"
+                    }
+                }
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "amount": {
+                "N": "4662"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T04:52:27.108Z"
+            },
+            "id": {
+                "S": "6f3b8ba0-1e8d-424d-aa24-02ab9ac69523"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "Renters insurance"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1413,\"f9b909be-f051-700d-28bf-677853a31c5f\":1412}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "id": {
+                "S": "c9ef6007-eead-4280-8031-d00571fa99f5"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "date": {
+                "S": "2026-01-09"
+            },
+            "createdAt": {
+                "S": "2026-01-09T04:49:33.699Z"
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "amount": {
+                "N": "2825"
+            },
+            "updatedAt": {
+                "S": "2026-01-09T04:49:33.699Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "category": {
+                "S": "travel"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "createdAt": {
+                "S": "2026-04-22T05:10:55.541Z"
+            },
+            "description": {
+                "S": "Cheesecake"
+            },
+            "date": {
+                "S": "2026-04-04"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T05:10:55.541Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "amount": {
+                "N": "800"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "partner1"
+            },
+            "id": {
+                "S": "bcbd7f04-d4aa-4a5e-bba1-c3d2a0c50b32"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "id": {
+                "S": "5d02a481-3615-4bc2-9d72-97b29ea1afa7"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:52:13.405Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "category": {
+                "S": "shopping"
+            },
+            "amount": {
+                "N": "8300"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "date": {
+                "S": "2025-11-30"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:52:13.405Z"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":4150,\"f9b909be-f051-700d-28bf-677853a31c5f\":4150}"
+            },
+            "description": {
+                "S": "Kayak + toll"
+            }
+        },
+        {
+            "description": {
+                "S": "1 x Vtopmart 4 Pack Extra Large Clear Plastic Storage Bins,11x11 Cube Acrylic Organizer Square Containers with Handle for Pantry,Closet,LaundryRoom,Kitchen,Bathroom,UnderSink Organization - $37.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-6004305-0831412"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "date": {
+                "S": "2025-12-05"
+            },
+            "amount": {
+                "N": "4207"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":2104,\"f9b909be-f051-700d-28bf-677853a31c5f\":2103}"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:16.453Z"
+            },
+            "note": {
+                "S": "1 x Vtopmart 4 Pack Extra Large Clear Plastic Storage Bins,11x11 Cube Acrylic Organizer Square Containers with Handle for Pantry,Closet,LaundryRoom,Kitchen,Bathroom,UnderSink Organization - $37.99\r\n\r\nhttps://www.amazon.com/gp/your-account/order-details?orderID=113-6004305-0831412"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:16.453Z"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "id": {
+                "S": "b2439a2b-0c86-4c0b-bf7b-d81452fdb785"
+            },
+            "category": {
+                "S": "other"
+            }
+        },
+        {
+            "amount": {
+                "N": "30037"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "createdAt": {
+                "S": "2026-03-27T02:41:03.588Z"
+            },
+            "id": {
+                "S": "9b6389d6-33b3-4bfc-a12c-c2c2bcc28568"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "category": {
+                "S": "utilities"
+            },
+            "description": {
+                "S": "PGE"
+            },
+            "date": {
+                "S": "2026-03-27"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "15018"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "15019"
+                    }
+                }
+            },
+            "updatedAt": {
+                "S": "2026-03-27T02:41:03.588Z"
+            }
+        },
+        {
+            "amount": {
+                "N": "13800"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "updatedAt": {
+                "S": "2026-01-25T02:18:16.172Z"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "Groceries"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "owner": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f::f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "date": {
+                "S": "2026-01-25"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":6900,\"f9b909be-f051-700d-28bf-677853a31c5f\":6900}"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "paidBy": {
+                "S": "f9b909be-f051-700d-28bf-677853a31c5f"
+            },
+            "id": {
+                "S": "c9c11a02-cc57-420e-a3f5-ff180a4315fa"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "category": {
+                "S": "groceries"
+            },
+            "createdAt": {
+                "S": "2026-01-25T02:18:16.172Z"
+            }
+        },
+        {
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "note": {
+                "S": "Paper towel holder"
+            },
+            "createdAt": {
+                "S": "2025-12-12T20:25:16.304Z"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "2652"
+            },
+            "description": {
+                "S": "Paper towel holder"
+            },
+            "category": {
+                "S": "shopping"
+            },
+            "id": {
+                "S": "58242991-0767-4877-92be-24fbf95fa477"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":1326,\"f9b909be-f051-700d-28bf-677853a31c5f\":1326}"
+            },
+            "date": {
+                "S": "2025-12-08"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "updatedAt": {
+                "S": "2025-12-12T20:25:16.304Z"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        },
+        {
+            "createdAt": {
+                "S": "2026-01-09T04:40:02.354Z"
+            },
+            "partner1Share": {
+                "N": "50"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "description": {
+                "S": "Storage racks"
+            },
+            "coupleId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "date": {
+                "S": "2026-01-09"
+            },
+            "amount": {
+                "N": "48509"
+            },
+            "shares": {
+                "S": "{\"4989b9ee-d031-7043-c8d1-7c5b8ebeebbb\":24255,\"f9b909be-f051-700d-28bf-677853a31c5f\":24254}"
+            },
+            "id": {
+                "S": "614fc116-44fe-4377-b076-6c2477c374c3"
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "category": {
+                "S": "home"
+            },
+            "partner2Share": {
+                "N": "50"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "updatedAt": {
+                "S": "2026-01-09T04:40:02.354Z"
+            }
+        },
+        {
+            "description": {
+                "S": "dishwasher tablets"
+            },
+            "owner": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb::4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            },
+            "groupId": {
+                "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+            },
+            "splitType": {
+                "S": "equal"
+            },
+            "amount": {
+                "N": "2325"
+            },
+            "updatedAt": {
+                "S": "2026-04-22T04:58:07.330Z"
+            },
+            "createdAt": {
+                "S": "2026-04-22T04:58:07.330Z"
+            },
+            "date": {
+                "S": "2026-04-10"
+            },
+            "id": {
+                "S": "412b2f32-a5db-4e30-aa69-b013a68cc10f"
+            },
+            "shares": {
+                "M": {
+                    "f9b909be-f051-700d-28bf-677853a31c5f": {
+                        "N": "1162"
+                    },
+                    "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb": {
+                        "N": "1163"
+                    }
+                }
+            },
+            "__typename": {
+                "S": "Expense"
+            },
+            "category": {
+                "S": "home"
+            },
+            "paidBy": {
+                "S": "4989b9ee-d031-7043-c8d1-7c5b8ebeebbb"
+            }
+        }
+    ],
+    "Count": 100,
+    "ScannedCount": 100,
+    "LastEvaluatedKey": {
+        "id": {
+            "S": "412b2f32-a5db-4e30-aa69-b013a68cc10f"
+        },
+        "groupId": {
+            "S": "b33ece50-8daf-4a11-9d6f-9c9ed601803e"
+        }
+    }
+}

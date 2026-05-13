@@ -15,6 +15,7 @@ export function Layout({ children }: LayoutProps) {
     { path: '/add', label: 'Add', emoji: '➕' },
     { path: '/history', label: 'History', emoji: '📋' },
     { path: '/stats', label: 'Stats', emoji: '📊' },
+    { path: '/chat', label: 'Chat', emoji: '💬' },
     { path: '/settings', label: 'Settings', emoji: '⚙️' },
   ];
 
