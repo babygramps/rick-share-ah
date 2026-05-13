@@ -106,3 +106,23 @@ type UserPreferences @model @auth(rules: [{ allow: owner }]) {
   userId: String! @index(name: "byUserId")
   theme: String
 }
+
+type ChatMessage @model
+  @auth(rules: [{ allow: owner, ownerField: "userId" }]) {
+  id: ID!
+  userId: String! @index(
+    name: "byUserAndGroup",
+    queryField: "chatMessagesByUserAndGroup",
+    sortKeyFields: ["groupId", "createdAt"]
+  )
+  groupId: ID!
+  role: String!         # "user" | "assistant"
+  content: String!
+  createdAt: AWSDateTime!
+}
+
+type Mutation {
+  sendChatMessage(groupId: ID!, content: String!): ChatMessage
+    @function(name: "aiChat-${env}")
+    @auth(rules: [{ allow: private }])
+}
