@@ -297,7 +297,7 @@
         "Parameters": {
           "secretsPathAmplifyAppId": "d5hdolte4cjfx",
           "deploymentBucketName": "amplify-rickshareah-dev-326e7-deployment",
-          "s3Key": "amplify-builds/aiChat-52304264335858696362-build.zip",
+          "s3Key": "amplify-builds/aiChat-4732624236716d626b46-build.zip",
           "apirickshareahGraphQLAPIIdOutput": {
             "Fn::GetAtt": [
               "apirickshareah",

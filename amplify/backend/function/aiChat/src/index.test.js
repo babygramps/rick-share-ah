@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { invokeChatWorker, runChatJob } from './index.js';
+import { getResolverFieldName, invokeChatWorker, runChatJob } from './index.js';
 
 test('runChatJob completes a queued job and persists the assistant reply', async () => {
   const statusUpdates = [];
@@ -108,4 +108,12 @@ test('invokeChatWorker asynchronously invokes this Lambda in worker mode', async
     jobId: 'job_queued_1',
     queuedByRequestId: 'queue-request-1',
   });
+});
+
+test('getResolverFieldName reads Amplify function payload fieldName', () => {
+  assert.equal(getResolverFieldName({
+    typeName: 'Mutation',
+    fieldName: 'queueChatMessage',
+    arguments: {},
+  }), 'queueChatMessage');
 });

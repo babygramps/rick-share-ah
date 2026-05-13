@@ -563,6 +563,10 @@ async function processChatJob({ jobId, requestId }) {
   return runChatJob({ job, requestId });
 }
 
+export function getResolverFieldName(event) {
+  return event?.fieldName || event?.info?.fieldName;
+}
+
 async function handleQueueChatMessage(event, context) {
   const requestId = context?.awsRequestId;
   const userId = event?.identity?.sub;
@@ -760,7 +764,7 @@ async function handleSendChatMessage(event, context) {
 
 export const handler = async (event, context) => {
   const requestId = context?.awsRequestId;
-  const fieldName = event?.info?.fieldName;
+  const fieldName = getResolverFieldName(event);
   const mode = event?.mode || event?.arguments?.mode;
 
   if (mode === 'processJob' || event?.jobId || event?.arguments?.jobId) {
@@ -774,5 +778,6 @@ export const handler = async (event, context) => {
     return handleQueueChatMessage(event, context);
   }
 
+  log('info', 'aiChat.route.sync', { requestId, fieldName: fieldName || null });
   return handleSendChatMessage(event, context);
 };
