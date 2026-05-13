@@ -1,0 +1,12 @@
+{
+  "name": "aiChat",
+  "version": "1.0.0",
+  "description": "Lambda resolver for sendChatMessage GraphQL mutation. Loads group data + chat history, calls Gemini 3.1 Pro, persists messages.",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.978.0",
+    "@aws-sdk/lib-dynamodb": "^3.978.0",
+    "@aws-sdk/client-ssm": "^3.978.0"
+  }
+}

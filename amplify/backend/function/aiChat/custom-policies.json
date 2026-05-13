@@ -1,0 +1,24 @@
+[
+  {
+    "Effect": "Allow",
+    "Action": [
+      "dynamodb:GetItem",
+      "dynamodb:Query",
+      "dynamodb:Scan",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem"
+    ],
+    "Resource": [
+      "arn:aws:dynamodb:*:*:table/Group-*",
+      "arn:aws:dynamodb:*:*:table/Group-*/index/*",
+      "arn:aws:dynamodb:*:*:table/GroupMember-*",
+      "arn:aws:dynamodb:*:*:table/GroupMember-*/index/*",
+      "arn:aws:dynamodb:*:*:table/Expense-*",
+      "arn:aws:dynamodb:*:*:table/Expense-*/index/*",
+      "arn:aws:dynamodb:*:*:table/Settlement-*",
+      "arn:aws:dynamodb:*:*:table/Settlement-*/index/*",
+      "arn:aws:dynamodb:*:*:table/ChatMessage-*",
+      "arn:aws:dynamodb:*:*:table/ChatMessage-*/index/*"
+    ]
+  }
+]

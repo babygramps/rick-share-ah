@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "api": {
+      "rickshareah": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "secretNames": [
+    "GEMINI_API_KEY"
+  ]
+}
