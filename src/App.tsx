@@ -9,6 +9,7 @@ import { AddExpense } from './pages/AddExpense';
 import { History } from './pages/History';
 import { Statistics } from './pages/Statistics';
 import { Settings } from './pages/Settings';
+import { Chat } from './pages/Chat';
 
 
 // Protected route wrapper
@@ -133,6 +134,18 @@ function AppRoutes() {
             <RequireGroup>
               <Layout>
                 <Statistics />
+              </Layout>
+            </RequireGroup>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute>
+            <RequireGroup>
+              <Layout>
+                <Chat />
               </Layout>
             </RequireGroup>
           </ProtectedRoute>
