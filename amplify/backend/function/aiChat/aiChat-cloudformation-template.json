@@ -108,7 +108,8 @@
                   "GEMINI_API_KEY"
                 ]
               ]
-            }
+            },
+            "GEMINI_MODEL": "gemini-3.1-pro-preview"
           }
         },
         "Role": {
@@ -119,7 +120,7 @@
         },
         "Runtime": "nodejs22.x",
         "Layers": [],
-        "Timeout": 25
+        "Timeout": 30
       }
     },
     "LambdaExecutionRole": {

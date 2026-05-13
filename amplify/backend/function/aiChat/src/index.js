@@ -7,7 +7,7 @@ const ssm = new SSMClient({});
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-pro-preview';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-const GEMINI_TIMEOUT_MS = 25_000;
+const GEMINI_TIMEOUT_MS = 24_000;
 
 let cachedGeminiKey = null;
 async function getGeminiKey() {
@@ -49,6 +49,30 @@ function formatCents(c) {
   const dollars = Math.floor(abs / 100);
   const cents = String(abs % 100).padStart(2, '0');
   return `${sign}$${dollars}.${cents}`;
+}
+
+function truncateText(value, max = 180) {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+function compactExpense(e) {
+  const out = {
+    id: e.id,
+    description: truncateText(e.description, 120),
+    amount: e.amount,
+    paidBy: e.paidBy,
+    splitType: e.splitType,
+    category: e.category,
+    date: e.date,
+  };
+  if (e.shares) out.shares = e.shares;
+  if (!e.shares && (e.partner1Share != null || e.partner2Share != null)) {
+    out.partner1Share = e.partner1Share;
+    out.partner2Share = e.partner2Share;
+  }
+  if (e.note) out.note = truncateText(e.note);
+  return out;
 }
 
 async function isUserInGroup(userId, groupId) {
@@ -154,11 +178,7 @@ function buildSystemPrompt({ user, group, members, expenses, settlements }) {
     ``,
     `GROUP: ${JSON.stringify({ id: group?.id, name: group?.name, type: group?.type })}`,
     `MEMBERS: ${JSON.stringify(members.map((m) => ({ userId: m.userId, name: m.name })))}`,
-    `EXPENSES: ${JSON.stringify(expenses.map((e) => ({
-      id: e.id, description: e.description, amount: e.amount, paidBy: e.paidBy,
-      splitType: e.splitType, shares: e.shares, partner1Share: e.partner1Share,
-      partner2Share: e.partner2Share, category: e.category, date: e.date, note: e.note,
-    })))}`,
+    `EXPENSES: ${JSON.stringify(expenses.map(compactExpense))}`,
     `SETTLEMENTS: ${JSON.stringify(settlements.map((s) => ({
       amount: s.amount, paidBy: s.paidBy, paidTo: s.paidTo, date: s.date, note: s.note,
     })))}`,
@@ -194,7 +214,11 @@ async function callGemini({ systemInstruction, contents }) {
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: systemInstruction }] },
         contents,
-        generationConfig: { temperature: 0.4 },
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 512,
+          thinkingConfig: { thinkingLevel: 'low' },
+        },
       }),
       signal: controller.signal,
     });
@@ -259,6 +283,15 @@ export const handler = async (event, context) => {
       settlements,
     });
     const contents = buildGeminiContents(history, content);
+
+    log('info', 'aiChat.promptBuilt', {
+      requestId,
+      model: GEMINI_MODEL,
+      promptChars: systemInstruction.length,
+      expenses: expenses.length,
+      settlements: settlements.length,
+      historyMessages: history.length,
+    });
 
     let assistantText;
     let usage = { inputTokens: null, outputTokens: null, latencyMs: null };
