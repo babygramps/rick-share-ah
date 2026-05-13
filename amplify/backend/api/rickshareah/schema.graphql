@@ -119,6 +119,7 @@ type ChatMessage @model @auth(rules: [
   groupId: ID!
   role: String!         # "user" | "assistant"
   content: String!
+  createdAt: AWSDateTime!
 }
 
 type Mutation {
