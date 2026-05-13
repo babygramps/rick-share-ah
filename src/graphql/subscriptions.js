@@ -625,3 +625,54 @@ export const onDeleteUserPreferences = /* GraphQL */ `
     }
   }
 `;
+export const onCreateChatMessage = /* GraphQL */ `
+  subscription OnCreateChatMessage(
+    $filter: ModelSubscriptionChatMessageFilterInput
+    $userId: String
+  ) {
+    onCreateChatMessage(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      role
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateChatMessage = /* GraphQL */ `
+  subscription OnUpdateChatMessage(
+    $filter: ModelSubscriptionChatMessageFilterInput
+    $userId: String
+  ) {
+    onUpdateChatMessage(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      role
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteChatMessage = /* GraphQL */ `
+  subscription OnDeleteChatMessage(
+    $filter: ModelSubscriptionChatMessageFilterInput
+    $userId: String
+  ) {
+    onDeleteChatMessage(filter: $filter, userId: $userId) {
+      id
+      userId
+      groupId
+      role
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

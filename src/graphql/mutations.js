@@ -1,6 +1,20 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const sendChatMessage = /* GraphQL */ `
+  mutation SendChatMessage($groupId: ID!, $content: String!) {
+    sendChatMessage(groupId: $groupId, content: $content) {
+      id
+      userId
+      groupId
+      role
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createGroup = /* GraphQL */ `
   mutation CreateGroup(
     $input: CreateGroupInput!
@@ -625,23 +639,54 @@ export const deleteUserPreferences = /* GraphQL */ `
     }
   }
 `;
-export const processReceipt = /* GraphQL */ `
-  mutation ProcessReceipt($imageKey: String!) {
-    processReceipt(imageKey: $imageKey) {
+export const createChatMessage = /* GraphQL */ `
+  mutation CreateChatMessage(
+    $input: CreateChatMessageInput!
+    $condition: ModelChatMessageConditionInput
+  ) {
+    createChatMessage(input: $input, condition: $condition) {
       id
-      status
-      merchantName
-      totalAmount
-      date
-      category
-      confidence
-      lineItems {
-        description
-        amount
-        qty
-      }
-      rawText
-      imageUrl
+      userId
+      groupId
+      role
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateChatMessage = /* GraphQL */ `
+  mutation UpdateChatMessage(
+    $input: UpdateChatMessageInput!
+    $condition: ModelChatMessageConditionInput
+  ) {
+    updateChatMessage(input: $input, condition: $condition) {
+      id
+      userId
+      groupId
+      role
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteChatMessage = /* GraphQL */ `
+  mutation DeleteChatMessage(
+    $input: DeleteChatMessageInput!
+    $condition: ModelChatMessageConditionInput
+  ) {
+    deleteChatMessage(input: $input, condition: $condition) {
+      id
+      userId
+      groupId
+      role
+      content
+      createdAt
+      updatedAt
+      __typename
     }
   }
 `;

@@ -51,37 +51,6 @@ export const listGroups = /* GraphQL */ `
     }
   }
 `;
-export const groupsByInviteCode = /* GraphQL */ `
-  query GroupsByInviteCode(
-    $inviteCode: String!
-    $sortDirection: ModelSortDirection
-    $filter: ModelGroupFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    groupsByInviteCode(
-      inviteCode: $inviteCode
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        type
-        name
-        inviteCode
-        ownerId
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getCouple = /* GraphQL */ `
   query GetCouple($id: ID!) {
     getCouple(id: $id) {
@@ -138,42 +107,6 @@ export const listCouples = /* GraphQL */ `
     }
   }
 `;
-export const couplesByInviteCode = /* GraphQL */ `
-  query CouplesByInviteCode(
-    $inviteCode: String!
-    $sortDirection: ModelSortDirection
-    $filter: ModelCoupleFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    couplesByInviteCode(
-      inviteCode: $inviteCode
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        name
-        partner1Id
-        partner1Name
-        partner1Email
-        partner2Id
-        partner2Name
-        partner2Email
-        inviteCode
-        defaultSplitPercent
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const getGroupMember = /* GraphQL */ `
   query GetGroupMember($id: ID!) {
     getGroupMember(id: $id) {
@@ -208,70 +141,6 @@ export const listGroupMembers = /* GraphQL */ `
     $nextToken: String
   ) {
     listGroupMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        groupId
-        userId
-        name
-        email
-        role
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const groupMembersByGroupId = /* GraphQL */ `
-  query GroupMembersByGroupId(
-    $groupId: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelGroupMemberFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    groupMembersByGroupId(
-      groupId: $groupId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        groupId
-        userId
-        name
-        email
-        role
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const groupMembersByUserId = /* GraphQL */ `
-  query GroupMembersByUserId(
-    $userId: String!
-    $sortDirection: ModelSortDirection
-    $filter: ModelGroupMemberFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    groupMembersByUserId(
-      userId: $userId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
       items {
         id
         groupId
@@ -370,6 +239,278 @@ export const listExpenses = /* GraphQL */ `
     }
   }
 `;
+export const getSettlement = /* GraphQL */ `
+  query GetSettlement($id: ID!) {
+    getSettlement(id: $id) {
+      id
+      groupId
+      group {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      coupleId
+      couple {
+        id
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      amount
+      paidBy
+      paidTo
+      date
+      note
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listSettlements = /* GraphQL */ `
+  query ListSettlements(
+    $filter: ModelSettlementFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSettlements(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        groupId
+        coupleId
+        amount
+        paidBy
+        paidTo
+        date
+        note
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getUserPreferences = /* GraphQL */ `
+  query GetUserPreferences($id: ID!) {
+    getUserPreferences(id: $id) {
+      id
+      userId
+      theme
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listUserPreferences = /* GraphQL */ `
+  query ListUserPreferences(
+    $filter: ModelUserPreferencesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserPreferences(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        theme
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getChatMessage = /* GraphQL */ `
+  query GetChatMessage($id: ID!) {
+    getChatMessage(id: $id) {
+      id
+      userId
+      groupId
+      role
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listChatMessages = /* GraphQL */ `
+  query ListChatMessages(
+    $filter: ModelChatMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listChatMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        groupId
+        role
+        content
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const groupsByInviteCode = /* GraphQL */ `
+  query GroupsByInviteCode(
+    $inviteCode: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGroupFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    groupsByInviteCode(
+      inviteCode: $inviteCode
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        type
+        name
+        inviteCode
+        ownerId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const couplesByInviteCode = /* GraphQL */ `
+  query CouplesByInviteCode(
+    $inviteCode: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCoupleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    couplesByInviteCode(
+      inviteCode: $inviteCode
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        partner1Id
+        partner1Name
+        partner1Email
+        partner2Id
+        partner2Name
+        partner2Email
+        inviteCode
+        defaultSplitPercent
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const groupMembersByGroupId = /* GraphQL */ `
+  query GroupMembersByGroupId(
+    $groupId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGroupMemberFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    groupMembersByGroupId(
+      groupId: $groupId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        groupId
+        userId
+        name
+        email
+        role
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const groupMembersByUserId = /* GraphQL */ `
+  query GroupMembersByUserId(
+    $userId: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelGroupMemberFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    groupMembersByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        groupId
+        userId
+        name
+        email
+        role
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const expensesByGroupId = /* GraphQL */ `
   query ExpensesByGroupId(
     $groupId: ID!
@@ -436,77 +577,6 @@ export const expensesByCoupleId = /* GraphQL */ `
         partner2Share
         shares
         category
-        date
-        note
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getSettlement = /* GraphQL */ `
-  query GetSettlement($id: ID!) {
-    getSettlement(id: $id) {
-      id
-      groupId
-      group {
-        id
-        type
-        name
-        inviteCode
-        ownerId
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      coupleId
-      couple {
-        id
-        name
-        partner1Id
-        partner1Name
-        partner1Email
-        partner2Id
-        partner2Name
-        partner2Email
-        inviteCode
-        defaultSplitPercent
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      amount
-      paidBy
-      paidTo
-      date
-      note
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const listSettlements = /* GraphQL */ `
-  query ListSettlements(
-    $filter: ModelSettlementFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listSettlements(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        groupId
-        coupleId
-        amount
-        paidBy
-        paidTo
         date
         note
         createdAt
@@ -587,40 +657,6 @@ export const settlementsByCoupleId = /* GraphQL */ `
     }
   }
 `;
-export const getUserPreferences = /* GraphQL */ `
-  query GetUserPreferences($id: ID!) {
-    getUserPreferences(id: $id) {
-      id
-      userId
-      theme
-      createdAt
-      updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const listUserPreferences = /* GraphQL */ `
-  query ListUserPreferences(
-    $filter: ModelUserPreferencesFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listUserPreferences(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        userId
-        theme
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
 export const userPreferencesByUserId = /* GraphQL */ `
   query UserPreferencesByUserId(
     $userId: String!
@@ -643,6 +679,38 @@ export const userPreferencesByUserId = /* GraphQL */ `
         createdAt
         updatedAt
         owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const chatMessagesByUserAndGroup = /* GraphQL */ `
+  query ChatMessagesByUserAndGroup(
+    $userId: String!
+    $groupIdCreatedAt: ModelChatMessageByUserAndGroupCompositeKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelChatMessageFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    chatMessagesByUserAndGroup(
+      userId: $userId
+      groupIdCreatedAt: $groupIdCreatedAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        groupId
+        role
+        content
+        createdAt
+        updatedAt
         __typename
       }
       nextToken
