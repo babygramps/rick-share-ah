@@ -18,7 +18,6 @@ export const listChatMessages = /* GraphQL */ `
         content
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
@@ -37,7 +36,6 @@ export const sendChatMessage = /* GraphQL */ `
       content
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
