@@ -503,7 +503,7 @@
               {
                 "Ref": "CoupleTable"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -598,7 +598,7 @@
               {
                 "Ref": "CoupleTable"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -729,7 +729,7 @@
               {
                 "Ref": "CoupleTable"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -881,7 +881,7 @@
               {
                 "Ref": "CoupleTable"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -1030,7 +1030,7 @@
               {
                 "Ref": "CoupleTable"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -1067,7 +1067,7 @@
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -1104,7 +1104,7 @@
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -1141,7 +1141,7 @@
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -1236,7 +1236,7 @@
               {
                 "Ref": "CoupleTable"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -1267,7 +1267,7 @@
               {
                 "Ref": "referencetotransformerrootstackGraphQLAPI20497F53ApiId"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"connectionAttributes\", {}))\n\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },

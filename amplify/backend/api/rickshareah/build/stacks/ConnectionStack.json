@@ -111,7 +111,7 @@
               {
                 "Ref": "referencetotransformerrootstackGroupMemberNestedStackGroupMemberNestedStackResource88F65E03OutputstransformerrootstackGroupMemberGroupMemberTable9A7A7956Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -200,7 +200,7 @@
               {
                 "Ref": "referencetotransformerrootstackExpenseNestedStackExpenseNestedStackResource7D8E85F1OutputstransformerrootstackExpenseExpenseTable04289514Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -289,7 +289,7 @@
               {
                 "Ref": "referencetotransformerrootstackSettlementNestedStackSettlementNestedStackResourceAA98924EOutputstransformerrootstackSettlementSettlementTable3B492906Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -378,7 +378,7 @@
               {
                 "Ref": "referencetotransformerrootstackExpenseNestedStackExpenseNestedStackResource7D8E85F1OutputstransformerrootstackExpenseExpenseTable04289514Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -467,7 +467,7 @@
               {
                 "Ref": "referencetotransformerrootstackSettlementNestedStackSettlementNestedStackResourceAA98924EOutputstransformerrootstackSettlementSettlementTable3B492906Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -556,7 +556,7 @@
               {
                 "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupTable65233FE2Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -600,7 +600,7 @@
               {
                 "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupTable65233FE2Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -689,7 +689,7 @@
               {
                 "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleTable8FE46B57Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -733,7 +733,7 @@
               {
                 "Ref": "referencetotransformerrootstackGroupNestedStackGroupNestedStackResource0BAADD61OutputstransformerrootstackGroupGroupTable65233FE2Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },
@@ -777,7 +777,7 @@
               {
                 "Ref": "referencetotransformerrootstackCoupleNestedStackCoupleNestedStackResource685E2FB4OutputstransformerrootstackCoupleCoupleTable8FE46B57Ref"
               },
-              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", []))\n$util.toJson({})"
+              "\"))\n$util.qr($ctx.stash.put(\"identityPoolId\", \"us-west-1:577354e2-c986-4993-a212-5fc51e50d422\"))\n$util.qr($ctx.stash.put(\"adminRoles\", [\"aiChat-dev\"]))\n$util.toJson({})"
             ]
           ]
         },

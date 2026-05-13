@@ -1,9 +1,6 @@
 ## [Start] Authorization Steps. **
 $util.qr($ctx.stash.put("hasAuth", true))
 #set( $isAuthorized = false )
-#if( $util.authType() == "API Key Authorization" )
-
-#end
 #if( $util.authType() == "User Pool Authorization" )
   #set( $isAuthorized = true )
   #set( $hasValidOwnerArgument = false )

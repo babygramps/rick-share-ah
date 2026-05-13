@@ -1,9 +1,6 @@
 ## [Start] Authorization Steps. **
 $util.qr($ctx.stash.put("hasAuth", true))
 #set( $isAuthorized = false )
-#if( $util.authType() == "API Key Authorization" )
-$util.unauthorized()
-#end
 #if( $util.authType() == "User Pool Authorization" )
   #if( !$isAuthorized )
     #set( $ownerEntity0 = $util.defaultIfNull($ctx.result.owner, null) )

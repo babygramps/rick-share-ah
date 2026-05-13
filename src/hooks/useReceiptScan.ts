@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { uploadData } from 'aws-amplify/storage';
 import { generateClient } from 'aws-amplify/api';
-import * as mutations from '../graphql/mutations';
+import { processReceipt } from '../graphql/customQueries';
 import type { ReceiptLineItem } from '../types';
 
 export interface ReceiptScanResult {
@@ -75,7 +75,7 @@ export function useReceiptScan(): UseReceiptScanState {
 
         console.log('[receipt-scan] processReceipt.start', { imageKey: uploadedPath });
         const resp = await client.graphql({
-          query: (mutations as any).processReceipt,
+          query: processReceipt,
           variables: { imageKey: uploadedPath },
           authMode: 'userPool',
         });

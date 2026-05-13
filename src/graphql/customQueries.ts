@@ -31,3 +31,24 @@ export const updateUserPreferences = /* GraphQL */ `
     }
   }
 `;
+
+export const processReceipt = /* GraphQL */ `
+  mutation ProcessReceipt($imageKey: String!) {
+    processReceipt(imageKey: $imageKey) {
+      id
+      status
+      merchantName
+      totalAmount
+      date
+      category
+      confidence
+      lineItems {
+        description
+        amount
+        qty
+      }
+      rawText
+      imageUrl
+    }
+  }
+`;

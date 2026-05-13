@@ -3,7 +3,7 @@ enum GroupType {
   GROUP
 }
 
-type Group @aws_cognito_user_pools {
+type Group {
   id: ID!
   type: GroupType!
   name: String!
@@ -17,7 +17,7 @@ type Group @aws_cognito_user_pools {
   owner: String
 }
 
-type Couple @aws_cognito_user_pools {
+type Couple {
   id: ID!
   name: String!
   partner1Id: String!
@@ -35,7 +35,7 @@ type Couple @aws_cognito_user_pools {
   owner: String
 }
 
-type GroupMember @aws_cognito_user_pools {
+type GroupMember {
   id: ID!
   groupId: ID!
   group: Group
@@ -48,7 +48,7 @@ type GroupMember @aws_cognito_user_pools {
   owner: String
 }
 
-type Expense @aws_cognito_user_pools {
+type Expense {
   id: ID!
   groupId: ID
   group: Group
@@ -69,7 +69,7 @@ type Expense @aws_cognito_user_pools {
   owner: String
 }
 
-type Settlement @aws_cognito_user_pools {
+type Settlement {
   id: ID!
   groupId: ID
   group: Group
@@ -85,13 +85,48 @@ type Settlement @aws_cognito_user_pools {
   owner: String
 }
 
-type UserPreferences @aws_cognito_user_pools {
+type UserPreferences {
   id: ID!
   userId: String!
   theme: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   owner: String
+}
+
+type ChatMessage {
+  id: ID!
+  userId: String!
+  groupId: ID!
+  role: String!
+  content: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Mutation {
+  sendChatMessage(groupId: ID!, content: String!): ChatMessage
+  createGroup(input: CreateGroupInput!, condition: ModelGroupConditionInput): Group
+  updateGroup(input: UpdateGroupInput!, condition: ModelGroupConditionInput): Group
+  deleteGroup(input: DeleteGroupInput!, condition: ModelGroupConditionInput): Group
+  createCouple(input: CreateCoupleInput!, condition: ModelCoupleConditionInput): Couple
+  updateCouple(input: UpdateCoupleInput!, condition: ModelCoupleConditionInput): Couple
+  deleteCouple(input: DeleteCoupleInput!, condition: ModelCoupleConditionInput): Couple
+  createGroupMember(input: CreateGroupMemberInput!, condition: ModelGroupMemberConditionInput): GroupMember
+  updateGroupMember(input: UpdateGroupMemberInput!, condition: ModelGroupMemberConditionInput): GroupMember
+  deleteGroupMember(input: DeleteGroupMemberInput!, condition: ModelGroupMemberConditionInput): GroupMember
+  createExpense(input: CreateExpenseInput!, condition: ModelExpenseConditionInput): Expense
+  updateExpense(input: UpdateExpenseInput!, condition: ModelExpenseConditionInput): Expense
+  deleteExpense(input: DeleteExpenseInput!, condition: ModelExpenseConditionInput): Expense
+  createSettlement(input: CreateSettlementInput!, condition: ModelSettlementConditionInput): Settlement
+  updateSettlement(input: UpdateSettlementInput!, condition: ModelSettlementConditionInput): Settlement
+  deleteSettlement(input: DeleteSettlementInput!, condition: ModelSettlementConditionInput): Settlement
+  createUserPreferences(input: CreateUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences
+  updateUserPreferences(input: UpdateUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences
+  deleteUserPreferences(input: DeleteUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences
+  createChatMessage(input: CreateChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
+  updateChatMessage(input: UpdateChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
+  deleteChatMessage(input: DeleteChatMessageInput!, condition: ModelChatMessageConditionInput): ChatMessage
 }
 
 input ModelStringInput {
@@ -244,7 +279,7 @@ enum ModelSortDirection {
   DESC
 }
 
-type ModelGroupConnection @aws_cognito_user_pools {
+type ModelGroupConnection {
   items: [Group]!
   nextToken: String
 }
@@ -269,27 +304,30 @@ input ModelGroupFilterInput {
 }
 
 type Query {
-  getGroup(id: ID!): Group @aws_cognito_user_pools
-  listGroups(filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection @aws_cognito_user_pools
-  groupsByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection @aws_cognito_user_pools
-  getCouple(id: ID!): Couple @aws_cognito_user_pools
-  listCouples(filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection @aws_cognito_user_pools
-  couplesByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection @aws_cognito_user_pools
-  getGroupMember(id: ID!): GroupMember @aws_cognito_user_pools
-  listGroupMembers(filter: ModelGroupMemberFilterInput, limit: Int, nextToken: String): ModelGroupMemberConnection @aws_cognito_user_pools
-  groupMembersByGroupId(groupId: ID!, sortDirection: ModelSortDirection, filter: ModelGroupMemberFilterInput, limit: Int, nextToken: String): ModelGroupMemberConnection @aws_cognito_user_pools
-  groupMembersByUserId(userId: String!, sortDirection: ModelSortDirection, filter: ModelGroupMemberFilterInput, limit: Int, nextToken: String): ModelGroupMemberConnection @aws_cognito_user_pools
-  getExpense(id: ID!): Expense @aws_cognito_user_pools
-  listExpenses(filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
-  expensesByGroupId(groupId: ID!, sortDirection: ModelSortDirection, filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
-  expensesByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection @aws_cognito_user_pools
-  getSettlement(id: ID!): Settlement @aws_cognito_user_pools
-  listSettlements(filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection @aws_cognito_user_pools
-  settlementsByGroupId(groupId: ID!, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection @aws_cognito_user_pools
-  settlementsByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection @aws_cognito_user_pools
-  getUserPreferences(id: ID!): UserPreferences @aws_cognito_user_pools
-  listUserPreferences(filter: ModelUserPreferencesFilterInput, limit: Int, nextToken: String): ModelUserPreferencesConnection @aws_cognito_user_pools
-  userPreferencesByUserId(userId: String!, sortDirection: ModelSortDirection, filter: ModelUserPreferencesFilterInput, limit: Int, nextToken: String): ModelUserPreferencesConnection @aws_cognito_user_pools
+  getGroup(id: ID!): Group
+  listGroups(filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection
+  getCouple(id: ID!): Couple
+  listCouples(filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection
+  getGroupMember(id: ID!): GroupMember
+  listGroupMembers(filter: ModelGroupMemberFilterInput, limit: Int, nextToken: String): ModelGroupMemberConnection
+  getExpense(id: ID!): Expense
+  listExpenses(filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection
+  getSettlement(id: ID!): Settlement
+  listSettlements(filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection
+  getUserPreferences(id: ID!): UserPreferences
+  listUserPreferences(filter: ModelUserPreferencesFilterInput, limit: Int, nextToken: String): ModelUserPreferencesConnection
+  getChatMessage(id: ID!): ChatMessage
+  listChatMessages(filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection
+  groupsByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelGroupFilterInput, limit: Int, nextToken: String): ModelGroupConnection
+  couplesByInviteCode(inviteCode: String!, sortDirection: ModelSortDirection, filter: ModelCoupleFilterInput, limit: Int, nextToken: String): ModelCoupleConnection
+  groupMembersByGroupId(groupId: ID!, sortDirection: ModelSortDirection, filter: ModelGroupMemberFilterInput, limit: Int, nextToken: String): ModelGroupMemberConnection
+  groupMembersByUserId(userId: String!, sortDirection: ModelSortDirection, filter: ModelGroupMemberFilterInput, limit: Int, nextToken: String): ModelGroupMemberConnection
+  expensesByGroupId(groupId: ID!, sortDirection: ModelSortDirection, filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection
+  expensesByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelExpenseFilterInput, limit: Int, nextToken: String): ModelExpenseConnection
+  settlementsByGroupId(groupId: ID!, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection
+  settlementsByCoupleId(coupleId: ID!, sortDirection: ModelSortDirection, filter: ModelSettlementFilterInput, limit: Int, nextToken: String): ModelSettlementConnection
+  userPreferencesByUserId(userId: String!, sortDirection: ModelSortDirection, filter: ModelUserPreferencesFilterInput, limit: Int, nextToken: String): ModelUserPreferencesConnection
+  chatMessagesByUserAndGroup(userId: String!, groupIdCreatedAt: ModelChatMessageByUserAndGroupCompositeKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelChatMessageFilterInput, limit: Int, nextToken: String): ModelChatMessageConnection
 }
 
 input ModelGroupConditionInput {
@@ -325,27 +363,6 @@ input DeleteGroupInput {
   id: ID!
 }
 
-type Mutation {
-  createGroup(input: CreateGroupInput!, condition: ModelGroupConditionInput): Group @aws_cognito_user_pools
-  updateGroup(input: UpdateGroupInput!, condition: ModelGroupConditionInput): Group @aws_cognito_user_pools
-  deleteGroup(input: DeleteGroupInput!, condition: ModelGroupConditionInput): Group @aws_cognito_user_pools
-  createCouple(input: CreateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
-  updateCouple(input: UpdateCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
-  deleteCouple(input: DeleteCoupleInput!, condition: ModelCoupleConditionInput): Couple @aws_cognito_user_pools
-  createGroupMember(input: CreateGroupMemberInput!, condition: ModelGroupMemberConditionInput): GroupMember @aws_cognito_user_pools
-  updateGroupMember(input: UpdateGroupMemberInput!, condition: ModelGroupMemberConditionInput): GroupMember @aws_cognito_user_pools
-  deleteGroupMember(input: DeleteGroupMemberInput!, condition: ModelGroupMemberConditionInput): GroupMember @aws_cognito_user_pools
-  createExpense(input: CreateExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
-  updateExpense(input: UpdateExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
-  deleteExpense(input: DeleteExpenseInput!, condition: ModelExpenseConditionInput): Expense @aws_cognito_user_pools
-  createSettlement(input: CreateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
-  updateSettlement(input: UpdateSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
-  deleteSettlement(input: DeleteSettlementInput!, condition: ModelSettlementConditionInput): Settlement @aws_cognito_user_pools
-  createUserPreferences(input: CreateUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences @aws_cognito_user_pools
-  updateUserPreferences(input: UpdateUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences @aws_cognito_user_pools
-  deleteUserPreferences(input: DeleteUserPreferencesInput!, condition: ModelUserPreferencesConditionInput): UserPreferences @aws_cognito_user_pools
-}
-
 input ModelSubscriptionGroupFilterInput {
   id: ModelSubscriptionIDInput
   type: ModelSubscriptionStringInput
@@ -360,27 +377,30 @@ input ModelSubscriptionGroupFilterInput {
 }
 
 type Subscription {
-  onCreateGroup(filter: ModelSubscriptionGroupFilterInput, owner: String): Group @aws_subscribe(mutations: ["createGroup"]) @aws_cognito_user_pools
-  onUpdateGroup(filter: ModelSubscriptionGroupFilterInput, owner: String): Group @aws_subscribe(mutations: ["updateGroup"]) @aws_cognito_user_pools
-  onDeleteGroup(filter: ModelSubscriptionGroupFilterInput, owner: String): Group @aws_subscribe(mutations: ["deleteGroup"]) @aws_cognito_user_pools
-  onCreateCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["createCouple"]) @aws_cognito_user_pools
-  onUpdateCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["updateCouple"]) @aws_cognito_user_pools
-  onDeleteCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["deleteCouple"]) @aws_cognito_user_pools
-  onCreateGroupMember(filter: ModelSubscriptionGroupMemberFilterInput, owner: String): GroupMember @aws_subscribe(mutations: ["createGroupMember"]) @aws_cognito_user_pools
-  onUpdateGroupMember(filter: ModelSubscriptionGroupMemberFilterInput, owner: String): GroupMember @aws_subscribe(mutations: ["updateGroupMember"]) @aws_cognito_user_pools
-  onDeleteGroupMember(filter: ModelSubscriptionGroupMemberFilterInput, owner: String): GroupMember @aws_subscribe(mutations: ["deleteGroupMember"]) @aws_cognito_user_pools
-  onCreateExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["createExpense"]) @aws_cognito_user_pools
-  onUpdateExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["updateExpense"]) @aws_cognito_user_pools
-  onDeleteExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["deleteExpense"]) @aws_cognito_user_pools
-  onCreateSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["createSettlement"]) @aws_cognito_user_pools
-  onUpdateSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["updateSettlement"]) @aws_cognito_user_pools
-  onDeleteSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["deleteSettlement"]) @aws_cognito_user_pools
-  onCreateUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["createUserPreferences"]) @aws_cognito_user_pools
-  onUpdateUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["updateUserPreferences"]) @aws_cognito_user_pools
-  onDeleteUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["deleteUserPreferences"]) @aws_cognito_user_pools
+  onCreateGroup(filter: ModelSubscriptionGroupFilterInput, owner: String): Group @aws_subscribe(mutations: ["createGroup"])
+  onUpdateGroup(filter: ModelSubscriptionGroupFilterInput, owner: String): Group @aws_subscribe(mutations: ["updateGroup"])
+  onDeleteGroup(filter: ModelSubscriptionGroupFilterInput, owner: String): Group @aws_subscribe(mutations: ["deleteGroup"])
+  onCreateCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["createCouple"])
+  onUpdateCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["updateCouple"])
+  onDeleteCouple(filter: ModelSubscriptionCoupleFilterInput, owner: String): Couple @aws_subscribe(mutations: ["deleteCouple"])
+  onCreateGroupMember(filter: ModelSubscriptionGroupMemberFilterInput, owner: String): GroupMember @aws_subscribe(mutations: ["createGroupMember"])
+  onUpdateGroupMember(filter: ModelSubscriptionGroupMemberFilterInput, owner: String): GroupMember @aws_subscribe(mutations: ["updateGroupMember"])
+  onDeleteGroupMember(filter: ModelSubscriptionGroupMemberFilterInput, owner: String): GroupMember @aws_subscribe(mutations: ["deleteGroupMember"])
+  onCreateExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["createExpense"])
+  onUpdateExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["updateExpense"])
+  onDeleteExpense(filter: ModelSubscriptionExpenseFilterInput, owner: String): Expense @aws_subscribe(mutations: ["deleteExpense"])
+  onCreateSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["createSettlement"])
+  onUpdateSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["updateSettlement"])
+  onDeleteSettlement(filter: ModelSubscriptionSettlementFilterInput, owner: String): Settlement @aws_subscribe(mutations: ["deleteSettlement"])
+  onCreateUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["createUserPreferences"])
+  onUpdateUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["updateUserPreferences"])
+  onDeleteUserPreferences(filter: ModelSubscriptionUserPreferencesFilterInput, owner: String): UserPreferences @aws_subscribe(mutations: ["deleteUserPreferences"])
+  onCreateChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["createChatMessage"])
+  onUpdateChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["updateChatMessage"])
+  onDeleteChatMessage(filter: ModelSubscriptionChatMessageFilterInput, userId: String): ChatMessage @aws_subscribe(mutations: ["deleteChatMessage"])
 }
 
-type ModelCoupleConnection @aws_cognito_user_pools {
+type ModelCoupleConnection {
   items: [Couple]!
   nextToken: String
 }
@@ -470,7 +490,7 @@ input ModelSubscriptionCoupleFilterInput {
   owner: ModelStringInput
 }
 
-type ModelGroupMemberConnection @aws_cognito_user_pools {
+type ModelGroupMemberConnection {
   items: [GroupMember]!
   nextToken: String
 }
@@ -540,7 +560,7 @@ input ModelSubscriptionGroupMemberFilterInput {
   owner: ModelStringInput
 }
 
-type ModelExpenseConnection @aws_cognito_user_pools @aws_api_key {
+type ModelExpenseConnection {
   items: [Expense]!
   nextToken: String
 }
@@ -645,7 +665,7 @@ input ModelSubscriptionExpenseFilterInput {
   owner: ModelStringInput
 }
 
-type ModelSettlementConnection @aws_cognito_user_pools @aws_api_key {
+type ModelSettlementConnection {
   items: [Settlement]!
   nextToken: String
 }
@@ -725,7 +745,7 @@ input ModelSubscriptionSettlementFilterInput {
   owner: ModelStringInput
 }
 
-type ModelUserPreferencesConnection @aws_cognito_user_pools {
+type ModelUserPreferencesConnection {
   items: [UserPreferences]!
   nextToken: String
 }
@@ -778,4 +798,83 @@ input ModelSubscriptionUserPreferencesFilterInput {
   and: [ModelSubscriptionUserPreferencesFilterInput]
   or: [ModelSubscriptionUserPreferencesFilterInput]
   owner: ModelStringInput
+}
+
+type ModelChatMessageConnection {
+  items: [ChatMessage]!
+  nextToken: String
+}
+
+input ModelChatMessageFilterInput {
+  id: ModelIDInput
+  userId: ModelStringInput
+  groupId: ModelIDInput
+  role: ModelStringInput
+  content: ModelStringInput
+  createdAt: ModelStringInput
+  updatedAt: ModelStringInput
+  and: [ModelChatMessageFilterInput]
+  or: [ModelChatMessageFilterInput]
+  not: ModelChatMessageFilterInput
+}
+
+input ModelChatMessageConditionInput {
+  userId: ModelStringInput
+  groupId: ModelIDInput
+  role: ModelStringInput
+  content: ModelStringInput
+  createdAt: ModelStringInput
+  and: [ModelChatMessageConditionInput]
+  or: [ModelChatMessageConditionInput]
+  not: ModelChatMessageConditionInput
+  updatedAt: ModelStringInput
+}
+
+input CreateChatMessageInput {
+  id: ID
+  userId: String!
+  groupId: ID!
+  role: String!
+  content: String!
+  createdAt: AWSDateTime
+}
+
+input UpdateChatMessageInput {
+  id: ID!
+  userId: String
+  groupId: ID
+  role: String
+  content: String
+  createdAt: AWSDateTime
+}
+
+input DeleteChatMessageInput {
+  id: ID!
+}
+
+input ModelSubscriptionChatMessageFilterInput {
+  id: ModelSubscriptionIDInput
+  groupId: ModelSubscriptionIDInput
+  role: ModelSubscriptionStringInput
+  content: ModelSubscriptionStringInput
+  createdAt: ModelSubscriptionStringInput
+  updatedAt: ModelSubscriptionStringInput
+  and: [ModelSubscriptionChatMessageFilterInput]
+  or: [ModelSubscriptionChatMessageFilterInput]
+  userId: ModelStringInput
+}
+
+input ModelChatMessageByUserAndGroupCompositeKeyConditionInput {
+  eq: ModelChatMessageByUserAndGroupCompositeKeyInput
+  le: ModelChatMessageByUserAndGroupCompositeKeyInput
+  lt: ModelChatMessageByUserAndGroupCompositeKeyInput
+  ge: ModelChatMessageByUserAndGroupCompositeKeyInput
+  gt: ModelChatMessageByUserAndGroupCompositeKeyInput
+  between: [ModelChatMessageByUserAndGroupCompositeKeyInput]
+  beginsWith: ModelChatMessageByUserAndGroupCompositeKeyInput
+}
+
+input ModelChatMessageByUserAndGroupCompositeKeyInput {
+  groupId: ID
+  createdAt: String
 }
