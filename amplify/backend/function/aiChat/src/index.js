@@ -8,6 +8,7 @@ const ssm = new SSMClient({});
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.1-pro-preview';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const GEMINI_TIMEOUT_MS = 24_000;
+const GEMINI_MAX_ATTEMPTS = 2;
 
 let cachedGeminiKey = null;
 async function getGeminiKey() {
@@ -57,22 +58,77 @@ function truncateText(value, max = 180) {
 }
 
 function compactExpense(e) {
-  const out = {
-    id: e.id,
-    description: truncateText(e.description, 120),
-    amount: e.amount,
-    paidBy: e.paidBy,
-    splitType: e.splitType,
-    category: e.category,
-    date: e.date,
-  };
-  if (e.shares) out.shares = e.shares;
-  if (!e.shares && (e.partner1Share != null || e.partner2Share != null)) {
-    out.partner1Share = e.partner1Share;
-    out.partner2Share = e.partner2Share;
-  }
-  if (e.note) out.note = truncateText(e.note);
+  const out = [
+    e.date,
+    e.category,
+    e.amount,
+    e.paidBy,
+    truncateText(e.description, 80),
+  ];
+  if (e.shares) out.push(e.shares);
   return out;
+}
+
+function compactSettlement(s) {
+  return [
+    s.date,
+    s.amount,
+    s.paidBy,
+    s.paidTo,
+    s.note ? truncateText(s.note, 80) : undefined,
+  ].filter((value) => value !== undefined);
+}
+
+function monthKey(date) {
+  return typeof date === 'string' && date.length >= 7 ? date.slice(0, 7) : 'unknown';
+}
+
+function normalize(value) {
+  return String(value || '').toLowerCase();
+}
+
+function buildExpenseAggregates(expenses) {
+  const byMonthCategory = {};
+  const byCategory = {};
+  const byPayer = {};
+  for (const e of expenses) {
+    const month = monthKey(e.date);
+    const category = e.category || 'uncategorized';
+    const amount = typeof e.amount === 'number' ? e.amount : 0;
+    byMonthCategory[month] ||= {};
+    byMonthCategory[month][category] ||= { total: 0, count: 0 };
+    byMonthCategory[month][category].total += amount;
+    byMonthCategory[month][category].count += 1;
+    byCategory[category] ||= { total: 0, count: 0 };
+    byCategory[category].total += amount;
+    byCategory[category].count += 1;
+    byPayer[e.paidBy] ||= { total: 0, count: 0 };
+    byPayer[e.paidBy].total += amount;
+    byPayer[e.paidBy].count += 1;
+  }
+  return { byMonthCategory, byCategory, byPayer };
+}
+
+function selectRelevantExpenses(expenses, question, limit = 60) {
+  const q = normalize(question);
+  const terms = q
+    .split(/[^a-z0-9]+/)
+    .filter((term) => term.length >= 3 && !['how', 'much', 'did', 'the', 'was', 'were', 'this', 'that', 'what', 'with'].includes(term));
+  return [...expenses]
+    .map((e) => {
+      const haystack = normalize(`${e.description} ${e.category} ${e.date}`);
+      let score = 0;
+      for (const term of terms) {
+        if (haystack.includes(term)) score += 4;
+      }
+      if (q.includes('biggest') || q.includes('largest')) score += Math.min(Math.floor((e.amount || 0) / 1000), 25);
+      if (q.includes('food') && ['food', 'restaurant', 'restaurants', 'dining', 'groceries', 'grocery'].some((term) => haystack.includes(term))) score += 20;
+      if (q.includes('transport') && ['transport', 'uber', 'lyft', 'gas', 'parking', 'transit'].some((term) => haystack.includes(term))) score += 20;
+      return { expense: e, score };
+    })
+    .sort((a, b) => b.score - a.score || String(b.expense.date || '').localeCompare(String(a.expense.date || '')))
+    .slice(0, limit)
+    .map(({ expense }) => compactExpense(expense));
 }
 
 async function isUserInGroup(userId, groupId) {
@@ -183,9 +239,11 @@ async function touchThread({ thread, content }) {
   return { ...thread, title: nextTitle, updatedAt: now };
 }
 
-function buildSystemPrompt({ user, group, members, expenses, settlements }) {
+function buildSystemPrompt({ user, group, members, expenses, settlements, question }) {
   const today = new Date().toISOString().slice(0, 10);
   const userName = members.find((m) => m.userId === user.userId)?.name || 'the user';
+  const aggregates = buildExpenseAggregates(expenses);
+  const relevantExpenses = selectRelevantExpenses(expenses, question);
   return [
     `You are an analyst built into Rick & Share-ah, an expense-splitting app for couples and groups.`,
     `You help ${userName} understand their group's spending. Answer ONLY using the data below — never invent expenses.`,
@@ -194,19 +252,17 @@ function buildSystemPrompt({ user, group, members, expenses, settlements }) {
     `CRITICAL CONVENTIONS:`,
     `- All amounts are integers in CENTS. $12.34 is stored as 1234.`,
     `- When showing money to the user, format as "$12.34" (divide by 100).`,
-    `- "paidBy" is a userId; resolve it to a name using the members list.`,
-    `- splitType is one of: equal, percentage, exact.`,
-    `- Each Expense may have a "shares" JSON field mapping userId -> share value (the authoritative split).`,
-    `  Legacy "partner1Share" / "partner2Share" fields may also exist on older rows — prefer "shares" when both are present.`,
-    `- A positive group balance means later partners owe earlier ones; settlements reduce that.`,
+    `- Data uses compact rows to reduce latency.`,
+    `- Expense row format: [date, category, amountCents, paidByUserId, description, optionalSharesJson].`,
+    `- Settlement row format: [date, amountCents, paidByUserId, paidToUserId, optionalNote].`,
+    `- Resolve user ids to names using MEMBERS.`,
     `- Today's date is ${today}.`,
     ``,
-    `GROUP: ${JSON.stringify({ id: group?.id, name: group?.name, type: group?.type })}`,
-    `MEMBERS: ${JSON.stringify(members.map((m) => ({ userId: m.userId, name: m.name })))}`,
-    `EXPENSES: ${JSON.stringify(expenses.map(compactExpense))}`,
-    `SETTLEMENTS: ${JSON.stringify(settlements.map((s) => ({
-      amount: s.amount, paidBy: s.paidBy, paidTo: s.paidTo, date: s.date, note: s.note,
-    })))}`,
+    `GROUP: ${JSON.stringify({ name: group?.name, type: group?.type })}`,
+    `MEMBERS: ${JSON.stringify(members.map((m) => [m.userId, m.name]))}`,
+    `EXPENSE_AGGREGATES_EXACT: ${JSON.stringify(aggregates)}`,
+    `RELEVANT_EXPENSE_ROWS: ${JSON.stringify(relevantExpenses)}`,
+    `SETTLEMENTS: ${JSON.stringify(settlements.map(compactSettlement))}`,
     ``,
     `When asked for totals or breakdowns, compute them from the data. Show your work briefly`,
     `(e.g. "March food = ${formatCents(12450)} across 12 expenses"). Keep replies concise — the user is on mobile.`,
@@ -230,33 +286,42 @@ async function callGemini({ systemInstruction, contents }) {
   const timer = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
   const t0 = Date.now();
   try {
-    const resp = await fetch(GEMINI_URL, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: systemInstruction }] },
-        contents,
-        generationConfig: {
-          temperature: 0.3,
-          maxOutputTokens: 512,
-          thinkingConfig: { thinkingLevel: 'low' },
+    let lastError;
+    for (let attempt = 1; attempt <= GEMINI_MAX_ATTEMPTS; attempt += 1) {
+      const resp = await fetch(GEMINI_URL, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-goog-api-key': apiKey,
         },
-      }),
-      signal: controller.signal,
-    });
-    const latencyMs = Date.now() - t0;
-    if (!resp.ok) {
-      const errBody = await resp.text().catch(() => '');
-      throw new Error(`Gemini HTTP ${resp.status}: ${errBody.slice(0, 500)}`);
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          contents,
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 384,
+            thinkingConfig: { thinkingLevel: 'low' },
+          },
+        }),
+        signal: controller.signal,
+      });
+      const latencyMs = Date.now() - t0;
+      if (!resp.ok) {
+        const errBody = await resp.text().catch(() => '');
+        lastError = new Error(`Gemini HTTP ${resp.status}: ${errBody.slice(0, 500)}`);
+        if ((resp.status === 429 || resp.status === 503) && attempt < GEMINI_MAX_ATTEMPTS && latencyMs < GEMINI_TIMEOUT_MS - 6_000) {
+          await new Promise((resolve) => setTimeout(resolve, 900));
+          continue;
+        }
+        throw lastError;
+      }
+      const json = await resp.json();
+      const text = json?.candidates?.[0]?.content?.parts?.map((p) => p.text).filter(Boolean).join('') || '';
+      const inputTokens = json?.usageMetadata?.promptTokenCount ?? null;
+      const outputTokens = json?.usageMetadata?.candidatesTokenCount ?? null;
+      return { text, inputTokens, outputTokens, latencyMs };
     }
-    const json = await resp.json();
-    const text = json?.candidates?.[0]?.content?.parts?.map((p) => p.text).filter(Boolean).join('') || '';
-    const inputTokens = json?.usageMetadata?.promptTokenCount ?? null;
-    const outputTokens = json?.usageMetadata?.candidatesTokenCount ?? null;
-    return { text, inputTokens, outputTokens, latencyMs };
+    throw lastError || new Error('Gemini request failed');
   } finally {
     clearTimeout(timer);
   }
@@ -328,6 +393,7 @@ export const handler = async (event, context) => {
       members,
       expenses,
       settlements,
+      question: content,
     });
     const contents = buildGeminiContents(history, content);
 
